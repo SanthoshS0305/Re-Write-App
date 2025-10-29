@@ -10,6 +10,10 @@ A full-stack MERN application that enables writers to create multi-chapter stori
 - ✅ **Story Management**: Create, edit, and delete stories with metadata
 - ✅ **Chapter Management**: Multi-chapter stories with reordering capability
 - ✅ **Rich Text Editor**: TipTap-powered editor with formatting options
+  - 12 font families (Times New Roman, Georgia, Arial, Merriweather, etc.)
+  - Font sizes from 10pt to 36pt
+  - Line spacing options (Single, 1.15, 1.5, Double)
+  - Bold, Italic, Headings, Lists
 - ✅ **Auto-save**: Automatic content saving with debouncing
 - ✅ **Revision History**: Automatic versioning on each edit
 - ✅ **Manual Save Points**: Named checkpoints for important versions

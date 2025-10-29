@@ -45,10 +45,20 @@ npm start
 
 Your browser will automatically open to `http://localhost:3000`
 
-## 4. Create Your Account
+## 4. Login or Create Account
 
+### Option A: Use Test Account
+```
+Email:    demo@example.com
+Password: Demo1234
+```
+
+### Option B: Create Your Own Account
 1. Click "Register"
-2. Enter your email and password (min 8 chars, with uppercase, lowercase, and number)
+2. Enter your email and password
+   - Min 8 characters
+   - Must have uppercase, lowercase, and number
+   - Example: `MyPass123`
 3. You'll be automatically logged in
 
 ## 5. Start Writing!
@@ -61,7 +71,11 @@ Your browser will automatically open to `http://localhost:3000`
 ## Features to Try
 
 - ✨ **Auto-save** - Your work saves automatically every 2 seconds
-- 📝 **Formatting** - Use the toolbar for bold, italic, headings, and lists
+- 📝 **Formatting** - Use the toolbar for:
+  - 12 font families (Times New Roman, Georgia, Arial, Merriweather, etc.)
+  - Font sizes from 10pt to 36pt
+  - Line spacing (Single, 1.15, 1.5, Double)
+  - Bold, Italic, Headings, Lists
 - 📚 **Multiple chapters** - Organize your story into chapters
 - ⏮️ **Revisions** - Click "Save Revision" to create save points
 - 🔍 **Compare** - View differences between any two versions
