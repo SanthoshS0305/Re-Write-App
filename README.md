@@ -95,6 +95,17 @@ REACT_APP_API_URL=http://localhost:5000/api/v1
 
 ### Development Mode
 
+**Start MongoDB Service (first time or if not running):**
+```bash
+# Linux/WSL
+sudo systemctl start mongod
+
+# macOS
+brew services start mongodb-community
+```
+
+**You'll need two terminal windows:**
+
 **Terminal 1 - Backend:**
 ```bash
 cd backend
@@ -108,6 +119,10 @@ npm start
 ```
 
 The application will open at `http://localhost:3000`
+
+**Stopping the App:**
+- Press `Ctrl+C` in each terminal to stop the Frontend and Backend
+- MongoDB service keeps running in the background (use `sudo systemctl stop mongod` to stop it if needed)
 
 ### Production Build
 
@@ -230,10 +245,28 @@ RevisionHistory/
 - Restore creates backup before reverting
 - Revisions include timestamps and word counts
 
+## Database Management
+
+You can interact with MongoDB using `mongosh` (MongoDB Shell):
+
+```bash
+# Connect to MongoDB
+mongosh
+
+# Switch to the app database
+use revision-history
+
+# View all stories
+db.stories.find()
+```
+
+📘 **See [MONGOSH_GUIDE.md](./MONGOSH_GUIDE.md) for a complete reference** with examples for viewing, filtering, and managing your data.
+
 ## Troubleshooting
 
 ### MongoDB Connection Issues
-- Ensure MongoDB is running: `mongod`
+- Ensure MongoDB service is running: `sudo systemctl status mongod`
+- Start if needed: `sudo systemctl start mongod`
 - Check connection string in `.env`
 - For Atlas, whitelist your IP address
 

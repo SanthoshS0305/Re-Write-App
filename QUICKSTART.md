@@ -5,9 +5,9 @@ Get Revision History running in 3 minutes!
 ## Prerequisites
 
 - Node.js (v16+)
-- MongoDB running locally OR MongoDB Atlas account
+- MongoDB Community Server installed and running
 
-## 1. Start MongoDB (if local)
+## 1. Start MongoDB Service
 
 ```bash
 # Linux/WSL
@@ -88,7 +88,7 @@ Password: Demo1234
 # Check if MongoDB is running
 sudo systemctl status mongod
 
-# If not, start it
+# Start it if needed
 sudo systemctl start mongod
 ```
 
@@ -104,6 +104,19 @@ kill -9 <PID>
 **Frontend won't start?**
 - Make sure backend is running first
 - Check that no other app is using port 3000
+
+## Stopping the App
+
+When you're done:
+1. Press `Ctrl+C` in the Frontend terminal
+2. Press `Ctrl+C` in the Backend terminal
+
+MongoDB will keep running in the background. To stop it:
+```bash
+sudo systemctl stop mongod  # Linux/WSL
+# or
+brew services stop mongodb-community  # macOS
+```
 
 ## That's It!
 

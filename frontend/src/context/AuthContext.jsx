@@ -106,10 +106,19 @@ export const AuthProvider = ({ children }) => {
     try {
       dispatch({ type: AUTH_ACTIONS.SET_LOADING, payload: true });
       const response = await authAPI.login(email, password);
-      localStorage.setItem('accessToken', response.data.data.accessToken);
-      dispatch({ type: AUTH_ACTIONS.LOGIN_SUCCESS, payload: response.data.data });
-      return { success: true };
+      console.log('Login response:', response.data);
+      
+      if (response.data.data && response.data.data.accessToken) {
+        localStorage.setItem('accessToken', response.data.data.accessToken);
+        dispatch({ type: AUTH_ACTIONS.LOGIN_SUCCESS, payload: response.data.data });
+        console.log('Login successful, token stored');
+        return { success: true };
+      } else {
+        console.error('No access token in response');
+        return { success: false, error: 'No access token received' };
+      }
     } catch (error) {
+      console.error('Login error:', error);
       const message = error.response?.data?.message || 'Login failed';
       dispatch({ type: AUTH_ACTIONS.SET_ERROR, payload: message });
       return { success: false, error: message };

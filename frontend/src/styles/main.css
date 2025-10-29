@@ -520,6 +520,89 @@ body {
   border-right: 1px solid var(--border-color);
   padding: 1.5rem;
   overflow-y: auto;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  box-shadow: var(--shadow-lg);
+}
+
+.sidebar.sidebar-collapsed {
+  transform: translateX(-100%);
+}
+
+/* Floating toggle button when sidebar is closed */
+.sidebar-toggle-floating {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: white;
+  z-index: 900;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.2s;
+}
+
+.sidebar-toggle-floating:hover {
+  transform: scale(1.1);
+  background-color: #2563eb;
+}
+
+/* Close button inside sidebar */
+.sidebar-toggle-close {
+  position: absolute;
+  top: 1rem;
+  right: 0.5rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.25rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  color: var(--text-color);
+  transition: background-color 0.2s;
+  z-index: 10;
+}
+
+.sidebar-toggle-close:hover {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+/* Overlay backdrop */
+.sidebar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .sidebar-header {
@@ -579,9 +662,17 @@ body {
 /* Editor Page */
 .editor-page {
   display: flex;
+  flex-direction: column;
   height: 100%;
   max-height: 100vh;
   overflow: hidden;
+}
+
+.editor-page-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
 }
 
 .editor-container {
@@ -594,7 +685,7 @@ body {
 }
 
 .editor-header {
-  padding: 1.5rem;
+  padding: 0.75rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
@@ -603,15 +694,24 @@ body {
   flex-shrink: 0;
 }
 
-.editor-title h2 {
-  margin-bottom: 0.5rem;
+.editor-title-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.editor-title-row h2 {
+  margin: 0;
+  font-size: 1.35rem;
 }
 
 .editor-status {
   display: flex;
+  align-items: center;
   gap: 1rem;
   font-size: 0.85rem;
   color: var(--text-secondary);
+  margin-left: 1rem;
 }
 
 .status-saving {
@@ -631,16 +731,97 @@ body {
   gap: 0.5rem;
 }
 
-.editor-toolbar {
+/* Editor Toolbar Container */
+.editor-toolbar-container {
+  flex-shrink: 0;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  width: 100%;
+}
+
+/* Editor Navbar (merged navbar + header) */
+.editor-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0.75rem 1.5rem;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.editor-navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.editor-navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar-separator {
+  color: var(--border-color);
+  font-size: 1.2rem;
+}
+
+.editor-chapter-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.editable-title {
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+}
+
+.editable-title:hover {
+  background-color: var(--bg-secondary);
+}
+
+.title-edit-container {
+  display: flex;
+  align-items: center;
+}
+
+.title-edit-input {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 0.25rem;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: inherit;
+  min-width: 300px;
+}
+
+.title-edit-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.editor-toolbar {
+  padding: 0.5rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
   display: flex;
   gap: 0.5rem;
+  align-items: center;
   background-color: var(--bg-secondary);
   flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
-.editor-toolbar button {
+.editor-toolbar > .toolbar-divider:last-of-type {
+  margin-left: auto;
+}
+
+.editor-toolbar button:not(.btn) {
   padding: 0.5rem 0.75rem;
   border: 1px solid var(--border-color);
   background-color: white;
@@ -650,11 +831,11 @@ body {
   font-family: inherit;
 }
 
-.editor-toolbar button:hover {
+.editor-toolbar button:not(.btn):hover {
   background-color: var(--bg-secondary);
 }
 
-.editor-toolbar button.active {
+.editor-toolbar button:not(.btn).active {
   background-color: var(--primary-color);
   color: white;
   border-color: var(--primary-color);
@@ -750,12 +931,13 @@ body {
 }
 
 .editor-content {
-  max-width: 1100px;
+  width: 8.5in;
+  max-width: 100%;
   margin: 0 auto;
-  min-height: calc(100vh - 250px);
+  min-height: 11in;
   cursor: text;
   background-color: var(--bg-color);
-  padding: 3rem 4rem;
+  padding: 1in;
   border-radius: 0.5rem;
   box-shadow: var(--shadow);
 }
@@ -764,6 +946,7 @@ body {
   outline: none;
   min-height: calc(100vh - 300px);
   cursor: text;
+  white-space: pre-wrap; /* Preserve spaces and allow wrapping */
 }
 
 .ProseMirror.ProseMirror-focused:empty::before {
@@ -1073,7 +1256,9 @@ body.dark-mode .modal-content,
 body.dark-mode .editor-container,
 body.dark-mode .chapter-item,
 body.dark-mode .revision-item,
-body.dark-mode .chapter-form-inline {
+body.dark-mode .chapter-form-inline,
+body.dark-mode .editor-navbar,
+body.dark-mode .editor-toolbar-container {
   background-color: var(--bg-color);
   color: var(--text-color);
 }
@@ -1107,18 +1292,29 @@ body.dark-mode .story-card:hover {
   box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
 }
 
-body.dark-mode .editor-toolbar button {
+body.dark-mode .editor-toolbar button:not(.btn) {
   background-color: var(--bg-secondary);
   border-color: var(--border-color);
   color: var(--text-color);
 }
 
-body.dark-mode .editor-toolbar button:hover {
+body.dark-mode .editor-toolbar button:not(.btn):hover {
   background-color: var(--bg-color);
 }
 
-body.dark-mode .editor-toolbar button.active {
+body.dark-mode .editor-toolbar button:not(.btn).active {
   background-color: var(--primary-color);
+  color: white;
+}
+
+body.dark-mode .sidebar-toggle-close {
+  background-color: var(--bg-secondary);
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+body.dark-mode .sidebar-toggle-close:hover {
+  background-color: var(--danger-color);
   color: white;
 }
 

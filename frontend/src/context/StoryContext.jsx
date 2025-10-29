@@ -8,6 +8,7 @@ const initialState = {
   stories: [],
   currentStory: null,
   currentChapter: null,
+  chaptersCache: {}, // Cache chapters by ID for instant switching
   loading: false,
   error: null,
 };
@@ -17,6 +18,7 @@ const STORY_ACTIONS = {
   SET_STORIES: 'SET_STORIES',
   SET_CURRENT_STORY: 'SET_CURRENT_STORY',
   SET_CURRENT_CHAPTER: 'SET_CURRENT_CHAPTER',
+  CACHE_CHAPTERS: 'CACHE_CHAPTERS',
   ADD_STORY: 'ADD_STORY',
   UPDATE_STORY: 'UPDATE_STORY',
   DELETE_STORY: 'DELETE_STORY',
@@ -36,6 +38,14 @@ const storyReducer = (state, action) => {
       return { ...state, currentStory: action.payload, loading: false };
     case STORY_ACTIONS.SET_CURRENT_CHAPTER:
       return { ...state, currentChapter: action.payload, loading: false };
+    case STORY_ACTIONS.CACHE_CHAPTERS:
+      return { 
+        ...state, 
+        chaptersCache: { 
+          ...state.chaptersCache, 
+          ...action.payload 
+        } 
+      };
     case STORY_ACTIONS.ADD_STORY:
       return { ...state, stories: [action.payload, ...state.stories], loading: false };
     case STORY_ACTIONS.UPDATE_STORY:
@@ -68,6 +78,10 @@ const storyReducer = (state, action) => {
       return {
         ...state,
         currentChapter: state.currentChapter?._id === action.payload._id ? action.payload : state.currentChapter,
+        chaptersCache: {
+          ...state.chaptersCache,
+          [action.payload._id]: action.payload,
+        },
         loading: false,
       };
     case STORY_ACTIONS.DELETE_CHAPTER:
@@ -112,7 +126,18 @@ export const StoryProvider = ({ children }) => {
     try {
       dispatch({ type: STORY_ACTIONS.SET_LOADING, payload: true });
       const response = await storyAPI.getStory(id);
-      dispatch({ type: STORY_ACTIONS.SET_CURRENT_STORY, payload: response.data.data.story });
+      const story = response.data.data.story;
+      
+      // Cache all chapters for instant switching
+      if (story.chapters && story.chapters.length > 0) {
+        const chaptersMap = {};
+        story.chapters.forEach(chapter => {
+          chaptersMap[chapter._id] = chapter;
+        });
+        dispatch({ type: STORY_ACTIONS.CACHE_CHAPTERS, payload: chaptersMap });
+      }
+      
+      dispatch({ type: STORY_ACTIONS.SET_CURRENT_STORY, payload: story });
     } catch (error) {
       dispatch({ type: STORY_ACTIONS.SET_ERROR, payload: error.message });
     }
@@ -157,12 +182,23 @@ export const StoryProvider = ({ children }) => {
     }
   };
 
-  // Fetch chapter
+  // Fetch chapter (with caching)
   const fetchChapter = async (id) => {
     try {
+      // Check cache first for instant switching
+      if (state.chaptersCache[id]) {
+        dispatch({ type: STORY_ACTIONS.SET_CURRENT_CHAPTER, payload: state.chaptersCache[id] });
+        return;
+      }
+      
+      // If not in cache, fetch from API
       dispatch({ type: STORY_ACTIONS.SET_LOADING, payload: true });
       const response = await chapterAPI.getChapter(id);
-      dispatch({ type: STORY_ACTIONS.SET_CURRENT_CHAPTER, payload: response.data.data.chapter });
+      const chapter = response.data.data.chapter;
+      
+      // Cache the chapter
+      dispatch({ type: STORY_ACTIONS.CACHE_CHAPTERS, payload: { [id]: chapter } });
+      dispatch({ type: STORY_ACTIONS.SET_CURRENT_CHAPTER, payload: chapter });
     } catch (error) {
       dispatch({ type: STORY_ACTIONS.SET_ERROR, payload: error.message });
     }
@@ -210,6 +246,7 @@ export const StoryProvider = ({ children }) => {
     stories: state.stories,
     currentStory: state.currentStory,
     currentChapter: state.currentChapter,
+    chaptersCache: state.chaptersCache,
     loading: state.loading,
     error: state.error,
     fetchStories,

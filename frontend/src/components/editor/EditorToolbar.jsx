@@ -1,13 +1,78 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { IconButton } from '@mui/material';
+import { Brightness4, Brightness7 } from '@mui/icons-material';
+import useAuth from '../../hooks/useAuth';
+import useTheme from '../../hooks/useTheme';
 
-const EditorToolbar = ({ editor }) => {
+const EditorToolbar = ({ 
+  editor, 
+  chapterTitle, 
+  saving, 
+  lastSaved, 
+  wordCount,
+  onSaveRevision,
+  onToggleRevisions,
+  showRevisions,
+  onTitleUpdate
+}) => {
+  const { user, logout } = useAuth();
+  const { darkMode, toggleDarkMode } = useTheme();
+  const navigate = useNavigate();
+  
   const [showFontDropdown, setShowFontDropdown] = useState(false);
   const [showSizeDropdown, setShowSizeDropdown] = useState(false);
   const [showSpacingDropdown, setShowSpacingDropdown] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(chapterTitle);
   
   const fontDropdownRef = useRef(null);
   const sizeDropdownRef = useRef(null);
   const spacingDropdownRef = useRef(null);
+  const titleInputRef = useRef(null);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  const handleTitleClick = () => {
+    setIsEditingTitle(true);
+    setEditedTitle(chapterTitle);
+  };
+
+  const handleTitleSave = () => {
+    if (editedTitle.trim() && editedTitle !== chapterTitle) {
+      onTitleUpdate(editedTitle.trim());
+    }
+    setIsEditingTitle(false);
+  };
+
+  const handleTitleCancel = () => {
+    setEditedTitle(chapterTitle);
+    setIsEditingTitle(false);
+  };
+
+  const handleTitleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleTitleSave();
+    } else if (e.key === 'Escape') {
+      handleTitleCancel();
+    }
+  };
+
+  // Focus input when editing starts
+  useEffect(() => {
+    if (isEditingTitle && titleInputRef.current) {
+      titleInputRef.current.focus();
+      titleInputRef.current.select();
+    }
+  }, [isEditingTitle]);
+
+  // Update edited title when prop changes
+  useEffect(() => {
+    setEditedTitle(chapterTitle);
+  }, [chapterTitle]);
 
   const fonts = [
     'Times New Roman',
@@ -96,9 +161,65 @@ const EditorToolbar = ({ editor }) => {
   if (!editor) return null;
 
   return (
-    <div className="editor-toolbar">
-      {/* Font Family Dropdown */}
-      <div className="toolbar-dropdown" ref={fontDropdownRef}>
+    <div className="editor-toolbar-container">
+      {/* Merged Navbar/Header Row */}
+      <div className="editor-navbar">
+        <div className="editor-navbar-left">
+          <Link to="/" className="navbar-brand">
+            Revision History
+          </Link>
+          <span className="navbar-separator">|</span>
+          {isEditingTitle ? (
+            <div className="title-edit-container">
+              <input
+                ref={titleInputRef}
+                type="text"
+                value={editedTitle}
+                onChange={(e) => setEditedTitle(e.target.value)}
+                onKeyDown={handleTitleKeyDown}
+                onBlur={handleTitleSave}
+                className="title-edit-input"
+                maxLength={200}
+              />
+            </div>
+          ) : (
+            <h2 
+              className="editor-chapter-title editable-title" 
+              onClick={handleTitleClick}
+              title="Click to edit chapter title"
+            >
+              {chapterTitle}
+            </h2>
+          )}
+          <div className="editor-status">
+            <span className="word-count">{wordCount} words</span>
+            {saving && <span className="status-saving">Saving...</span>}
+          </div>
+        </div>
+        
+        <div className="editor-navbar-right">
+          <Link to="/stories" className="navbar-link">
+            My Stories
+          </Link>
+          <span className="navbar-user">{user?.email}</span>
+          <IconButton 
+            onClick={toggleDarkMode} 
+            color="inherit"
+            size="small"
+            aria-label="toggle dark mode"
+          >
+            {darkMode ? <Brightness7 /> : <Brightness4 />}
+          </IconButton>
+          <button onClick={handleLogout} className="btn btn-secondary btn-sm">
+            Logout
+          </button>
+        </div>
+      </div>
+
+      {/* Formatting Toolbar */}
+      <div className="editor-toolbar">
+        {/* Font Family Dropdown */}
+        <div className="toolbar-dropdown" ref={fontDropdownRef}>
         <button
           className="toolbar-dropdown-button"
           onClick={() => setShowFontDropdown(!showFontDropdown)}
@@ -243,6 +364,26 @@ const EditorToolbar = ({ editor }) => {
       >
         ―
       </button>
+
+      <div className="toolbar-divider"></div>
+
+      {/* Revision Buttons */}
+      <button 
+        onClick={onSaveRevision} 
+        className="btn btn-primary btn-sm toolbar-revision-btn" 
+        disabled={saving}
+        title="Save Revision Point"
+      >
+        Save Revision
+      </button>
+      <button
+        onClick={onToggleRevisions}
+        className="btn btn-secondary btn-sm toolbar-revision-btn"
+        title={showRevisions ? 'Hide Revisions' : 'View Revisions'}
+      >
+        {showRevisions ? 'Hide Revisions' : 'View Revisions'}
+      </button>
+      </div>
     </div>
   );
 };

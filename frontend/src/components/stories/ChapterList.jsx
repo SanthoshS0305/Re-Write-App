@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import useStory from '../../hooks/useStory';
 import LoadingSpinner from '../common/LoadingSpinner';
-import Sidebar from '../layout/Sidebar';
 import ConfirmDialog from '../common/ConfirmDialog';
 
 const ChapterList = () => {
@@ -65,7 +64,6 @@ const ChapterList = () => {
 
   return (
     <div className="chapter-list-page">
-      <Sidebar />
       <div className="main-content">
         <div className="page-header">
           <div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeContextProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { StoryProvider } from './context/StoryContext';
@@ -12,6 +12,14 @@ import ChapterList from './components/stories/ChapterList';
 import TextEditor from './components/editor/TextEditor';
 import useAuth from './hooks/useAuth';
 import LoadingSpinner from './components/common/LoadingSpinner';
+
+// Wrapper to conditionally show navbar
+const ConditionalNavbar = () => {
+  const location = useLocation();
+  const isEditorPage = location.pathname.includes('/chapters/');
+  
+  return !isEditorPage ? <Navbar /> : null;
+};
 
 // Protected Route wrapper
 const ProtectedRoute = ({ children }) => {
@@ -38,8 +46,14 @@ const AppRoutes = () => {
         path="/"
         element={isAuthenticated ? <Navigate to="/stories" /> : <Navigate to="/login" />}
       />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route 
+        path="/login" 
+        element={isAuthenticated ? <Navigate to="/stories" replace /> : <Login />} 
+      />
+      <Route 
+        path="/register" 
+        element={isAuthenticated ? <Navigate to="/stories" replace /> : <Register />} 
+      />
       <Route
         path="/stories"
         element={
@@ -77,7 +91,7 @@ function App() {
           <AuthProvider>
             <StoryProvider>
               <div className="app">
-                <Navbar />
+                <ConditionalNavbar />
                 <main className="app-main">
                   <AppRoutes />
                 </main>

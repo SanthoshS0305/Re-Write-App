@@ -27,18 +27,26 @@ mongod --version
 
 ### 2. MongoDB Setup
 
-**Option A: Local MongoDB**
+**Option A: Local MongoDB Community Server**
 
 ```bash
 # Start MongoDB service
-# On Linux:
+# On Linux/WSL:
 sudo systemctl start mongod
+sudo systemctl enable mongod  # Auto-start on boot (optional)
 
 # On macOS (with Homebrew):
 brew services start mongodb-community
 
 # On Windows:
 # MongoDB should start automatically as a service
+```
+
+**Verify it's running:**
+```bash
+sudo systemctl status mongod  # Linux/WSL
+# or
+brew services list | grep mongodb  # macOS
 ```
 
 **Option B: MongoDB Atlas (Cloud)**
@@ -120,8 +128,8 @@ Your browser should automatically open to `http://localhost:3000`
 **Error:** `MongoNetworkError: connect ECONNREFUSED`
 
 **Solution:**
-- Ensure MongoDB is running: `sudo systemctl status mongod`
-- Start MongoDB: `sudo systemctl start mongod`
+- Ensure MongoDB service is running: `sudo systemctl status mongod`
+- Start MongoDB if needed: `sudo systemctl start mongod`
 - Check connection string in `backend/.env`
 
 ### Port Already in Use
@@ -223,8 +231,8 @@ Run: `./start.sh`
 
 - API runs on `http://localhost:5000`
 - Auto-reloads on file changes (nodemon)
-- Check MongoDB with: `mongosh revision-history`
-- View collections: `db.users.find()`, `db.stories.find()`
+- Check MongoDB with: `mongosh`
+- View collections: `use revision-history` then `db.users.find()`, `db.stories.find()`
 
 ### Frontend Development
 
@@ -235,7 +243,7 @@ Run: `./start.sh`
 
 ### Database Management
 
-View your data:
+View your data using MongoDB Shell (`mongosh`):
 ```bash
 # Connect to MongoDB shell
 mongosh
@@ -244,17 +252,25 @@ mongosh
 use revision-history
 
 # View all stories
-db.stories.find().pretty()
+db.stories.find()
 
 # View all users
-db.users.find().pretty()
+db.users.find()
 
 # View all chapters
-db.chapters.find().pretty()
+db.chapters.find()
 
 # View all revisions
-db.revisions.find().pretty()
+db.revisions.find()
+
+# Count documents
+db.stories.countDocuments()
+
+# Exit shell
+exit
 ```
+
+📘 **For more advanced queries and examples**, see [MONGOSH_GUIDE.md](./MONGOSH_GUIDE.md)
 
 ## Next Steps
 

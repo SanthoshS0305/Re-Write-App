@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const mongoSanitize = require('mongo-sanitize');
 const connectDB = require('./config/db');
 const { errorHandler } = require('./middleware/errorHandler');
-const { apiLimiter } = require('./middleware/rateLimit');
+// Rate limiters are applied per-route in individual routers
 
 // Import routes
 const authRoutes = require('./routes/auth');
@@ -55,8 +55,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// Rate limiting
-app.use('/api', apiLimiter);
+// NOTE: Rate limiting is applied per-route in individual routers
+// (auth routes have authLimiter, etc.) to avoid blocking autosave
 
 // Health check endpoint
 app.get('/health', (req, res) => {
