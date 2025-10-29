@@ -2,11 +2,12 @@ const rateLimit = require('express-rate-limit');
 
 /**
  * Strict rate limiter for authentication endpoints
- * 5 requests per 15 minutes per IP
+ * Development: 50 requests per 15 minutes per IP (increased for testing)
+ * Production: Consider reducing to 5 for security
  */
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5,
+  max: 50, // Increased for development
   message: {
     success: false,
     message: 'Too many authentication attempts. Please try again later.',
@@ -19,11 +20,12 @@ const authLimiter = rateLimit({
 
 /**
  * Registration rate limiter
- * 3 requests per hour per IP
+ * Development: 20 requests per hour per IP (increased for testing)
+ * Production: Consider reducing to 3 for security
  */
 const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3,
+  max: 20, // Increased for development
   message: {
     success: false,
     message: 'Too many registration attempts. Please try again later.',

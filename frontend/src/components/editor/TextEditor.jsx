@@ -8,12 +8,15 @@ import Heading from '@tiptap/extension-heading';
 import BulletList from '@tiptap/extension-bullet-list';
 import OrderedList from '@tiptap/extension-ordered-list';
 import ListItem from '@tiptap/extension-list-item';
+import FontFamily from '@tiptap/extension-font-family';
+import { TextStyle, FontSize, LineHeight } from './extensions';
 import useStory from '../../hooks/useStory';
 import useDebounce from '../../hooks/useDebounce';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Sidebar from '../layout/Sidebar';
 import PromptDialog from '../common/PromptDialog';
 import RevisionHistory from '../revisions/RevisionHistory';
+import EditorToolbar from './EditorToolbar';
 import { calculateWordCount } from '../../utils/diffUtils';
 
 const TextEditor = () => {
@@ -24,6 +27,7 @@ const TextEditor = () => {
   const [showRevisions, setShowRevisions] = useState(false);
   const [content, setContent] = useState('');
   const [showSavePrompt, setShowSavePrompt] = useState(false);
+  const [loadedChapterId, setLoadedChapterId] = useState(null);
 
   const debouncedContent = useDebounce(content, 2000);
 
@@ -36,6 +40,10 @@ const TextEditor = () => {
       BulletList,
       OrderedList,
       ListItem,
+      TextStyle,
+      FontFamily,
+      FontSize,
+      LineHeight,
     ],
     content: '',
     onUpdate: ({ editor }) => {
@@ -49,9 +57,11 @@ const TextEditor = () => {
     },
   });
 
-  // Fetch chapter on mount
+  // Fetch chapter on mount and when chapter changes
   useEffect(() => {
     if (chapterId) {
+      // Reset content when switching chapters to prevent stale auto-saves
+      setContent('');
       fetchChapter(chapterId);
     }
     if (storyId) {
@@ -60,29 +70,35 @@ const TextEditor = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chapterId, storyId]);
 
-  // Set editor content when chapter loads (only on initial load)
+  // Set editor content when chapter loads or changes
   useEffect(() => {
-    if (currentChapter && editor && !content) {
+    if (currentChapter && editor && currentChapter._id !== loadedChapterId) {
       editor.commands.setContent(currentChapter.currentContent || '');
       setContent(currentChapter.currentContent || '');
       setLastSaved(new Date(currentChapter.updatedAt));
+      setLoadedChapterId(currentChapter._id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentChapter, editor]);
+  }, [currentChapter, editor, chapterId]);
 
   // Auto-save on debounced content change
   useEffect(() => {
-    if (debouncedContent && currentChapter && debouncedContent !== currentChapter.currentContent) {
+    if (
+      debouncedContent && 
+      currentChapter && 
+      loadedChapterId === currentChapter._id &&
+      debouncedContent !== currentChapter.currentContent
+    ) {
       handleAutoSave();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedContent]);
+  }, [debouncedContent, loadedChapterId]);
 
   const handleAutoSave = async () => {
-    if (!currentChapter) return;
+    if (!currentChapter || loadedChapterId !== currentChapter._id) return;
 
     setSaving(true);
-    await updateChapter(chapterId, { content: debouncedContent });
+    await updateChapter(currentChapter._id, { content: debouncedContent });
     setSaving(false);
     setLastSaved(new Date());
   };
@@ -92,11 +108,11 @@ const TextEditor = () => {
   };
 
   const confirmSave = async (description) => {
-    if (!currentChapter) return;
+    if (!currentChapter || loadedChapterId !== currentChapter._id) return;
 
     setShowSavePrompt(false);
     setSaving(true);
-    await updateChapter(chapterId, {
+    await updateChapter(currentChapter._id, {
       content: editor.getHTML(),
       createRevision: true,
       revisionDescription: description || 'Manual save point',
@@ -151,66 +167,7 @@ const TextEditor = () => {
           </div>
         ) : (
           <>
-            <div className="editor-toolbar">
-          <button
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            className={editor?.isActive('bold') ? 'active' : ''}
-            title="Bold (Ctrl+B)"
-          >
-            <strong>B</strong>
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            className={editor?.isActive('italic') ? 'active' : ''}
-            title="Italic (Ctrl+I)"
-          >
-            <em>I</em>
-          </button>
-          <div className="toolbar-divider"></div>
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-            className={editor?.isActive('heading', { level: 1 }) ? 'active' : ''}
-            title="Heading 1"
-          >
-            H1
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-            className={editor?.isActive('heading', { level: 2 }) ? 'active' : ''}
-            title="Heading 2"
-          >
-            H2
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-            className={editor?.isActive('heading', { level: 3 }) ? 'active' : ''}
-            title="Heading 3"
-          >
-            H3
-          </button>
-          <div className="toolbar-divider"></div>
-          <button
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={editor?.isActive('bulletList') ? 'active' : ''}
-            title="Bullet List"
-          >
-            • List
-          </button>
-          <button
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            className={editor?.isActive('orderedList') ? 'active' : ''}
-            title="Numbered List"
-          >
-            1. List
-          </button>
-          <div className="toolbar-divider"></div>
-          <button
-            onClick={() => editor.chain().focus().setHorizontalRule().run()}
-            title="Horizontal Rule"
-          >
-            ―
-          </button>
-        </div>
+            <EditorToolbar editor={editor} />
 
             <div className="editor-content-wrapper">
               <EditorContent editor={editor} className="editor-content" />

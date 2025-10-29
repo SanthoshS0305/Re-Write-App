@@ -348,58 +348,64 @@ export const highlightHtmlDiff = (oldHtml, newHtml, side) => {
   
   // Build highlighted HTML
   let result = sourceHtml;
+  const className = side === 'old' ? 'diff-removed' : 'diff-added';
   
-  // Process word-level ranges in reverse order
+  // Process word-level ranges - use context-aware highlighting
   for (let i = ranges.length - 1; i >= 0; i--) {
     const range = ranges[i];
     const wordsInRange = words.slice(range.start, range.end + 1);
-    const phraseToHighlight = wordsInRange.join(' ');
-    const className = side === 'old' ? 'diff-removed' : 'diff-added';
     
-    // Escape special regex characters
-    const escapedPhrase = phraseToHighlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Build context: get a few words before and after the range for better matching
+    const contextBefore = words.slice(Math.max(0, range.start - 3), range.start);
+    const contextAfter = words.slice(range.end + 1, Math.min(words.length, range.end + 4));
     
-    // Find and replace using DOM manipulation
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = result;
+    // Create a regex pattern that matches the phrase with context
+    const beforePattern = contextBefore.length > 0 
+      ? contextBefore.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('\\s+') + '\\s+'
+      : '';
+    const afterPattern = contextAfter.length > 0
+      ? '\\s+' + contextAfter.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('\\s+')
+      : '';
     
-    const textNodes = [];
-    const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT);
-    let node = walker.nextNode();
-    while (node !== null) {
-      textNodes.push(node);
-      node = walker.nextNode();
-    }
+    // Build the full phrase pattern
+    const phrasePattern = wordsInRange.map(w => `(${w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`).join('(\\s+)');
     
-    for (const textNode of textNodes) {
-      const text = textNode.textContent;
-      const regex = new RegExp(escapedPhrase.replace(/\s+/g, '\\s+'), 'i');
+    // Match with context
+    const contextRegex = new RegExp(
+      beforePattern + phrasePattern + afterPattern,
+      'i'
+    );
+    
+    const match = result.match(contextRegex);
+    if (match) {
+      // Extract just the matched phrase (skip context words)
+      const phraseStartIndex = beforePattern ? match.index + match[0].indexOf(wordsInRange[0]) : match.index;
       
-      if (regex.test(text)) {
-        const highlightedText = text.replace(regex, `<span class="${className}">$&</span>`);
-        const span = document.createElement('span');
-        span.innerHTML = highlightedText;
-        textNode.parentNode.replaceChild(span, textNode);
-        result = tempDiv.innerHTML;
-        break;
+      // Replace each word in the matched region
+      let highlightedPhrase = match[0];
+      for (const word of wordsInRange) {
+        const escapedWord = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const wordRegex = new RegExp(`\\b(${escapedWord})\\b`, 'i');
+        highlightedPhrase = highlightedPhrase.replace(wordRegex, `<span class="${className}">$1</span>`);
       }
+      
+      // Replace the original match with the highlighted version
+      result = result.substring(0, match.index) + highlightedPhrase + result.substring(match.index + match[0].length);
     }
   }
   
   // Process punctuation-only highlights
-  for (const { index, item } of punctuationHighlights) {
+  for (const { item } of punctuationHighlights) {
     const { word: baseWord, punctuation } = splitWordAndPunctuation(item.word);
     
     if (punctuation) {
-      const className = item.type === 'removed-punct' ? 'diff-removed' : 'diff-added';
-      
-      // Escape regex characters
+      const punctClassName = item.type === 'removed-punct' ? 'diff-removed' : 'diff-added';
       const escapedBase = baseWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const escapedPunct = punctuation.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       
-      // Match the word with its punctuation and wrap only the punctuation
-      const regex = new RegExp(`\\b(${escapedBase})(${escapedPunct})\\b`, 'gi');
-      result = result.replace(regex, `$1<span class="${className}">$2</span>`);
+      // Match word+punctuation and wrap only the punctuation
+      const regex = new RegExp(`(${escapedBase})(${escapedPunct})`, 'i');
+      result = result.replace(regex, `$1<span class="${punctClassName}">$2</span>`);
     }
   }
   
