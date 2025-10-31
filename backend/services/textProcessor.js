@@ -78,16 +78,16 @@ const parseCharacterMarkups = (text) => {
 
 /**
  * Validate modular section boundaries
- * Ensure sections don't overlap
+ * Ensure sections don't overlap (now checks paragraph indices)
  */
 const validateModularSections = (sections) => {
-  const sorted = [...sections].sort((a, b) => a.startOffset - b.startOffset);
+  const sorted = [...sections].sort((a, b) => a.paragraphIndex - b.paragraphIndex);
 
   for (let i = 0; i < sorted.length - 1; i++) {
-    if (sorted[i].endOffset > sorted[i + 1].startOffset) {
+    if (sorted[i].paragraphIndex === sorted[i + 1].paragraphIndex) {
       return {
         valid: false,
-        message: 'Modular sections cannot overlap',
+        message: 'Modular sections cannot overlap (same paragraph)',
       };
     }
   }
@@ -102,6 +102,67 @@ const extractTextRange = (text, startOffset, endOffset) => {
   return text.substring(startOffset, endOffset);
 };
 
+/**
+ * Apply active variants to chapter content
+ * Replaces paragraphs at modular section indices with active variant content
+ * NOTE: Works with paragraph indices (0-based) instead of character offsets
+ */
+const applyActiveVariants = (content, modularSections) => {
+  if (!modularSections || modularSections.length === 0) {
+    return content;
+  }
+
+  // Parse paragraphs from HTML - more robust approach
+  const splitByParagraphs = (html) => {
+    if (!html) return [];
+    // Match all <p>...</p> tags with their positions
+    const paragraphRegex = /<p[^>]*>.*?<\/p>/gs;
+    const paragraphs = [];
+    const positions = [];
+    let match;
+    
+    while ((match = paragraphRegex.exec(html)) !== null) {
+      paragraphs.push(match[0]);
+      positions.push({ start: match.index, end: match.index + match[0].length });
+    }
+    
+    return { paragraphs, positions };
+  };
+
+  const { paragraphs, positions } = splitByParagraphs(content);
+  
+  if (paragraphs.length === 0) {
+    return content;
+  }
+
+  // Sort sections by paragraph index (backwards to preserve indices while replacing)
+  const sortedSections = [...modularSections]
+    .filter(section => section.variants && section.variants.length > 0)
+    .sort((a, b) => b.paragraphIndex - a.paragraphIndex);
+
+  for (const section of sortedSections) {
+    const activeVariant = section.variants.find(v => v.isActive);
+    
+    if (!activeVariant || section.paragraphIndex >= paragraphs.length) {
+      continue;
+    }
+
+    // Replace the paragraph at the given index
+    paragraphs[section.paragraphIndex] = activeVariant.content;
+  }
+
+  // Reconstruct HTML by replacing paragraphs at their original positions
+  let result = content;
+  for (let i = positions.length - 1; i >= 0; i--) {
+    const pos = positions[i];
+    const before = result.substring(0, pos.start);
+    const after = result.substring(pos.end);
+    result = before + paragraphs[i] + after;
+  }
+
+  return result;
+};
+
 module.exports = {
   calculateWordCount,
   calculateWordCountDelta,
@@ -110,5 +171,6 @@ module.exports = {
   parseCharacterMarkups,
   validateModularSections,
   extractTextRange,
+  applyActiveVariants,
 };
 

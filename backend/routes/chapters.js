@@ -83,8 +83,7 @@ router.delete('/:id', deleteChapter);
 router.post(
   '/:id/modules',
   [
-    body('startOffset').isInt({ min: 0 }).withMessage('Start offset must be a positive integer'),
-    body('endOffset').isInt({ min: 0 }).withMessage('End offset must be a positive integer'),
+    body('paragraphIndex').isInt({ min: 0 }).withMessage('Paragraph index must be a positive integer'),
     body('variantName').optional().trim(),
     body('variantContent').notEmpty().withMessage('Variant content is required'),
   ],

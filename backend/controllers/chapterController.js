@@ -1,6 +1,7 @@
 const Chapter = require('../models/Chapter');
 const Story = require('../models/Story');
 const Revision = require('../models/Revision');
+const { applyActiveVariants } = require('../services/textProcessor');
 
 // Simple UUID generator
 const generateId = () => {
@@ -82,9 +83,19 @@ const getChapter = async (req, res, next) => {
       });
     }
 
+    // Apply active variants to content
+    const renderedContent = applyActiveVariants(
+      chapter.currentContent,
+      chapter.modularSections
+    );
+
+    // Create response with rendered content
+    const chapterResponse = chapter.toObject();
+    chapterResponse.currentContent = renderedContent;
+
     res.json({
       success: true,
-      data: { chapter },
+      data: { chapter: chapterResponse },
     });
   } catch (error) {
     next(error);
@@ -195,7 +206,7 @@ const deleteChapter = async (req, res, next) => {
 const createModularSection = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { startOffset, endOffset, variantName, variantContent } = req.body;
+    const { paragraphIndex, variantName, variantContent } = req.body;
 
     const chapter = await Chapter.findById(id);
 
@@ -219,8 +230,7 @@ const createModularSection = async (req, res, next) => {
     const moduleId = generateId();
     const modularSection = {
       id: moduleId,
-      startOffset,
-      endOffset,
+      paragraphIndex,
       variants: [
         {
           name: variantName || 'Original',

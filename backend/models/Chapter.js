@@ -20,11 +20,7 @@ const modularSectionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  startOffset: {
-    type: Number,
-    required: true,
-  },
-  endOffset: {
+  paragraphIndex: {
     type: Number,
     required: true,
   },
