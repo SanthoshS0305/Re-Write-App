@@ -75,6 +75,11 @@ export const storyAPI = {
   updateStory: (id, data) => api.put(`/stories/${id}`, data),
   deleteStory: (id) => api.delete(`/stories/${id}`),
   reorderChapters: (id, chapterIds) => api.put(`/stories/${id}/reorder`, { chapterIds }),
+  createCharacter: (storyId, data) => api.post(`/stories/${storyId}/characters`, data),
+  updateCharacter: (storyId, characterId, data) =>
+    api.put(`/stories/${storyId}/characters/${characterId}`, data),
+  deleteCharacter: (storyId, characterId) =>
+    api.delete(`/stories/${storyId}/characters/${characterId}`),
 };
 
 // Chapter API

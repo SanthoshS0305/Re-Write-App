@@ -115,8 +115,8 @@ const applyActiveVariants = (content, modularSections) => {
   // Parse paragraphs from HTML - more robust approach
   const splitByParagraphs = (html) => {
     if (!html) return [];
-    // Match all <p>...</p> tags with their positions
-    const paragraphRegex = /<p[^>]*>.*?<\/p>/gs;
+    // Match all <p>...</p> tags with their positions, handling nested tags
+    const paragraphRegex = /<p[^>]*>[\s\S]*?<\/p>/g;
     const paragraphs = [];
     const positions = [];
     let match;
@@ -152,9 +152,11 @@ const applyActiveVariants = (content, modularSections) => {
   }
 
   // Reconstruct HTML by replacing paragraphs at their original positions
+  // Start from the end to preserve positions
   let result = content;
   for (let i = positions.length - 1; i >= 0; i--) {
     const pos = positions[i];
+    // Use original positions from first parse
     const before = result.substring(0, pos.start);
     const after = result.substring(pos.end);
     result = before + paragraphs[i] + after;

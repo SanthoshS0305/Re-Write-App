@@ -83,7 +83,10 @@ router.delete('/:id', deleteChapter);
 router.post(
   '/:id/modules',
   [
-    body('paragraphIndex').isInt({ min: 0 }).withMessage('Paragraph index must be a positive integer'),
+    body('paragraphIndex')
+      .isInt({ min: 0 })
+      .withMessage('Paragraph index must be a non-negative integer')
+      .customSanitizer((value) => parseInt(value, 10)),
     body('variantName').optional().trim(),
     body('variantContent').notEmpty().withMessage('Variant content is required'),
   ],

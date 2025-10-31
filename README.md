@@ -2,7 +2,7 @@
 
 A full-stack MERN application that enables writers to create multi-chapter stories with comprehensive revision tracking, modular content versioning, and advanced writing tools.
 
-## Features (MVP - Phases 1-2)
+## Features (MVP - Phases 1-3) ✅
 
 ### Implemented Features
 
@@ -19,10 +19,10 @@ A full-stack MERN application that enables writers to create multi-chapter stori
 - ✅ **Manual Save Points**: Named checkpoints for important versions
 - ✅ **Revision Comparison**: Side-by-side diff view between versions
 - ✅ **Restore Functionality**: Revert to any previous revision
-- ✅ **Modular Sections**: Mark sections with multiple variants (API ready, UI basic)
+- ✅ **Modular Sections**: Create variants from text selection, switch between versions
+- ✅ **Character Management**: Add, edit, delete characters with aliases and colors
 
-### Future Features (Phases 3-8)
-- Character aliasing system (Elephant Aliasing)
+### Future Features (Phases 4-8)
 - Overview ribbon visualization
 - Advanced search & dialogue tools
 - Timeline & date tagging
@@ -327,8 +327,7 @@ MIT
 
 ## Contributing
 
-This is an MVP implementation. Future phases will add:
-- Character management with aliases
+This is an MVP implementation covering Phases 1-3. Future phases will add:
 - Visual overview ribbon
 - Advanced search capabilities
 - Timeline tracking

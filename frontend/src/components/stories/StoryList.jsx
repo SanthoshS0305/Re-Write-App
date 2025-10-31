@@ -85,7 +85,7 @@ const StoryList = () => {
                   {story.description || 'No description'}
                 </p>
                 <div className="story-meta">
-                  <span>{story.chapters?.length || 0} chapters</span>
+                  <span>{story.chapterCount || 0} chapters</span>
                   <span>
                     Updated {new Date(story.updatedAt).toLocaleDateString()}
                   </span>

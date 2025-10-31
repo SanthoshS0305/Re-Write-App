@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import useStory from '../../hooks/useStory';
+import ModularSectionsPanel from '../editor/ModularSectionsPanel';
 
 const Sidebar = () => {
   const { storyId, chapterId } = useParams();
-  const { currentStory } = useStory();
+  const { currentStory, fetchChapter } = useStory();
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [activeTab, setActiveTab] = useState('chapters'); // 'chapters' or 'sections'
 
   if (!currentStory) return null;
 
@@ -52,25 +54,59 @@ const Sidebar = () => {
               <h3>{currentStory.title}</h3>
             </div>
 
-            <div className="sidebar-section">
-              <h4>Chapters</h4>
-              <ul className="chapter-list">
-                {currentStory.chapters && currentStory.chapters.length > 0 ? (
-                  currentStory.chapters.map((chapter) => (
-                    <li
-                      key={chapter._id}
-                      className={chapterId === chapter._id ? 'active' : ''}
-                    >
-                      <Link to={`/stories/${storyId}/chapters/${chapter._id}`}>
-                        {chapter.title}
-                      </Link>
-                    </li>
-                  ))
-                ) : (
-                  <li className="empty-state">No chapters yet</li>
-                )}
-              </ul>
+            <div className="sidebar-tabs">
+              <button
+                className={`sidebar-tab ${activeTab === 'chapters' ? 'active' : ''}`}
+                onClick={() => setActiveTab('chapters')}
+              >
+                Chapters
+              </button>
+              <button
+                className={`sidebar-tab ${activeTab === 'sections' ? 'active' : ''}`}
+                onClick={() => setActiveTab('sections')}
+              >
+                Variants
+              </button>
             </div>
+
+            {activeTab === 'chapters' && (
+              <div className="sidebar-section">
+                <ul className="chapter-list">
+                  {currentStory.chapters && currentStory.chapters.length > 0 ? (
+                    currentStory.chapters.map((chapter) => (
+                      <li
+                        key={chapter._id}
+                        className={chapterId === chapter._id ? 'active' : ''}
+                      >
+                        <Link to={`/stories/${storyId}/chapters/${chapter._id}`}>
+                          {chapter.title}
+                        </Link>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="empty-state">No chapters yet</li>
+                  )}
+                </ul>
+              </div>
+            )}
+
+            {activeTab === 'sections' && chapterId && (
+              <div className="sidebar-section">
+                <ModularSectionsPanel 
+                  chapterId={chapterId} 
+                  onVariantChange={async () => {
+                    // Refresh chapter data to reflect variant changes
+                    await fetchChapter(chapterId);
+                  }}
+                />
+              </div>
+            )}
+
+            {activeTab === 'sections' && !chapterId && (
+              <div className="sidebar-section">
+                <p className="empty-state">Open a chapter to view variants</p>
+              </div>
+            )}
           </>
         )}
       </aside>
