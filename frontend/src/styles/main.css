@@ -1136,6 +1136,41 @@ body {
   margin-bottom: 1em;
 }
 
+/* Modular Section Paragraph Indicator */
+.ProseMirror p:has(.modular-section-marker) {
+  position: relative;
+  border-top: 1px solid rgba(37, 99, 235, 0.2);
+  border-bottom: 1px solid rgba(37, 99, 235, 0.2);
+  padding: 0.25rem 0 0.25rem 1.5rem;
+}
+
+.ProseMirror p:has(.modular-section-marker)::before {
+  content: '┌';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  color: rgba(37, 99, 235, 0.5);
+  font-size: 0.8rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.ProseMirror p:has(.modular-section-marker)::after {
+  content: '┘';
+  position: absolute;
+  bottom: -1px;
+  right: 0;
+  color: rgba(37, 99, 235, 0.5);
+  font-size: 0.8rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.modular-section-marker {
+  display: none; /* Hide the widget marker, we use CSS for styling */
+}
+
+
 /* Font and Spacing Support - Allow inline styles to work */
 
 .revisions-panel {
@@ -1871,10 +1906,10 @@ body.dark-mode .variant-selector-dropdown {
 
 /* Variant Details Panel */
 .variant-details-panel {
-  position: fixed;
+  position: absolute;
   right: 0;
   top: 0;
-  height: 100vh;
+  bottom: 0;
   width: 400px;
   background-color: var(--bg-color);
   border-left: 1px solid var(--border-color);

@@ -164,7 +164,7 @@ const ChapterList = () => {
           <CharacterManager
             storyId={storyId}
             characters={currentStory.characters || []}
-            onUpdate={fetchStory}
+            onUpdate={() => fetchStory(storyId)}
           />
         )}
 

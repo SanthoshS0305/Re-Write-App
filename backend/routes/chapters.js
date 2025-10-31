@@ -83,12 +83,16 @@ router.delete('/:id', deleteChapter);
 router.post(
   '/:id/modules',
   [
-    body('paragraphIndex')
+    body('selectionStart')
       .isInt({ min: 0 })
-      .withMessage('Paragraph index must be a non-negative integer')
+      .withMessage('Selection start must be a non-negative integer')
+      .customSanitizer((value) => parseInt(value, 10)),
+    body('selectionEnd')
+      .isInt({ min: 0 })
+      .withMessage('Selection end must be a non-negative integer')
       .customSanitizer((value) => parseInt(value, 10)),
     body('variantName').optional().trim(),
-    body('variantContent').notEmpty().withMessage('Variant content is required'),
+    body('selectedContent').notEmpty().withMessage('Selected content is required'),
   ],
   validate,
   createModularSection

@@ -17,7 +17,10 @@ const ModularSectionsPanel = ({ chapterId, onVariantChange }) => {
   const loadSections = async () => {
     try {
       const response = await chapterAPI.getChapter(chapterId);
-      setSections(response.data.data.chapter.modularSections || []);
+      // Filter to only show modular sections
+      const allSections = response.data.data.chapter.sections || [];
+      const modularSections = allSections.filter(s => s.isModular);
+      setSections(modularSections);
     } catch (err) {
       setError('Failed to load sections');
     } finally {
@@ -53,11 +56,12 @@ const ModularSectionsPanel = ({ chapterId, onVariantChange }) => {
 
     try {
       const section = sections.find(s => s.id === moduleId);
-      const activeVariant = section.variants.find(v => v.isActive) || section.variants[0];
+      const activeVariant = (section.textVariants || []).find(v => v.isActive) || section.textVariants[0];
       
       const updatedVariants = [
-        ...section.variants,
+        ...section.textVariants,
         {
+          id: Date.now().toString(36) + Math.random().toString(36).substring(2),
           name: newVariantName.trim(),
           content: activeVariant.content,
           isActive: false,
@@ -76,14 +80,15 @@ const ModularSectionsPanel = ({ chapterId, onVariantChange }) => {
   const handleDuplicateVariant = async (moduleId, variantName) => {
     try {
       const section = sections.find(s => s.id === moduleId);
-      const variantToDuplicate = section.variants.find(v => v.name === variantName);
+      const variantToDuplicate = (section.textVariants || []).find(v => v.name === variantName);
       
       if (!variantToDuplicate) return;
       
       const newVariantName = `${variantToDuplicate.name} (Copy)`;
       const updatedVariants = [
-        ...section.variants,
+        ...section.textVariants,
         {
+          id: Date.now().toString(36) + Math.random().toString(36).substring(2),
           name: newVariantName,
           content: variantToDuplicate.content,
           isActive: false,
@@ -115,13 +120,16 @@ const ModularSectionsPanel = ({ chapterId, onVariantChange }) => {
       {error && <div className="error-message">{error}</div>}
       
       {sections.map((section) => {
-        const activeVariant = section.variants.find(v => v.isActive) || section.variants[0];
+        const variants = section.textVariants || [];
+        const activeVariant = variants.find(v => v.isActive) || variants[0];
         
         return (
           <div key={section.id} className="section-item">
             <div className="section-header">
-              <span className="section-id">Section {section.id.slice(0, 8)}</span>
-              {section.variants.length > 1 && (
+              <span className="section-id">
+                Section {section.position}
+              </span>
+              {variants.length > 1 && (
                 <button
                   onClick={() => handleDeleteSection(section.id)}
                   className="btn btn-danger btn-xs"
@@ -132,7 +140,7 @@ const ModularSectionsPanel = ({ chapterId, onVariantChange }) => {
             </div>
             
             <div className="section-variants">
-              {section.variants.map((variant) => (
+              {variants.map((variant) => (
                 <div key={variant.name} className="variant-button-wrapper">
                   <button
                     onClick={() => handleActivateVariant(section.id, variant.name)}

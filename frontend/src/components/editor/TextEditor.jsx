@@ -11,7 +11,7 @@ import OrderedList from '@tiptap/extension-ordered-list';
 import ListItem from '@tiptap/extension-list-item';
 import FontFamily from '@tiptap/extension-font-family';
 import { DashboardCustomize, Dashboard } from '@mui/icons-material';
-import { TextStyle, FontSize, LineHeight } from './extensions';
+import { TextStyle, FontSize, LineHeight, ModularSectionDecoration } from './extensions';
 import useStory from '../../hooks/useStory';
 import LoadingSpinner from '../common/LoadingSpinner';
 import Sidebar from '../layout/Sidebar';
@@ -31,7 +31,7 @@ const TextEditor = () => {
   const [showVariantDialog, setShowVariantDialog] = useState(false);
   const [showVariantSelector, setShowVariantSelector] = useState(false);
   const [showVariantDetails, setShowVariantDetails] = useState(false);
-  const [pendingVariant, setPendingVariant] = useState(null); // { paragraphIndex, selectedHTML }
+  const [pendingVariant, setPendingVariant] = useState(null); // { selectionStart, selectionEnd, selectedHTML, moduleId? }
   const [loadedChapterId, setLoadedChapterId] = useState(null);
   const [selectionRange, setSelectionRange] = useState(null);
   const [hasSelection, setHasSelection] = useState(false);
@@ -48,6 +48,7 @@ const TextEditor = () => {
   const currentChapterRef = useRef(null);
   const showVariantDialogRef = useRef(false);
   const showVariantSelectorRef = useRef(false);
+  const modularSectionsRef = useRef([]);
 
   // Google Docs-style immediate save with queuing
   const handleAutoSave = useCallback(async (content, chapterId) => {
@@ -101,6 +102,9 @@ const TextEditor = () => {
       FontFamily,
       FontSize,
       LineHeight,
+      ModularSectionDecoration.configure({
+        modularSections: modularSectionsRef,
+      }),
     ],
     content: '',
     onUpdate: ({ editor }) => {
@@ -144,21 +148,9 @@ const TextEditor = () => {
           setFloatingButtonPos({ top, left });
         }
         
-        // Check if selection overlaps with existing modular section by paragraph index
-        const doc = editor.state.doc;
-        let paragraphIndex = 0;
-        doc.nodesBetween(0, from, (node, pos) => {
-          if (node.type.name === 'paragraph') {
-            paragraphIndex++;
-          }
-        });
-        paragraphIndex = Math.max(0, paragraphIndex - 1);
-        
-        const overlapping = currentChapterRef.current?.modularSections?.find(section =>
-          section.paragraphIndex === paragraphIndex
-        );
-        
-        setOverlappingSection(overlapping || null);
+        // Check if selection overlaps with existing modular section
+        // TODO: Implement character position-based overlap detection with sections
+        setOverlappingSection(null);
       } else {
         // Only clear hasSelection if dialog/selector are not open
         if (!showVariantDialogRef.current && !showVariantSelectorRef.current) {
@@ -180,33 +172,9 @@ const TextEditor = () => {
           const wrapperRect = editorWrapperRef.current.getBoundingClientRect();
           const clickY = coords.top - wrapperRect.top;
           
-          // Check if clicked within existing variant regions by paragraph index
-          const doc = view.state.doc;
-          let paragraphIndex = 0;
-          doc.nodesBetween(0, pos, (node, pos) => {
-            if (node.type.name === 'paragraph') {
-              paragraphIndex++;
-            }
-          });
-          paragraphIndex = Math.max(0, paragraphIndex - 1);
-          
-          const overlapping = currentChapterRef.current.modularSections?.find(section =>
-            section.paragraphIndex === paragraphIndex
-          );
-          
-          if (overlapping) {
-            setOverlappingSection(overlapping);
-            const buttonWidth = 40;
-            const editorRect = editorContentRef.current?.getBoundingClientRect();
-            const left = editorRect
-              ? Math.max(0, (editorRect.left - wrapperRect.left) - buttonWidth - 8)
-              : 0;
-            setFloatingButtonPos({ top: clickY - 10, left });
-            setHasSelection(true);
-          } else {
-            // Clear if clicking outside of variant section
-            setOverlappingSection(null);
-          }
+          // TODO: Implement click-based detection for modular sections
+          // For now, just clear
+          setOverlappingSection(null);
         }
         return false;
       },
@@ -301,6 +269,19 @@ const TextEditor = () => {
     currentChapterRef.current = currentChapter;
   }, [currentChapter]);
 
+  // Update modular sections ref and refresh decorations
+  useEffect(() => {
+    if (currentChapter) {
+      modularSectionsRef.current = currentChapter.sections || [];
+      // Force decoration refresh by dispatching a transaction with setMeta
+      if (editor) {
+        const tr = editor.view.state.tr;
+        tr.setMeta('refreshDecorations', true);
+        editor.view.dispatch(tr);
+      }
+    }
+  }, [currentChapter, editor]);
+
   // Update dialog refs for onSelectionUpdate
   useEffect(() => {
     showVariantDialogRef.current = showVariantDialog;
@@ -385,24 +366,13 @@ const TextEditor = () => {
     container.appendChild(serializer.serializeFragment(slice.content));
     const selectedHTML = container.innerHTML;
     
-    // Calculate paragraph index by counting paragraphs before the selection
-    // Get all paragraphs up to the selection start
-    const doc = editor.state.doc;
-    let paragraphIndex = 0;
-    doc.nodesBetween(0, from, (node, pos) => {
-      if (node.type.name === 'paragraph') {
-        paragraphIndex++;
-      }
-    });
-    
-    // Subtract 1 because index is 0-based and we just counted the paragraph we're in
-    paragraphIndex = Math.max(0, paragraphIndex - 1);
-    
+    // Use character positions directly from selection
     try {
       const response = await chapterAPI.createModularSection(currentChapter._id, {
-        paragraphIndex: paragraphIndex,
+        selectionStart: from,
+        selectionEnd: to,
         variantName: variantName || 'Original',
-        variantContent: selectedHTML,
+        selectedContent: selectedHTML,
       });
       
       // Get the created section
@@ -488,16 +458,7 @@ const TextEditor = () => {
                       container.appendChild(serializer.serializeFragment(slice.content));
                       const selectedHTML = container.innerHTML;
                       
-                      const doc = editor.state.doc;
-                      let paragraphIndex = 0;
-                      doc.nodesBetween(0, from, (node, pos) => {
-                        if (node.type.name === 'paragraph') {
-                          paragraphIndex++;
-                        }
-                      });
-                      paragraphIndex = Math.max(0, paragraphIndex - 1);
-                      
-                      setPendingVariant({ paragraphIndex, selectedHTML });
+                      setPendingVariant({ selectionStart: from, selectionEnd: to, selectedHTML });
                       setShowVariantDetails(true);
                     }
                   }}
@@ -549,7 +510,7 @@ const TextEditor = () => {
             </div>
             <div className="variant-details-content">
               {/* Show existing variants */}
-              {overlappingSection && overlappingSection.variants.map((variant) => (
+              {overlappingSection && (overlappingSection.textVariants || []).map((variant) => (
                 <div
                   key={variant.name}
                   className={`variant-item ${variant.isActive ? 'active' : ''}`}
@@ -575,12 +536,13 @@ const TextEditor = () => {
                     </button>
                     <button
                       onClick={async () => {
-                        const section = currentChapter.modularSections.find(s => s.id === overlappingSection.id);
-                        const variantToDuplicate = section.variants.find(v => v.name === variant.name);
+                        const section = (currentChapter.sections || []).find(s => s.id === overlappingSection.id);
+                        const variantToDuplicate = (section?.textVariants || []).find(v => v.name === variant.name);
                         const newVariantName = `${variantToDuplicate.name} (Copy)`;
                         const updatedVariants = [
-                          ...section.variants,
+                          ...section.textVariants,
                           {
+                            id: Date.now().toString(36) + Math.random().toString(36).substring(2),
                             name: newVariantName,
                             content: variantToDuplicate.content,
                             isActive: false,
@@ -596,8 +558,8 @@ const TextEditor = () => {
                     <button
                       onClick={async () => {
                         if (!window.confirm('Delete this variant?')) return;
-                        const section = currentChapter.modularSections.find(s => s.id === overlappingSection.id);
-                        const updatedVariants = section.variants.filter(v => v.name !== variant.name);
+                        const section = (currentChapter.sections || []).find(s => s.id === overlappingSection.id);
+                        const updatedVariants = section.textVariants.filter(v => v.name !== variant.name);
                         await chapterAPI.updateModularSection(chapterId, overlappingSection.id, { variants: updatedVariants });
                         await fetchChapter(currentChapter._id);
                       }}
@@ -624,10 +586,11 @@ const TextEditor = () => {
                           try {
                             if (pendingVariant.moduleId) {
                               // Adding variant to existing section
-                              const section = currentChapter.modularSections.find(s => s.id === pendingVariant.moduleId);
+                              const section = (currentChapter.sections || []).find(s => s.id === pendingVariant.moduleId);
                               const updatedVariants = [
-                                ...section.variants,
+                                ...section.textVariants,
                                 {
+                                  id: Date.now().toString(36) + Math.random().toString(36).substring(2),
                                   name: variantName,
                                   content: pendingVariant.selectedHTML,
                                   isActive: false,
@@ -639,9 +602,10 @@ const TextEditor = () => {
                             } else {
                               // Creating new section
                               const response = await chapterAPI.createModularSection(currentChapter._id, {
-                                paragraphIndex: pendingVariant.paragraphIndex,
+                                selectionStart: pendingVariant.selectionStart,
+                                selectionEnd: pendingVariant.selectionEnd,
                                 variantName: variantName,
-                                variantContent: pendingVariant.selectedHTML,
+                                selectedContent: pendingVariant.selectedHTML,
                               });
                               
                               // Get the created section from response
