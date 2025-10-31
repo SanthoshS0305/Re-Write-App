@@ -41,7 +41,7 @@ const Login = () => {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1>Revision History</h1>
+        <h1>Re:Write</h1>
         <h2>Login</h2>
 
         {error && <div className="error-message">{error}</div>}

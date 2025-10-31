@@ -1,4 +1,4 @@
-# Revision History - Multi-Chapter Story Writing Platform
+# Re:Write - Multi-Chapter Story Writing Platform
 
 A full-stack MERN application that enables writers to create multi-chapter stories with comprehensive revision tracking, modular content versioning, and advanced writing tools.
 

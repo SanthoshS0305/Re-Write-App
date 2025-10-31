@@ -1,6 +1,6 @@
 # MongoDB Shell (mongosh) Quick Reference
 
-This guide shows you how to use `mongosh` to interact with your Revision History database.
+This guide shows you how to use `mongosh` to interact with your Re:Write database.
 
 ## Connecting to MongoDB
 

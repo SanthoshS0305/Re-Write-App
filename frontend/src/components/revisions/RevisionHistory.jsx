@@ -11,11 +11,32 @@ const RevisionHistory = ({ chapterId }) => {
   const [showComparison, setShowComparison] = useState(false);
   const [showRestoreConfirm, setShowRestoreConfirm] = useState(false);
   const [revisionToRestore, setRevisionToRestore] = useState(null);
+  const [revisionCache, setRevisionCache] = useState({});
 
   useEffect(() => {
     fetchRevisions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chapterId]);
+
+  // Handle escape key to close comparison modal
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && showComparison) {
+        setShowComparison(false);
+      }
+    };
+
+    if (showComparison) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showComparison]);
 
   const fetchRevisions = async () => {
     setLoading(true);
@@ -60,19 +81,28 @@ const RevisionHistory = ({ chapterId }) => {
     }
   };
 
-  if (showComparison && selectedRevision1 && selectedRevision2) {
-    return (
-      <div className="revision-comparison-wrapper">
-        <button onClick={() => setShowComparison(false)} className="btn btn-secondary btn-sm">
-          ← Back to Revisions
-        </button>
-        <RevisionComparison
-          revision1Id={selectedRevision1}
-          revision2Id={selectedRevision2}
-        />
-      </div>
-    );
-  }
+  const handleCloseComparison = () => {
+    setShowComparison(false);
+  };
+
+  // Pre-fetch revision data when selected
+  const prefetchRevision = async (revisionId) => {
+    // Skip if already cached
+    if (revisionCache[revisionId]) {
+      return;
+    }
+
+    try {
+      const response = await revisionAPI.getRevision(revisionId);
+      const revision = response.data.data.revision;
+      setRevisionCache(prev => ({
+        ...prev,
+        [revisionId]: revision
+      }));
+    } catch (error) {
+      console.error('Error pre-fetching revision:', error);
+    }
+  };
 
   return (
     <div className="revision-history">
@@ -103,8 +133,10 @@ const RevisionHistory = ({ chapterId }) => {
                     if (e.target.checked) {
                       if (!selectedRevision1) {
                         setSelectedRevision1(revision._id);
+                        prefetchRevision(revision._id); // Pre-fetch data immediately
                       } else if (!selectedRevision2) {
                         setSelectedRevision2(revision._id);
+                        prefetchRevision(revision._id); // Pre-fetch data immediately
                       }
                     } else {
                       if (selectedRevision1 === revision._id) {
@@ -150,6 +182,25 @@ const RevisionHistory = ({ chapterId }) => {
         onCancel={cancelRestore}
         confirmText="Restore"
       />
+
+      {showComparison && selectedRevision1 && selectedRevision2 && (
+        <div className="comparison-modal-overlay" onClick={handleCloseComparison}>
+          <div className="comparison-modal-content" onClick={(e) => e.stopPropagation()}>
+            <button 
+              className="comparison-close-button" 
+              onClick={handleCloseComparison}
+              aria-label="Close comparison"
+            >
+              ✕
+            </button>
+            <RevisionComparison
+              revision1Id={selectedRevision1}
+              revision2Id={selectedRevision2}
+              revisionCache={revisionCache}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

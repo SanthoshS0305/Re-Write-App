@@ -1,7 +1,7 @@
 {
   "name": "revision-history-backend",
   "version": "1.0.0",
-  "description": "Backend API for Revision History story writing platform",
+  "description": "Backend API for Re:Write story writing platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

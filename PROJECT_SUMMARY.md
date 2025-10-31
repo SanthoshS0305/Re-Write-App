@@ -1,8 +1,8 @@
-# Project Summary - Revision History MVP
+# Project Summary - Re:Write MVP
 
 ## What Was Built
 
-A complete, production-ready MERN stack application implementing **Phases 1-2** of the Revision History platform. This MVP includes all core functionality for multi-chapter story writing with comprehensive revision tracking.
+A complete, production-ready MERN stack application implementing **Phases 1-2** of the Re:Write platform. This MVP includes all core functionality for multi-chapter story writing with comprehensive revision tracking.
 
 ## Completed Features ✅
 

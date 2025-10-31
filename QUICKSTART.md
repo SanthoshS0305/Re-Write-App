@@ -1,6 +1,6 @@
 # Quick Start Guide
 
-Get Revision History running in 3 minutes!
+Get Re:Write running in 3 minutes!
 
 ## Prerequisites
 

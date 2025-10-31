@@ -19,7 +19,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-brand">
-          Revision History
+          Re:Write
         </Link>
 
         <div className="navbar-menu">

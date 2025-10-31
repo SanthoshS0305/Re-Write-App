@@ -166,7 +166,7 @@ const EditorToolbar = ({
       <div className="editor-navbar">
         <div className="editor-navbar-left">
           <Link to="/" className="navbar-brand">
-            Revision History
+            Re:Write
           </Link>
           <span className="navbar-separator">|</span>
           {isEditingTitle ? (
@@ -218,12 +218,15 @@ const EditorToolbar = ({
 
       {/* Formatting Toolbar */}
       <div className="editor-toolbar">
+        {/* Formatting Controls Wrapper - This gets disabled */}
+        <div className={`toolbar-formatting-controls ${showRevisions ? 'toolbar-disabled' : ''}`}>
         {/* Font Family Dropdown */}
         <div className="toolbar-dropdown" ref={fontDropdownRef}>
         <button
           className="toolbar-dropdown-button"
-          onClick={() => setShowFontDropdown(!showFontDropdown)}
+          onClick={() => !showRevisions && setShowFontDropdown(!showFontDropdown)}
           title="Font Family"
+          disabled={showRevisions}
         >
           <span className="dropdown-label">{getCurrentFont()}</span>
           <span className="dropdown-arrow">▼</span>
@@ -248,8 +251,9 @@ const EditorToolbar = ({
       <div className="toolbar-dropdown" ref={sizeDropdownRef}>
         <button
           className="toolbar-dropdown-button"
-          onClick={() => setShowSizeDropdown(!showSizeDropdown)}
+          onClick={() => !showRevisions && setShowSizeDropdown(!showSizeDropdown)}
           title="Font Size"
+          disabled={showRevisions}
         >
           <span className="dropdown-label">{getCurrentSize()}</span>
           <span className="dropdown-arrow">▼</span>
@@ -273,8 +277,9 @@ const EditorToolbar = ({
       <div className="toolbar-dropdown" ref={spacingDropdownRef}>
         <button
           className="toolbar-dropdown-button"
-          onClick={() => setShowSpacingDropdown(!showSpacingDropdown)}
+          onClick={() => !showRevisions && setShowSpacingDropdown(!showSpacingDropdown)}
           title="Line Spacing"
+          disabled={showRevisions}
         >
           <span className="dropdown-label">Spacing: {getCurrentSpacing()}</span>
           <span className="dropdown-arrow">▼</span>
@@ -298,16 +303,18 @@ const EditorToolbar = ({
 
       {/* Text Formatting Buttons */}
       <button
-        onClick={() => editor.chain().focus().toggleBold().run()}
+        onClick={() => !showRevisions && editor.chain().focus().toggleBold().run()}
         className={editor.isActive('bold') ? 'active' : ''}
         title="Bold (Ctrl+B)"
+        disabled={showRevisions}
       >
         <strong>B</strong>
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
+        onClick={() => !showRevisions && editor.chain().focus().toggleItalic().run()}
         className={editor.isActive('italic') ? 'active' : ''}
         title="Italic (Ctrl+I)"
+        disabled={showRevisions}
       >
         <em>I</em>
       </button>
@@ -316,23 +323,26 @@ const EditorToolbar = ({
 
       {/* Heading Buttons */}
       <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+        onClick={() => !showRevisions && editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={editor.isActive('heading', { level: 1 }) ? 'active' : ''}
         title="Heading 1"
+        disabled={showRevisions}
       >
         H1
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+        onClick={() => !showRevisions && editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={editor.isActive('heading', { level: 2 }) ? 'active' : ''}
         title="Heading 2"
+        disabled={showRevisions}
       >
         H2
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+        onClick={() => !showRevisions && editor.chain().focus().toggleHeading({ level: 3 }).run()}
         className={editor.isActive('heading', { level: 3 }) ? 'active' : ''}
         title="Heading 3"
+        disabled={showRevisions}
       >
         H3
       </button>
@@ -341,16 +351,18 @@ const EditorToolbar = ({
 
       {/* List Buttons */}
       <button
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        onClick={() => !showRevisions && editor.chain().focus().toggleBulletList().run()}
         className={editor.isActive('bulletList') ? 'active' : ''}
         title="Bullet List"
+        disabled={showRevisions}
       >
         • List
       </button>
       <button
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        onClick={() => !showRevisions && editor.chain().focus().toggleOrderedList().run()}
         className={editor.isActive('orderedList') ? 'active' : ''}
         title="Numbered List"
+        disabled={showRevisions}
       >
         1. List
       </button>
@@ -359,15 +371,17 @@ const EditorToolbar = ({
 
       {/* Horizontal Rule Button */}
       <button
-        onClick={() => editor.chain().focus().setHorizontalRule().run()}
+        onClick={() => !showRevisions && editor.chain().focus().setHorizontalRule().run()}
         title="Horizontal Rule"
+        disabled={showRevisions}
       >
         ―
       </button>
+      </div>
 
       <div className="toolbar-divider"></div>
 
-      {/* Revision Buttons */}
+      {/* Revision Buttons - Always Enabled */}
       <button 
         onClick={onSaveRevision} 
         className="btn btn-primary btn-sm toolbar-revision-btn" 
