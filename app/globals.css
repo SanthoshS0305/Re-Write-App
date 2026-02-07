@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 80% 40%;
+    --chart-3: 197 70% 50%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    
+    /* Re:Write custom colors */
+    --dark-green: #02353c;
+    --dark-green-highlight: #044c56;
+    --dark-mint-green: #3b4c49;
+    --dark-page: #3c3c3c;
+    --aqua: #3fd0c9;
+    --mint-green: #c1f6ed;
+    --light-gray: #f3f3f3;
+    --green-highlight: #34c18a;
+    --green-lowlight: #2ca274;
+  }
+
+  .dark {
+    --background: 59 8% 25%;
+    --foreground: 0 0% 100%;
+    --card: 59 8% 25%;
+    --card-foreground: 0 0% 100%;
+    --popover: 59 8% 25%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 177 60% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 189 95% 12%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 189 95% 12%;
+    --muted-foreground: 0 0% 100%;
+    --accent: 189 95% 15%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 189 95% 15%;
+    --input: 189 95% 15%;
+    --ring: 177 60% 50%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-image: url("/images/woman.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer components {
+  /* Scene marker styles - blue corner brackets */
+  .scene-content {
+    position: relative;
+    display: inline-block;
+    padding: 2px;
+  }
+
+  /* Top-left corner */
+  .scene-content::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid #3b82f6;
+    border-left: 2px solid #3b82f6;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Bottom-right corner */
+  .scene-content::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    border-bottom: 2px solid #3b82f6;
+    border-right: 2px solid #3b82f6;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Additional corners using box-shadow */
+  .scene-content {
+    box-shadow: 
+      /* Top-right corner */
+      inset -8px 0 0 0 transparent,
+      inset 0 -8px 0 0 transparent,
+      /* Bottom-left corner */
+      inset 8px 0 0 0 transparent,
+      inset 0 8px 0 0 transparent;
+  }
+
+  /* Dark mode prose styles */
+  .dark .prose {
+    color: white;
+  }
+
+  .dark .prose p {
+    color: white;
+  }
+
+  .dark .prose h1,
+  .dark .prose h2,
+  .dark .prose h3,
+  .dark .prose h4,
+  .dark .prose h5,
+  .dark .prose h6 {
+    color: white;
+  }
+
+  .dark .prose strong {
+    color: white;
+  }
+
+  .dark .prose a {
+    color: var(--aqua);
+  }
+
+  /* Ensure Joan font is applied */
+  .font-display {
+    font-family: "Joan", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  .joan-regular {
+    font-family: "Joan", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  /* Text color utilities */
+  .text-aqua {
+    color: var(--aqua);
+  }
+
+  .text-green-lowlight {
+    color: var(--green-lowlight);
+  }
+
+  /* Login page welcome text styles */
+  .login-welcome-container {
+    width: fit-content;
+    height: fit-content;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .login-welcome-text {
+    font-size: 48px;
+  }
+
+  .login-welcome-span {
+    font-size: 32px;
+    color: var(--aqua);
+  }
+
+  .login-welcome-span-light {
+    font-size: 32px;
+  }
+
+  /* Attribution font styling */
+  .attribution.font-display {
+    font-family: "Joan", serif !important;
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  /* Next.js portal positioning */
+  nextjs-portal {
+    left: 0px;
+    top: 0px;
+  }
+}
+
