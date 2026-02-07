@@ -1,344 +1,188 @@
-# Re:Write - Multi-Chapter Story Writing Platform
+# Re:Write
 
-A full-stack MERN application that enables writers to create multi-chapter stories with comprehensive revision tracking, modular content versioning, and advanced writing tools.
+A web-based collaborative writing application with advanced version control features, specifically designed for creative writers who need granular control over their story versions and scene revisions.
 
-## Features (MVP - Phases 1-3) ✅
+## Features
 
-### Implemented Features
-
-- ✅ **User Authentication**: Secure registration and login with JWT
-- ✅ **Story Management**: Create, edit, and delete stories with metadata
-- ✅ **Chapter Management**: Multi-chapter stories with reordering capability
-- ✅ **Rich Text Editor**: TipTap-powered editor with formatting options
-  - 12 font families (Times New Roman, Georgia, Arial, Merriweather, etc.)
-  - Font sizes from 10pt to 36pt
-  - Line spacing options (Single, 1.15, 1.5, Double)
-  - Bold, Italic, Headings, Lists
-- ✅ **Auto-save**: Automatic content saving with debouncing
-- ✅ **Revision History**: Automatic versioning on each edit
-- ✅ **Manual Save Points**: Named checkpoints for important versions
-- ✅ **Revision Comparison**: Side-by-side diff view between versions
-- ✅ **Restore Functionality**: Revert to any previous revision
-- ✅ **Modular Sections**: Create variants from text selection, switch between versions
-- ✅ **Character Management**: Add, edit, delete characters with aliases and colors
-
-### Future Features (Phases 4-8)
-- Overview ribbon visualization
-- Advanced search & dialogue tools
-- Timeline & date tagging
-- Settings panel with feature toggles
+- **Rich Text Editing**: Full-featured editor with formatting (bold, italic, underline, headings, lists, links)
+- **Scene Management**: Create scenes from selected text with visual indicators and version control
+- **Document Versioning**: Save and restore document versions with diff comparison
+- **Offline Support**: Write offline with automatic sync when connection is restored
+- **Import/Export**: Export chapters as `.rewr` files and import them back
+- **Dark Mode**: Beautiful dark mode support
 
 ## Tech Stack
 
-### Backend
-- **Node.js** with Express.js
-- **MongoDB** with Mongoose
-- **JWT** for authentication
-- **bcrypt** for password hashing
-- **Security**: helmet, express-rate-limit, mongo-sanitize, CORS
+- **Frontend**: Next.js 14 (App Router), React 18, TypeScript
+- **UI**: Tailwind CSS, shadcn/ui, Lucide React
+- **Editor**: Tiptap 2.1+ (ProseMirror)
+- **Database**: Supabase (PostgreSQL), Prisma ORM
+- **Authentication**: Auth.js (NextAuth.js v5)
+- **State Management**: TanStack Query, Zustand
+- **Offline**: IndexedDB via `idb` library
+- **Version Control**: diff-match-patch, jsondiffpatch
 
-### Frontend
-- **React 18** with functional components and hooks
-- **React Router** for navigation
-- **TipTap** for rich text editing
-- **Axios** for API calls
-- **Context API + useReducer** for state management
+## Getting Started
 
-## Prerequisites
+### Prerequisites
 
-- Node.js (v16 or higher)
-- MongoDB (local or Atlas)
-- npm or yarn
+- Node.js 18+ and npm
+- Supabase account and project
+- PostgreSQL database (via Supabase)
 
-## Installation
+### Installation
 
-### 1. Clone the repository
+1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd RevisionHistory
+cd reWriteApp
 ```
 
-### 2. Backend Setup
-
+2. Install dependencies:
 ```bash
-cd backend
 npm install
 ```
 
-Create a `.env` file in the `backend` directory:
-
-```env
-PORT=5000
-NODE_ENV=development
-MONGODB_URI=mongodb://localhost:27017/revision-history
-JWT_SECRET=your-super-secret-jwt-key-min-32-characters-long
-JWT_REFRESH_SECRET=your-super-secret-refresh-key-min-32-characters-long
-FRONTEND_URL=http://localhost:3000
-```
-
-**Important**: Generate strong random strings for JWT secrets in production!
-
-### 3. Frontend Setup
+3. Set up environment variables:
+Create a `.env.local` file with the following:
 
 ```bash
-cd ../frontend
-npm install
+# Database
+DATABASE_URL="postgresql://user:password@host:port/database"
+
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
+SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
+
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="generate-a-secret-key-here"
+
+# Google OAuth (optional, for Google sign-in)
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
 ```
 
-Create a `.env` file in the `frontend` directory:
-
-```env
-REACT_APP_API_URL=http://localhost:5000/api/v1
-```
-
-## Running the Application
-
-### Development Mode
-
-**Start MongoDB Service (first time or if not running):**
+4. Set up the database:
 ```bash
-# Linux/WSL
-sudo systemctl start mongod
-
-# macOS
-brew services start mongodb-community
+npx prisma generate
+npx prisma db push
 ```
 
-**You'll need two terminal windows:**
+**For Google OAuth support (manual database update required):**
+If you're adding Google OAuth support, you need to manually update your database schema:
 
-**Terminal 1 - Backend:**
+**Option 1: Using Prisma (recommended if it works):**
 ```bash
-cd backend
+npx prisma db push
+```
+
+**Option 2: Manual SQL migration:**
+If Prisma commands fail, run this SQL directly in your database:
+```sql
+-- Add image column for OAuth users
+ALTER TABLE "User" ADD COLUMN IF NOT EXISTS "image" TEXT;
+
+-- Make password nullable (OAuth users don't have passwords)
+ALTER TABLE "User" ALTER COLUMN "password" DROP NOT NULL;
+```
+
+You can find the complete migration SQL in `migrations/add_google_oauth.sql`.
+
+5. Run the development server:
+```bash
 npm run dev
 ```
 
-**Terminal 2 - Frontend:**
-```bash
-cd frontend
-npm start
-```
-
-The application will open at `http://localhost:3000`
-
-**Stopping the App:**
-- Press `Ctrl+C` in each terminal to stop the Frontend and Backend
-- MongoDB service keeps running in the background (use `sudo systemctl stop mongod` to stop it if needed)
-
-### Production Build
-
-**Backend:**
-```bash
-cd backend
-npm start
-```
-
-**Frontend:**
-```bash
-cd frontend
-npm run build
-```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Project Structure
 
 ```
-RevisionHistory/
-├── backend/
-│   ├── config/          # Database configuration
-│   ├── controllers/     # Route controllers
-│   ├── middleware/      # Auth, validation, error handling
-│   ├── models/          # Mongoose schemas
-│   ├── routes/          # API routes
-│   ├── services/        # Business logic
-│   ├── utils/           # Helper functions
-│   └── server.js        # Entry point
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/  # React components
-│   │   ├── context/     # Context providers
-│   │   ├── hooks/       # Custom hooks
-│   │   ├── services/    # API service
-│   │   ├── styles/      # CSS files
-│   │   └── utils/       # Utility functions
-│   └── package.json
-└── README.md
+/app
+  /api              # API routes
+  /dashboard        # Dashboard pages
+  /editor           # Editor pages
+  /login            # Authentication pages
+  /signup
+
+/components
+  /ui               # shadcn/ui components
+  /editor           # Editor components
+  /scene-manager    # Scene management UI
+  /version-manager  # Version management UI
+  /dashboard        # Dashboard components
+  /offline          # Offline sync components
+
+/lib
+  /db               # Database clients (Prisma, Supabase)
+  /offline           # IndexedDB and sync logic
+  /editor            # Tiptap configuration
+  /utils             # Utility functions
+
+/prisma
+  schema.prisma     # Database schema
 ```
 
-## API Endpoints
+## Usage
 
-### Authentication
-- `POST /api/v1/auth/register` - Register new user
-- `POST /api/v1/auth/login` - Login user
-- `POST /api/v1/auth/refresh` - Refresh access token
-- `POST /api/v1/auth/logout` - Logout user
-- `GET /api/v1/auth/me` - Get current user
+### Creating a Story
 
-### Stories
-- `GET /api/v1/stories` - List user's stories
-- `POST /api/v1/stories` - Create new story
-- `GET /api/v1/stories/:id` - Get single story
-- `PUT /api/v1/stories/:id` - Update story
-- `DELETE /api/v1/stories/:id` - Delete story
-- `PUT /api/v1/stories/:id/reorder` - Reorder chapters
+1. Sign up or log in
+2. Click "New Story" on the dashboard
+3. Enter a story title
 
-### Chapters
-- `POST /api/v1/chapters/stories/:storyId/chapters` - Create chapter
-- `GET /api/v1/chapters/:id` - Get chapter
-- `PUT /api/v1/chapters/:id` - Update chapter
-- `DELETE /api/v1/chapters/:id` - Delete chapter
+### Creating Chapters
 
-### Revisions
-- `GET /api/v1/chapters/:id/revisions` - List revisions
-- `GET /api/v1/revisions/:id` - Get single revision
-- `POST /api/v1/chapters/:id/restore/:revisionId` - Restore revision
+1. Open a story
+2. Click "New Chapter"
+3. Enter a chapter title
+4. Start writing in the editor
 
-### Modular Sections
-- `POST /api/v1/chapters/:id/modules` - Create modular section
-- `PUT /api/v1/chapters/:id/modules/:moduleId` - Update variants
-- `PUT /api/v1/chapters/:id/modules/:moduleId/activate` - Activate variant
-- `DELETE /api/v1/chapters/:id/modules/:moduleId` - Delete section
+### Creating Scenes
 
-## Security Features
+1. Select text in the editor
+2. Click "Create Scene" button
+3. Enter a scene label
+4. The scene will be marked with blue corner brackets
 
-- ✅ Password hashing with bcrypt (12 rounds)
-- ✅ JWT with secure secrets and expiration
-- ✅ Rate limiting on authentication endpoints
-- ✅ Input validation with express-validator
-- ✅ Authorization checks on all protected routes
-- ✅ CORS configuration with whitelist
-- ✅ Helmet security headers
-- ✅ MongoDB injection prevention
-- ✅ Request size limits (10MB)
-- ✅ httpOnly cookies for refresh tokens
-- ✅ Token blacklisting on logout
+### Managing Scene Versions
 
-## Usage Guide
+1. Click "Scene Manager" in the toolbar
+2. Select a scene
+3. View versions and create new ones
+4. Use "Apply Version" to restore a previous version
 
-### Getting Started
+### Document Versioning
 
-1. **Register an account** at `/register`
-2. **Login** with your credentials
-3. **Create a story** from the stories page
-4. **Add chapters** to your story
-5. **Write content** in the rich text editor
-6. **Auto-save** happens automatically every 2 seconds
-7. **Create manual save points** when you reach important milestones
-8. **View revision history** to see all versions
-9. **Compare revisions** side-by-side
-10. **Restore** any previous version
+1. Click "Versions" in the toolbar
+2. Click "Save Version" to create a snapshot
+3. Compare versions side-by-side
+4. Restore any previous version
 
-### Editor Features
+### Export/Import
 
-- **Bold**: Ctrl/Cmd + B
-- **Italic**: Ctrl/Cmd + I
-- **Headings**: H1, H2, H3 buttons
-- **Lists**: Bullet and numbered lists
-- **Auto-save**: Content saves automatically
-- **Word count**: Real-time word counting
-- **Manual save**: Create named revision points
+- **Export**: Click "Export" in the editor toolbar to download a `.rewr` file
+- **Import**: Click "Import" on the dashboard and select a `.rewr` file
 
-### Revision Management
+## Development
 
-- All edits create automatic revision points
-- Manual saves allow custom descriptions
-- Compare any two revisions side-by-side
-- Restore creates backup before reverting
-- Revisions include timestamps and word counts
+### Available Scripts
 
-## Database Management
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run prisma:studio` - Open Prisma Studio
 
-You can interact with MongoDB using `mongosh` (MongoDB Shell):
+### Database Management
 
-```bash
-# Connect to MongoDB
-mongosh
-
-# Switch to the app database
-use revision-history
-
-# View all stories
-db.stories.find()
-```
-
-📘 **See [MONGOSH_GUIDE.md](./MONGOSH_GUIDE.md) for a complete reference** with examples for viewing, filtering, and managing your data.
-
-## Troubleshooting
-
-### MongoDB Connection Issues
-- Ensure MongoDB service is running: `sudo systemctl status mongod`
-- Start if needed: `sudo systemctl start mongod`
-- Check connection string in `.env`
-- For Atlas, whitelist your IP address
-
-### Port Already in Use
-- Change `PORT` in backend `.env`
-- Update `REACT_APP_API_URL` in frontend `.env`
-
-### CORS Errors
-- Verify `FRONTEND_URL` in backend `.env`
-- Check browser console for specific errors
-
-### Authentication Issues
-- Clear browser cookies and localStorage
-- Verify JWT secrets are set correctly
-- Check token expiration times
-
-## Development Notes
-
-### Adding New Features
-
-1. **Backend**: Create model → controller → routes → middleware
-2. **Frontend**: Create component → integrate with context → connect to API
-3. **Test**: Verify authentication, authorization, and error handling
-
-### Code Quality
-
-- Follow ES6+ JavaScript standards
-- Use async/await for asynchronous operations
-- Implement proper error handling
-- Add comments for complex logic
-- Keep components focused and reusable
-
-## Deployment
-
-### Backend (Railway/Render)
-
-1. Set environment variables in platform
-2. Ensure `NODE_ENV=production`
-3. Use MongoDB Atlas for database
-4. Configure CORS with production frontend URL
-
-### Frontend (Vercel/Netlify)
-
-1. Set `REACT_APP_API_URL` to production backend
-2. Build command: `npm run build`
-3. Publish directory: `build`
-
-### Database (MongoDB Atlas)
-
-1. Create cluster and database
-2. Whitelist application IPs
-3. Enable automated backups
-4. Set up monitoring alerts
+- `npx prisma generate` - Generate Prisma Client
+- `npx prisma db push` - Push schema changes to database
+- `npx prisma studio` - Open database GUI
 
 ## License
 
-MIT
+ISC
 
-## Contributing
-
-This is an MVP implementation covering Phases 1-3. Future phases will add:
-- Visual overview ribbon
-- Advanced search capabilities
-- Timeline tracking
-- Settings panel
-
-## Support
-
-For issues or questions, please create an issue in the repository.
-
-## Acknowledgments
-
-- TipTap for the excellent rich text editor
-- MongoDB for flexible data storage
-- React team for the amazing framework

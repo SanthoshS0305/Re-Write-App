@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  image     String?
+  stories   Story[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Story {
+  id        String    @id @default(uuid())
+  title     String
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapters  Chapter[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Chapter {
+  id            String           @id @default(uuid())
+  title         String
+  order         Int
+  content       Json             // ProseMirror JSON document
+  wordCount     Int              @default(0)
+  storyId       String
+  story         Story            @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  scenes        Scene[]
+  versions      ChapterVersion[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model Scene {
+  id              String         @id @default(uuid())
+  label           String
+  startPos        Int            // Position in document where scene starts
+  endPos          Int            // Position in document where scene ends
+  chapterId       String
+  chapter         Chapter        @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  currentVersion  String?        // ID of currently active version
+  versions        SceneVersion[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
+model SceneVersion {
+  id        String   @id @default(uuid())
+  content   Json     // ProseMirror JSON for just this scene
+  sceneId   String
+  scene     Scene    @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model ChapterVersion {
+  id          String   @id @default(uuid())
+  label       String?  // Optional user-provided label
+  content     Json     // Full chapter ProseMirror JSON
+  wordCount   Int
+  scenesState Json     // Snapshot of all scenes at this version
+  chapterId   String
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+}
+
