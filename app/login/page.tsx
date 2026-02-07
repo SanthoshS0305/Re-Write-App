@@ -58,9 +58,9 @@ export default function LoginPage() {
         </div>
 
         {/* Login Card */}
-        <div className="bg-dark-green rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] pt-[61px] pb-[61px] px-[40px] w-full h-full flex flex-col justify-center items-center" style={{ backgroundColor: 'var(--dark-green)' }}>
+        <div className="bg-dark-green rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] pt-[60px] pb-[60px] px-[40px] w-full h-full flex flex-col justify-center items-center" style={{ backgroundColor: 'var(--dark-green)' }}>
           {/* Logo */}
-          <div className="text-center mb-8 py-[30px]">
+          <div className="text-center mb-8 py-0">
             <h1 className="font-display text-7xl leading-none">
               <span className="text-aqua" style={{ fontSize: '96px' }}>Re</span>
               <span className="text-mint-green" style={{ fontSize: '96px' }}>:</span>
