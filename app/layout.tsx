@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata: Metadata = {
   title: "Re:Write - Collaborative Writing App",
   description: "A web-based collaborative writing application with advanced version control",
+  icons: {
+    icon: "/images/icon.png",
+  },
 };
 
 export default function RootLayout({
