@@ -5,20 +5,27 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { CreateSceneDialog } from "./CreateSceneDialog";
 import type { Editor } from "@tiptap/react";
+import type { Scene } from "@/lib/editor/scene-plugin";
 
 interface SceneCreationButtonProps {
   editor: Editor;
   chapterId: string;
+  scenes: Scene[];
   onSceneCreated: () => void;
 }
 
 export function SceneCreationButton({
   editor,
   chapterId,
+  scenes,
   onSceneCreated,
 }: SceneCreationButtonProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selection, setSelection] = useState<{ from: number; to: number; coords: { top: number; left: number } } | null>(null);
+  const [selection, setSelection] = useState<{
+    from: number;
+    to: number;
+    coords: { top: number; left: number };
+  } | null>(null);
 
   useEffect(() => {
     const updateSelection = () => {
@@ -27,7 +34,7 @@ export function SceneCreationButton({
         try {
           const coords = editor.view.coordsAtPos(from);
           setSelection({ from, to, coords });
-        } catch (e) {
+        } catch {
           setSelection(null);
         }
       } else {
@@ -48,9 +55,9 @@ export function SceneCreationButton({
     return null;
   }
 
-  const handleCreateScene = () => {
-    setIsDialogOpen(true);
-  };
+  const overlapsScene = scenes.some(
+    (s) => selection.from < s.endPos && selection.to > s.startPos
+  );
 
   return (
     <>
@@ -63,11 +70,13 @@ export function SceneCreationButton({
       >
         <Button
           size="sm"
-          onClick={handleCreateScene}
+          onClick={() => !overlapsScene && setIsDialogOpen(true)}
+          disabled={overlapsScene}
           className="shadow-lg"
+          title={overlapsScene ? "Selection overlaps an existing scene" : "Create scene from selection"}
         >
           <Plus className="h-4 w-4 mr-2" />
-          Create Scene
+          {overlapsScene ? "Overlaps scene" : "Create Scene"}
         </Button>
       </div>
       <CreateSceneDialog
@@ -82,4 +91,3 @@ export function SceneCreationButton({
     </>
   );
 }
-

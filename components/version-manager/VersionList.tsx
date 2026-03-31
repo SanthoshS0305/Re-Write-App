@@ -18,6 +18,7 @@ interface VersionListProps {
   loading: boolean;
   chapterId: string;
   onVersionCreated: () => void;
+  onRestored?: (content: any) => void;
 }
 
 export function VersionList({
@@ -29,6 +30,7 @@ export function VersionList({
   loading,
   chapterId,
   onVersionCreated,
+  onRestored,
 }: VersionListProps) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [label, setLabel] = useState("");
@@ -82,7 +84,7 @@ export function VersionList({
       });
 
       if (response.ok) {
-        window.location.reload();
+        onRestored?.(version.content);
       }
     } catch (error) {
       console.error("Failed to restore version:", error);

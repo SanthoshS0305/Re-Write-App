@@ -6,19 +6,20 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { editorExtensions } from "@/lib/editor/tiptap-config";
 import { DiffMatchPatch } from "diff-match-patch";
+import { extractTextFromJSON } from "@/lib/utils/extract-text";
 import type { Scene, SceneVersion } from "./types";
 
 interface SceneDiffProps {
   scene: Scene | null;
   version: SceneVersion | null;
   chapterId: string;
+  onVersionApplied?: (sceneId: string, content: any) => void;
 }
 
-export function SceneDiff({ scene, version, chapterId }: SceneDiffProps) {
-  const [currentContent, setCurrentContent] = useState<any>(null);
+export function SceneDiff({ scene, version, chapterId, onVersionApplied }: SceneDiffProps) {
   const [diffHtml, setDiffHtml] = useState<string>("");
   const [showDiff, setShowDiff] = useState(false);
-  const [compareVersion, setCompareVersion] = useState<SceneVersion | null>(null);
+  const [applying, setApplying] = useState(false);
 
   const editor = useEditor({
     extensions: editorExtensions,
@@ -29,35 +30,29 @@ export function SceneDiff({ scene, version, chapterId }: SceneDiffProps) {
   useEffect(() => {
     if (version && editor) {
       editor.commands.setContent(version.content);
+      setDiffHtml("");
+      setShowDiff(false);
     }
   }, [version, editor]);
 
-  useEffect(() => {
-    if (scene && !currentContent) {
-      // Load current scene content from chapter
-      const loadCurrentContent = async () => {
-        try {
-          const response = await fetch(`/api/chapters/${chapterId}`);
-          if (response.ok) {
-            const chapter = await response.json();
-            // Extract scene content from chapter content
-            // This is simplified - in reality, you'd need to extract based on startPos/endPos
-            setCurrentContent(chapter.content);
-          }
-        } catch (error) {
-          console.error("Failed to load current content:", error);
-        }
-      };
-      loadCurrentContent();
-    }
-  }, [scene, chapterId, currentContent]);
+  const handleShowDiff = async () => {
+    if (!version) return;
 
-  const handleShowDiff = () => {
-    if (!version || !currentContent) return;
+    // Fetch current chapter content to compare against
+    let currentContent: any = null;
+    try {
+      const res = await fetch(`/api/chapters/${chapterId}`);
+      if (res.ok) {
+        const ch = await res.json();
+        currentContent = ch.content;
+      }
+    } catch {
+      return;
+    }
 
     const dmp = new DiffMatchPatch();
-    const text1 = JSON.stringify(currentContent, null, 2);
-    const text2 = JSON.stringify(version.content, null, 2);
+    const text1 = extractTextFromJSON(currentContent);
+    const text2 = extractTextFromJSON(version.content);
     const diffs = dmp.diff_main(text1, text2);
     dmp.diff_cleanupSemantic(diffs);
 
@@ -68,13 +63,11 @@ export function SceneDiff({ scene, version, chapterId }: SceneDiffProps) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/\n/g, "<br>");
-      
+
       if (op === 1) {
-        // Insertion
-        html += `<span class="bg-green-200 dark:bg-green-900">${escaped}</span>`;
+        html += `<ins class="bg-green-100 dark:bg-green-900 no-underline">${escaped}</ins>`;
       } else if (op === -1) {
-        // Deletion
-        html += `<span class="bg-red-200 dark:bg-red-900">${escaped}</span>`;
+        html += `<del class="bg-red-100 dark:bg-red-900">${escaped}</del>`;
       } else {
         html += escaped;
       }
@@ -86,7 +79,7 @@ export function SceneDiff({ scene, version, chapterId }: SceneDiffProps) {
 
   const handleApplyVersion = async () => {
     if (!scene || !version) return;
-
+    setApplying(true);
     try {
       const response = await fetch(`/api/scenes/${scene.id}/apply`, {
         method: "POST",
@@ -95,11 +88,12 @@ export function SceneDiff({ scene, version, chapterId }: SceneDiffProps) {
       });
 
       if (response.ok) {
-        // Reload or update UI
-        window.location.reload();
+        onVersionApplied?.(scene.id, version.content);
       }
     } catch (error) {
       console.error("Failed to apply version:", error);
+    } finally {
+      setApplying(false);
     }
   };
 
@@ -120,22 +114,26 @@ export function SceneDiff({ scene, version, chapterId }: SceneDiffProps) {
   }
 
   return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4">
+    <div className="p-4 flex flex-col h-full">
+      <div className="flex items-center justify-between mb-4 shrink-0">
         <h3 className="font-semibold">Preview</h3>
         <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={handleShowDiff}>
-            Show Diff
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={showDiff ? () => setShowDiff(false) : handleShowDiff}
+          >
+            {showDiff ? "Hide Diff" : "Show Diff"}
           </Button>
-          <Button size="sm" onClick={handleApplyVersion}>
-            Apply Version
+          <Button size="sm" onClick={handleApplyVersion} disabled={applying}>
+            {applying ? "Applying..." : "Apply Version"}
           </Button>
         </div>
       </div>
-      <ScrollArea className="h-full">
+      <ScrollArea className="flex-1">
         {showDiff && diffHtml ? (
           <div
-            className="prose prose-sm dark:prose-invert max-w-none"
+            className="prose prose-sm dark:prose-invert max-w-none leading-relaxed"
             dangerouslySetInnerHTML={{ __html: diffHtml }}
           />
         ) : (
@@ -147,4 +145,3 @@ export function SceneDiff({ scene, version, chapterId }: SceneDiffProps) {
     </div>
   );
 }
-

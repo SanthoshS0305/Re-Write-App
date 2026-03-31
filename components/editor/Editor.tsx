@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import { editorExtensions } from "@/lib/editor/tiptap-config";
 import { EditorToolbar } from "./EditorToolbar";
 import { SceneCreationButton } from "./SceneCreationButton";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { JSONContent } from "@tiptap/core";
 import type { Scene } from "@/lib/editor/scene-plugin";
 
@@ -18,14 +18,54 @@ interface EditorProps {
   onEditorReady?: (editor: any) => void;
 }
 
-export function Editor({ content, onUpdate, chapterId, onSceneManagerOpen, onVersionManagerOpen, showToolbarInHeader = false, onEditorReady }: EditorProps) {
+export function Editor({
+  content,
+  onUpdate,
+  chapterId,
+  onSceneManagerOpen,
+  onVersionManagerOpen,
+  showToolbarInHeader = false,
+  onEditorReady,
+}: EditorProps) {
   const [scenes, setScenes] = useState<Scene[]>([]);
+  const positionSyncTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const editor = useEditor({
     extensions: editorExtensions,
     content,
     onUpdate: ({ editor }) => {
       onUpdate(editor.getJSON());
+
+      // Debounce persisting scene positions after document changes
+      const sceneExt = editor.extensionManager.extensions.find(
+        (ext) => ext.name === "scene"
+      );
+      if (!sceneExt) return;
+
+      const pending = sceneExt.storage.pendingPositionUpdates as
+        | { id: string; startPos: number; endPos: number }[]
+        | undefined;
+      if (!pending || pending.length === 0) return;
+
+      if (positionSyncTimer.current) clearTimeout(positionSyncTimer.current);
+      positionSyncTimer.current = setTimeout(async () => {
+        const updates = sceneExt.storage
+          .pendingPositionUpdates as { id: string; startPos: number; endPos: number }[];
+        sceneExt.storage.pendingPositionUpdates = [];
+        for (const { id, startPos, endPos } of updates) {
+          try {
+            await fetch(`/api/scenes/${id}`, {
+              method: "PATCH",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ startPos, endPos }),
+            });
+          } catch (err) {
+            console.error("Failed to sync scene position:", err);
+          }
+        }
+        // Refresh local scenes state from storage
+        setScenes([...(sceneExt.storage.scenes as Scene[])]);
+      }, 800);
     },
     editorProps: {
       attributes: {
@@ -35,7 +75,7 @@ export function Editor({ content, onUpdate, chapterId, onSceneManagerOpen, onVer
     },
   });
 
-  // Load scenes
+  // Load scenes on mount
   useEffect(() => {
     if (!chapterId) return;
 
@@ -45,17 +85,7 @@ export function Editor({ content, onUpdate, chapterId, onSceneManagerOpen, onVer
         if (response.ok) {
           const data = await response.json();
           setScenes(data);
-          
-          // Update scene extension storage
-          if (editor) {
-            const sceneExtension = editor.extensionManager.extensions.find(
-              (ext) => ext.name === "scene"
-            );
-            if (sceneExtension) {
-              sceneExtension.storage.scenes = data;
-              editor.view.dispatch(editor.state.tr);
-            }
-          }
+          updateEditorScenes(data);
         }
       } catch (error) {
         console.error("Failed to load scenes:", error);
@@ -65,11 +95,10 @@ export function Editor({ content, onUpdate, chapterId, onSceneManagerOpen, onVer
     loadScenes();
   }, [chapterId, editor]);
 
-  // Update editor content when prop changes
+  // Update editor content when prop changes externally (e.g. version restore)
   useEffect(() => {
     if (editor && content) {
       const currentContent = editor.getJSON();
-      // Only update if content is actually different
       if (JSON.stringify(currentContent) !== JSON.stringify(content)) {
         editor.commands.setContent(content);
       }
@@ -83,23 +112,25 @@ export function Editor({ content, onUpdate, chapterId, onSceneManagerOpen, onVer
     }
   }, [editor, onEditorReady]);
 
+  function updateEditorScenes(data: Scene[]) {
+    if (!editor) return;
+    const sceneExt = editor.extensionManager.extensions.find(
+      (ext) => ext.name === "scene"
+    );
+    if (sceneExt) {
+      sceneExt.storage.scenes = data;
+      sceneExt.storage.pendingPositionUpdates = [];
+      editor.view.dispatch(editor.state.tr);
+    }
+  }
+
   const handleSceneCreated = async () => {
-    // Reload scenes
     try {
       const response = await fetch(`/api/chapters/${chapterId}/scenes`);
       if (response.ok) {
         const data = await response.json();
         setScenes(data);
-        
-        if (editor) {
-          const sceneExtension = editor.extensionManager.extensions.find(
-            (ext) => ext.name === "scene"
-          );
-          if (sceneExtension) {
-            sceneExtension.storage.scenes = data;
-            editor.view.dispatch(editor.state.tr);
-          }
-        }
+        updateEditorScenes(data);
       }
     } catch (error) {
       console.error("Failed to reload scenes:", error);
@@ -107,23 +138,32 @@ export function Editor({ content, onUpdate, chapterId, onSceneManagerOpen, onVer
   };
 
   if (!editor) {
-    return <div className="flex items-center justify-center h-96">Loading editor...</div>;
+    return (
+      <div className="flex items-center justify-center h-96">
+        Loading editor...
+      </div>
+    );
   }
 
   return (
     <div className="relative h-full">
       {!showToolbarInHeader && (
-        <EditorToolbar editor={editor} chapterId={chapterId} onSceneManagerOpen={onSceneManagerOpen} onVersionManagerOpen={onVersionManagerOpen} />
+        <EditorToolbar
+          editor={editor}
+          chapterId={chapterId}
+          onSceneManagerOpen={onSceneManagerOpen}
+          onVersionManagerOpen={onVersionManagerOpen}
+        />
       )}
       <div className="relative h-full">
         <EditorContent editor={editor} />
         <SceneCreationButton
           editor={editor}
           chapterId={chapterId}
+          scenes={scenes}
           onSceneCreated={handleSceneCreated}
         />
       </div>
     </div>
   );
 }
-

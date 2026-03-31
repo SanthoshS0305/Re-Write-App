@@ -3,19 +3,17 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Save } from "lucide-react";
 import type { Scene, SceneVersion } from "./types";
-import { useEditor } from "@tiptap/react";
-import { editorExtensions } from "@/lib/editor/tiptap-config";
+import type { Editor as TiptapEditor } from "@tiptap/react";
 
 interface SceneVersionsProps {
   scene: Scene | null;
   selectedVersion: SceneVersion | null;
   onVersionSelect: (version: SceneVersion) => void;
   onVersionCreated: () => void;
+  editor?: TiptapEditor | null;
 }
 
 export function SceneVersions({
@@ -23,13 +21,10 @@ export function SceneVersions({
   selectedVersion,
   onVersionSelect,
   onVersionCreated,
+  editor,
 }: SceneVersionsProps) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const editor = useEditor({
-    extensions: editorExtensions,
-    content: scene ? (scene.versions[0]?.content || { type: "doc", content: [] }) : null,
-  });
 
   if (!scene) {
     return (
@@ -40,11 +35,21 @@ export function SceneVersions({
   }
 
   const handleCreateVersion = async () => {
-    if (!editor || !scene) return;
+    if (!scene) return;
 
     setLoading(true);
     try {
-      const content = editor.getJSON();
+      let content: any;
+
+      if (editor) {
+        // Extract scene content directly from the live editor document
+        const slice = editor.state.doc.slice(scene.startPos, scene.endPos);
+        content = { type: "doc", content: slice.toJSON().content ?? [] };
+      } else {
+        // Fallback: snapshot the latest known version content
+        content = scene.versions[0]?.content ?? { type: "doc", content: [] };
+      }
+
       const response = await fetch(`/api/scenes/${scene.id}/versions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -52,7 +57,6 @@ export function SceneVersions({
       });
 
       if (response.ok) {
-        const newVersion = await response.json();
         onVersionCreated();
         setIsCreateDialogOpen(false);
       }
@@ -64,19 +68,15 @@ export function SceneVersions({
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 flex flex-col h-full">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold">Versions</h3>
-        <Button
-          size="sm"
-          onClick={() => setIsCreateDialogOpen(true)}
-          disabled={!editor}
-        >
+        <Button size="sm" onClick={() => setIsCreateDialogOpen(true)}>
           <Save className="h-4 w-4 mr-2" />
           Save as New Version
         </Button>
       </div>
-      <ScrollArea className="h-full">
+      <ScrollArea className="flex-1">
         <div className="space-y-2">
           {scene.versions.map((version) => (
             <Button
@@ -95,6 +95,9 @@ export function SceneVersions({
               </div>
             </Button>
           ))}
+          {scene.versions.length === 0 && (
+            <p className="text-sm text-muted-foreground">No versions saved yet.</p>
+          )}
         </div>
       </ScrollArea>
 
@@ -103,19 +106,16 @@ export function SceneVersions({
           <DialogHeader>
             <DialogTitle>Save as New Version</DialogTitle>
             <DialogDescription>
-              Save the current scene content as a new version
+              Snapshot the current scene text as a new version.
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <p className="text-sm text-muted-foreground">
-              This will create a new version of the scene with the current content.
+              This captures the scene&apos;s current content from the editor.
             </p>
           </div>
           <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsCreateDialogOpen(false)}
-            >
+            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
               Cancel
             </Button>
             <Button onClick={handleCreateVersion} disabled={loading}>
@@ -127,4 +127,3 @@ export function SceneVersions({
     </div>
   );
 }
-
