@@ -170,44 +170,33 @@ export function EditorToolbar({ editor, chapterId, onSceneManagerOpen, onVersion
           </button>
           <button
             type="button"
-            className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded"
+            onClick={() => editor.chain().focus().toggleCode().run()}
+            className={`w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded ${editor.isActive("code") ? "bg-gray-200" : ""}`}
           >
-            <span className="text-gray-700 text-xs">Img</span>
-          </button>
-          <button
-            type="button"
-            className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded"
-          >
-            <span className="text-gray-700 text-xs">Vid</span>
-          </button>
-          <button
-            type="button"
-            className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded"
-          >
-            <span className="text-gray-700 text-xs">Code</span>
+            <span className="text-gray-700 text-xs font-mono">{"<>"}</span>
           </button>
         </div>
       </div>
 
-      {/* More Options */}
+      {/* Undo / Redo */}
       <div className="flex gap-6 items-start">
         <button
           type="button"
-          className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded"
+          onClick={() => editor.chain().focus().undo().run()}
+          disabled={!editor.can().undo()}
+          className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded disabled:opacity-30"
+          title="Undo"
         >
-          <span className="text-gray-700 text-xs">←</span>
+          <span className="text-gray-700 text-xs">↩</span>
         </button>
         <button
           type="button"
-          className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded"
+          onClick={() => editor.chain().focus().redo().run()}
+          disabled={!editor.can().redo()}
+          className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded disabled:opacity-30"
+          title="Redo"
         >
-          <span className="text-gray-700 text-xs">→</span>
-        </button>
-        <button
-          type="button"
-          className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded"
-        >
-          <span className="text-gray-700 text-xs">⋯</span>
+          <span className="text-gray-700 text-xs">↪</span>
         </button>
       </div>
     </div>

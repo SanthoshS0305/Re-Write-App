@@ -84,50 +84,36 @@
 }
 
 @layer components {
-  /* Scene marker styles - blue corner brackets */
+  /* Scene marker styles — 4 blue corner brackets via CSS gradients */
   .scene-content {
     position: relative;
-    display: inline-block;
-    padding: 2px;
-  }
-
-  /* Top-left corner */
-  .scene-content::before {
-    content: "";
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    width: 8px;
-    height: 8px;
-    border-top: 2px solid #3b82f6;
-    border-left: 2px solid #3b82f6;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* Bottom-right corner */
-  .scene-content::after {
-    content: "";
-    position: absolute;
-    bottom: -2px;
-    right: -2px;
-    width: 8px;
-    height: 8px;
-    border-bottom: 2px solid #3b82f6;
-    border-right: 2px solid #3b82f6;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* Additional corners using box-shadow */
-  .scene-content {
-    box-shadow: 
-      /* Top-right corner */
-      inset -8px 0 0 0 transparent,
-      inset 0 -8px 0 0 transparent,
-      /* Bottom-left corner */
-      inset 8px 0 0 0 transparent,
-      inset 0 8px 0 0 transparent;
+    display: inline;
+    padding: 3px 2px;
+    background-image:
+      /* top-left horizontal */
+      linear-gradient(to right, #3b82f6 2px, transparent 2px),
+      /* top-left vertical */
+      linear-gradient(to bottom, #3b82f6 2px, transparent 2px),
+      /* top-right horizontal */
+      linear-gradient(to left, #3b82f6 2px, transparent 2px),
+      /* top-right vertical */
+      linear-gradient(to bottom, #3b82f6 2px, transparent 2px),
+      /* bottom-left horizontal */
+      linear-gradient(to right, #3b82f6 2px, transparent 2px),
+      /* bottom-left vertical */
+      linear-gradient(to top, #3b82f6 2px, transparent 2px),
+      /* bottom-right horizontal */
+      linear-gradient(to left, #3b82f6 2px, transparent 2px),
+      /* bottom-right vertical */
+      linear-gradient(to top, #3b82f6 2px, transparent 2px);
+    background-size: 10px 2px, 2px 10px, 10px 2px, 2px 10px,
+                     10px 2px, 2px 10px, 10px 2px, 2px 10px;
+    background-position:
+      top left,    top left,
+      top right,   top right,
+      bottom left, bottom left,
+      bottom right, bottom right;
+    background-repeat: no-repeat;
   }
 
   /* Dark mode prose styles */

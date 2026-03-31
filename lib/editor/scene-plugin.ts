@@ -15,12 +15,13 @@ export const SceneExtension = Extension.create({
   addStorage() {
     return {
       scenes: [] as Scene[],
+      pendingPositionUpdates: [] as { id: string; startPos: number; endPos: number }[],
     };
   },
 
   addProseMirrorPlugins() {
     const extension = this;
-    
+
     return [
       new Plugin({
         key: new PluginKey("scene"),
@@ -34,18 +35,39 @@ export const SceneExtension = Extension.create({
               return DecorationSet.empty;
             }
 
+            // Map positions through the transaction to keep them current
+            let positionsChanged = false;
+            const updatedScenes = scenes.map((scene) => {
+              const newStart = tr.mapping.map(scene.startPos);
+              const newEnd = tr.mapping.map(scene.endPos);
+              if (newStart !== scene.startPos || newEnd !== scene.endPos) {
+                positionsChanged = true;
+                return { ...scene, startPos: newStart, endPos: newEnd };
+              }
+              return scene;
+            });
+
+            if (positionsChanged) {
+              extension.storage.scenes = updatedScenes;
+              // Queue position updates for persistence
+              extension.storage.pendingPositionUpdates = updatedScenes.map((s) => ({
+                id: s.id,
+                startPos: s.startPos,
+                endPos: s.endPos,
+              }));
+            }
+
             const decorations: Decoration[] = [];
-
-            scenes.forEach((scene) => {
+            updatedScenes.forEach((scene) => {
               const { startPos, endPos } = scene;
-
-              // Only create decorations if positions are valid
-              if (startPos >= 0 && endPos <= newState.doc.content.size && startPos < endPos) {
-                // Create a decoration that spans the entire scene
+              if (
+                startPos >= 0 &&
+                endPos <= newState.doc.content.size &&
+                startPos < endPos
+              ) {
                 decorations.push(
                   Decoration.inline(startPos, endPos, {
                     class: "scene-content",
-                    style: "position: relative;",
                   })
                 );
               }

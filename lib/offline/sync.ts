@@ -136,14 +136,3 @@ export async function resolveConflict(
   throw new Error("Failed to resolve conflict");
 }
 
-function getEndpoint(entity: string, id: string): string {
-  const endpoints: Record<string, (id: string) => string> = {
-    chapters: (id) => `/api/chapters/${id}`,
-    scenes: (id) => `/api/scenes/${id}`,
-    stories: (id) => `/api/stories/${id}`,
-  };
-
-  const getter = endpoints[entity];
-  return getter ? getter(id) : "";
-}
-
