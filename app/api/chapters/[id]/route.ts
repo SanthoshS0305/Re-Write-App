@@ -4,9 +4,10 @@ import { prisma } from "@/lib/db/prisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -15,7 +16,7 @@ export async function GET(
 
     const chapter = await prisma.chapter.findFirst({
       where: {
-        id: params.id,
+        id,
         story: {
           userId: session.user.id,
         },
@@ -41,9 +42,10 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -55,7 +57,7 @@ export async function PATCH(
     // Verify user owns the chapter
     const existingChapter = await prisma.chapter.findFirst({
       where: {
-        id: params.id,
+        id,
         story: {
           userId: session.user.id,
         },
@@ -78,7 +80,7 @@ export async function PATCH(
     }
 
     const chapter = await prisma.chapter.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
     });
 
@@ -94,9 +96,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -105,7 +108,7 @@ export async function DELETE(
 
     const chapter = await prisma.chapter.deleteMany({
       where: {
-        id: params.id,
+        id,
         story: {
           userId: session.user.id,
         },
@@ -125,4 +128,3 @@ export async function DELETE(
     );
   }
 }
-

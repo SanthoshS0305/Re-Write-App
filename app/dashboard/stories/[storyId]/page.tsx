@@ -6,8 +6,9 @@ import { StoryDetailContent } from "@/components/dashboard/StoryDetailContent";
 export default async function StoryDetailPage({
   params,
 }: {
-  params: { storyId: string };
+  params: Promise<{ storyId: string }>;
 }) {
+  const { storyId } = await params;
   const session = await getServerSession();
 
   if (!session?.user?.id) {
@@ -16,7 +17,7 @@ export default async function StoryDetailPage({
 
   const story = await prisma.story.findFirst({
     where: {
-      id: params.storyId,
+      id: storyId,
       userId: session.user.id,
     },
     include: {

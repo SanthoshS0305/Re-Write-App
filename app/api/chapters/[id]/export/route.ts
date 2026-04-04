@@ -5,9 +5,10 @@ import { exportToRewr } from "@/lib/utils/rewr-format";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -16,7 +17,7 @@ export async function GET(
 
     const chapter = await prisma.chapter.findFirst({
       where: {
-        id: params.id,
+        id,
         story: {
           userId: session.user.id,
         },
@@ -56,4 +57,3 @@ export async function GET(
     );
   }
 }
-

@@ -75,7 +75,7 @@
     border-color: hsl(var(--border));
   }
   body {
-    background-image: url("/images/woman.jpg");
+    background-image: url("/images/forest_bg.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

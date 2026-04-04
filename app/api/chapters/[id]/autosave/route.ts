@@ -5,9 +5,10 @@ import { countWords } from "@/lib/utils/word-count";
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -19,7 +20,7 @@ export async function PATCH(
     // Verify user owns the chapter
     const existingChapter = await prisma.chapter.findFirst({
       where: {
-        id: params.id,
+        id,
         story: {
           userId: session.user.id,
         },
@@ -33,7 +34,7 @@ export async function PATCH(
     const wordCount = countWords(content);
 
     const chapter = await prisma.chapter.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         content,
         wordCount,
@@ -49,4 +50,3 @@ export async function PATCH(
     );
   }
 }
-

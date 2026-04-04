@@ -6,12 +6,13 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 export default function SignupPage() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [error, setError] = useState("");
@@ -28,14 +29,16 @@ export default function SignupPage() {
       return;
     }
 
+    const displayName = [firstName, lastName].filter(Boolean).join(" ") || username;
+
     try {
       const response = await fetch("/api/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          name: username,
-          email, 
-          password 
+        body: JSON.stringify({
+          name: displayName,
+          email,
+          password,
         }),
       });
 
@@ -46,7 +49,7 @@ export default function SignupPage() {
       }
 
       router.push("/login");
-    } catch (err) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
@@ -54,113 +57,137 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between relative overflow-hidden gap-0">
-      {/* Background Image */}
+    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute bg-dark-mint-green inset-0" />
+        <div className="absolute inset-0" style={{ backgroundColor: "var(--dark-mint-green)" }} />
+        <img
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
+          src="/images/forest_bg.jpg"
+        />
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-fit max-w-md px-8 flex flex-col items-center py-10 flex-1 justify-center" style={{ height: 'fit-content', width: 'fit-content' }}>
+      <div className="relative z-10 flex flex-col items-center gap-[10px] py-[10px]">
         {/* Welcome Text */}
-        <div className="mb-6 text-center flex login-welcome-container" style={{ height: 'fit-content', width: 'fit-content' }}>
-          <p className="font-display text-4xl leading-tight flex gap-[10px] login-welcome-text">
-            <span className="text-aqua login-welcome-span">Hello, Author,</span>
-            <span className="text-light-gray login-welcome-span-light">Welcome to</span>
-          </p>
+        <div className="flex gap-[10px] items-center justify-center h-[100px] px-[10px]">
+          <span className="font-display text-[64px] leading-normal" style={{ color: "var(--aqua)" }}>
+            Hello, Author,
+          </span>
+          <span className="font-display text-[64px] leading-normal" style={{ color: "var(--light-gray)" }}>
+            Welcome to
+          </span>
         </div>
 
         {/* Signup Card */}
-        <div className="bg-dark-green rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] pt-[60px] pb-[60px] px-[40px] w-full h-full flex flex-col justify-center items-center" style={{ backgroundColor: 'var(--dark-green)' }}>
+        <div
+          className="flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px] overflow-clip"
+          style={{ backgroundColor: "var(--dark-green)" }}
+        >
           {/* Logo */}
-          <div className="text-center mb-8 py-0">
-            <h1 className="font-display text-7xl leading-none">
-              <span className="text-aqua" style={{ fontSize: '96px' }}>Re</span>
-              <span className="text-mint-green" style={{ fontSize: '96px' }}>:</span>
-              <span className="text-light-gray" style={{ fontSize: '96px' }}>Write</span>
-            </h1>
+          <div className="flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]">
+            <span style={{ color: "var(--aqua)" }}>Re</span>
+            <span style={{ color: "black" }}>:</span>
+            <span style={{ color: "var(--light-gray)" }}>Write</span>
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-[20px]">
-            <div className="text-light-gray" style={{ padding: '2px' }}>
+          <form onSubmit={handleSubmit} className="flex flex-col gap-[20px] w-full px-[5px]">
+            <Input
+              id="username"
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="font-display !bg-mint-green !border-[3px] !border-black !rounded-[20px] !text-black placeholder:!text-black/60 !h-14 !px-4 focus:!ring-0 focus:!outline-none"
+              style={{ fontSize: "32px" }}
+            />
+            <Input
+              id="email"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="font-display !bg-mint-green !border-[3px] !border-black !rounded-[20px] !text-black placeholder:!text-black/60 !h-14 !px-4 focus:!ring-0 focus:!outline-none"
+              style={{ fontSize: "32px" }}
+            />
+            <div className="flex gap-[10px]">
               <Input
-                id="username"
+                id="firstName"
                 type="text"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="!bg-mint-green !border-[3px] !border-dark-green-highlight !rounded-[20px] !text-black placeholder:!text-black/60 text-2xl !h-14 !px-4 font-display focus:!ring-0 focus:!outline-none focus:!border-dark-green-highlight"
-                style={{ fontSize: '24px', overflow: 'visible' }}
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="font-display !bg-mint-green !border-[3px] !border-black !rounded-[20px] !text-black placeholder:!text-black/60 !h-14 !px-4 focus:!ring-0 focus:!outline-none flex-1"
+                style={{ fontSize: "32px" }}
               />
-            </div>
-            <div className="text-light-gray" style={{ padding: '2px' }}>
               <Input
-                id="email"
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="!bg-mint-green !border-[3px] !border-dark-green-highlight !rounded-[20px] !text-black placeholder:!text-black/60 text-2xl !h-14 !px-4 font-display focus:!ring-0 focus:!outline-none focus:!border-dark-green-highlight"
-                style={{ fontSize: '24px', overflow: 'visible' }}
+                id="lastName"
+                type="text"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="font-display !bg-mint-green !border-[3px] !border-black !rounded-[20px] !text-black placeholder:!text-black/60 !h-14 !px-4 focus:!ring-0 focus:!outline-none flex-1"
+                style={{ fontSize: "32px" }}
               />
             </div>
-            <div className="text-light-gray">
-              <Input
-                id="password"
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-                className="!bg-mint-green !border-[2px] !border-dark-green-highlight !rounded-[20px] !text-accent placeholder:!text-black/60 text-2xl !h-14 !px-4 font-display focus:!ring-0 focus:!outline-none focus:!border-dark-green-highlight"
-                style={{ fontSize: '24px' }}
-              />
-            </div>
-            <div className="text-light-gray">
-              <Input
-                id="repeatPassword"
-                type="password"
-                placeholder="Repeat Password"
-                value={repeatPassword}
-                onChange={(e) => setRepeatPassword(e.target.value)}
-                required
-                minLength={6}
-                className="!bg-mint-green !border-[2px] !border-dark-green-highlight !rounded-[20px] !text-accent placeholder:!text-black/60 text-2xl !h-14 !px-4 font-display focus:!ring-0 focus:!outline-none focus:!border-dark-green-highlight"
-                style={{ fontSize: '24px' }}
-              />
-            </div>
+            <Input
+              id="password"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              className="font-display !bg-mint-green !border-[3px] !border-black !rounded-[20px] !text-black placeholder:!text-black/60 !h-14 !px-4 focus:!ring-0 focus:!outline-none"
+              style={{ fontSize: "32px" }}
+            />
+            <Input
+              id="repeatPassword"
+              type="password"
+              placeholder="Repeat Password"
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              required
+              minLength={6}
+              className="font-display !bg-mint-green !border-[3px] !border-black !rounded-[20px] !text-black placeholder:!text-black/60 !h-14 !px-4 focus:!ring-0 focus:!outline-none"
+              style={{ fontSize: "32px" }}
+            />
+
             {error && (
               <div className="text-sm text-red-400 bg-red-900/20 border border-red-500/30 rounded p-3">
                 {error}
               </div>
             )}
-            <Button 
-              type="submit" 
-              className="w-full !bg-aqua !border-[3px] !border-dark-green-highlight !rounded-[30px] !text-black font-display text-2xl !h-14 hover:!bg-aqua/90 disabled:opacity-50 !flex !flex-col" 
+
+            <Button
+              type="submit"
               disabled={loading}
-              style={{ fontSize: '24px', backgroundColor: 'var(--aqua)', color: 'var(--dark-green)' }}
+              className="font-display !border-[3px] !border-black !rounded-[30px] !text-black !h-[60px] hover:opacity-90 disabled:opacity-50 self-center px-[16px]"
+              style={{ fontSize: "36px", backgroundColor: "var(--green-highlight)" }}
             >
               {loading ? "Creating account..." : "Create Account"}
             </Button>
-            <div className="relative my-4">
+
+            <div className="relative my-2">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-light-gray/30"></div>
+                <div className="w-full border-t" style={{ borderColor: "var(--light-gray)", opacity: 0.3 }} />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-dark-green text-light-gray font-display">OR</span>
+                <span className="px-2 font-display" style={{ backgroundColor: "var(--dark-green)", color: "var(--light-gray)" }}>OR</span>
               </div>
             </div>
+
             <Button
               type="button"
               onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-              className="w-full !bg-white !border-[3px] !border-dark-green-highlight !rounded-[30px] !text-black font-display text-2xl !h-14 hover:!bg-gray-100 disabled:opacity-50 !flex !items-center !justify-center !gap-2"
-              style={{ fontSize: '24px', color: 'var(--mint-green)', padding: '3px 10px' }}
+              className="font-display !bg-white !border-[3px] !border-black !rounded-[30px] !text-black !h-[60px] hover:!bg-gray-100 disabled:opacity-50 flex items-center justify-center gap-2 self-center px-[16px]"
+              style={{ fontSize: "24px" }}
             >
-              <svg className="w-6 h-6" viewBox="0 0 24 24" style={{ width: '45px' }}>
+              <svg viewBox="0 0 24 24" style={{ width: "28px", height: "28px", flexShrink: 0 }}>
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
@@ -168,25 +195,20 @@ export default function SignupPage() {
               </svg>
               Continue with Google
             </Button>
-            <div className="text-center font-display text-xl">
-              <span className="text-light-gray">Got an Account? </span>
-              <Link href="/login" className="text-green-lowlight hover:text-green-lowlight/80" style={{ color: 'var(--green-lowlight)', fontSize: '20px' }}>
+
+            <div className="flex gap-[10px] items-start justify-center font-display text-[24px] px-[16px] py-[16px]">
+              <span style={{ color: "var(--light-gray)" }}>Got an Account?</span>
+              <Link
+                href="/login"
+                className="hover:opacity-80"
+                style={{ color: "var(--green-lowlight)" }}
+              >
                 Log In
               </Link>
             </div>
           </form>
         </div>
       </div>
-
-      {/* Attribution */}
-      <div className="relative z-10 w-full px-8 pb-8 text-center">
-        <div className="max-w-2xl mx-auto">
-          <p className="attribution font-display">
-            "<a rel="noopener noreferrer" href="https://www.rawpixel.com/image/11515769/woman-nature-stormy-sky">Woman in nature, stormy sky</a>" is marked with <a rel="noopener noreferrer" href="https://creativecommons.org/publicdomain/zero/1.0/?ref=openverse">CC0 1.0 <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" style={{ height: '1em', marginRight: '0.125em', display: 'inline' }} /><img src="https://mirrors.creativecommons.org/presskit/icons/zero.svg" style={{ height: '1em', marginRight: '0.125em', display: 'inline' }} /></a>.
-          </p>
-        </div>
-      </div>
     </div>
   );
 }
-

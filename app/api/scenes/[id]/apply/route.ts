@@ -4,9 +4,10 @@ import { prisma } from "@/lib/db/prisma";
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -25,7 +26,7 @@ export async function POST(
     // Verify user owns the scene
     const scene = await prisma.scene.findFirst({
       where: {
-        id: params.id,
+        id,
         chapter: {
           story: {
             userId: session.user.id,
@@ -42,7 +43,7 @@ export async function POST(
     const version = await prisma.sceneVersion.findFirst({
       where: {
         id: versionId,
-        sceneId: params.id,
+        sceneId: id,
       },
     });
 
@@ -52,7 +53,7 @@ export async function POST(
 
     // Update scene to use this version
     await prisma.scene.update({
-      where: { id: params.id },
+      where: { id },
       data: { currentVersion: versionId },
     });
 
@@ -68,4 +69,3 @@ export async function POST(
     );
   }
 }
-

@@ -4,9 +4,10 @@ import { prisma } from "@/lib/db/prisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -15,7 +16,7 @@ export async function GET(
 
     const scene = await prisma.scene.findFirst({
       where: {
-        id: params.id,
+        id,
         chapter: {
           story: {
             userId: session.user.id,
@@ -46,9 +47,10 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -60,7 +62,7 @@ export async function PATCH(
     // Verify user owns the scene
     const existingScene = await prisma.scene.findFirst({
       where: {
-        id: params.id,
+        id,
         chapter: {
           story: {
             userId: session.user.id,
@@ -88,7 +90,7 @@ export async function PATCH(
     }
 
     const scene = await prisma.scene.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       include: {
         versions: {
@@ -109,9 +111,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -120,7 +123,7 @@ export async function DELETE(
 
     const scene = await prisma.scene.deleteMany({
       where: {
-        id: params.id,
+        id,
         chapter: {
           story: {
             userId: session.user.id,
@@ -142,4 +145,3 @@ export async function DELETE(
     );
   }
 }
-

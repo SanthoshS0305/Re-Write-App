@@ -4,9 +4,10 @@ import { prisma } from "@/lib/db/prisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -16,7 +17,7 @@ export async function GET(
     // Verify user owns the chapter
     const chapter = await prisma.chapter.findFirst({
       where: {
-        id: params.id,
+        id,
         story: {
           userId: session.user.id,
         },
@@ -28,7 +29,7 @@ export async function GET(
     }
 
     const scenes = await prisma.scene.findMany({
-      where: { chapterId: params.id },
+      where: { chapterId: id },
       include: {
         versions: {
           orderBy: { createdAt: "desc" },
@@ -49,9 +50,10 @@ export async function GET(
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -70,7 +72,7 @@ export async function POST(
     // Verify user owns the chapter
     const chapter = await prisma.chapter.findFirst({
       where: {
-        id: params.id,
+        id,
         story: {
           userId: session.user.id,
         },
@@ -84,7 +86,7 @@ export async function POST(
     // Check for overlapping scenes
     const overlappingScene = await prisma.scene.findFirst({
       where: {
-        chapterId: params.id,
+        chapterId: id,
         OR: [
           {
             AND: [
@@ -121,7 +123,7 @@ export async function POST(
         label: label.trim(),
         startPos,
         endPos,
-        chapterId: params.id,
+        chapterId: id,
         versions: {
           create: {
             content: content || { type: "doc", content: [] },
@@ -157,4 +159,3 @@ export async function POST(
     );
   }
 }
-

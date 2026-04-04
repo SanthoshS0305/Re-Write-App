@@ -4,9 +4,10 @@ import { prisma } from "@/lib/db/prisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -16,7 +17,7 @@ export async function GET(
     // Verify user owns the scene
     const scene = await prisma.scene.findFirst({
       where: {
-        id: params.id,
+        id,
         chapter: {
           story: {
             userId: session.user.id,
@@ -30,7 +31,7 @@ export async function GET(
     }
 
     const versions = await prisma.sceneVersion.findMany({
-      where: { sceneId: params.id },
+      where: { sceneId: id },
       orderBy: { createdAt: "desc" },
     });
 
@@ -46,9 +47,10 @@ export async function GET(
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -67,7 +69,7 @@ export async function POST(
     // Verify user owns the scene
     const scene = await prisma.scene.findFirst({
       where: {
-        id: params.id,
+        id,
         chapter: {
           story: {
             userId: session.user.id,
@@ -82,7 +84,7 @@ export async function POST(
 
     const version = await prisma.sceneVersion.create({
       data: {
-        sceneId: params.id,
+        sceneId: id,
         content,
       },
     });
@@ -96,4 +98,3 @@ export async function POST(
     );
   }
 }
-

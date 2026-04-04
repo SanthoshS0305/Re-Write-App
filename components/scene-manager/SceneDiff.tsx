@@ -22,6 +22,7 @@ export function SceneDiff({ scene, version, chapterId, onVersionApplied }: Scene
   const [applying, setApplying] = useState(false);
 
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: editorExtensions,
     content: version?.content || null,
     editable: false,

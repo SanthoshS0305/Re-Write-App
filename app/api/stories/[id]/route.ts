@@ -4,9 +4,10 @@ import { prisma } from "@/lib/db/prisma";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -15,7 +16,7 @@ export async function GET(
 
     const story = await prisma.story.findFirst({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
       include: {
@@ -41,9 +42,10 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -61,7 +63,7 @@ export async function PATCH(
 
     const story = await prisma.story.updateMany({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
       data: {
@@ -74,7 +76,7 @@ export async function PATCH(
     }
 
     const updatedStory = await prisma.story.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json(updatedStory);
@@ -89,9 +91,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -100,7 +103,7 @@ export async function DELETE(
 
     const story = await prisma.story.deleteMany({
       where: {
-        id: params.id,
+        id,
         userId: session.user.id,
       },
     });
@@ -118,4 +121,3 @@ export async function DELETE(
     );
   }
 }
-

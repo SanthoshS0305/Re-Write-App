@@ -103,3 +103,55 @@ Pattern: check session → verify ownership → validate inputs → Prisma query
 
 ### Styling
 Custom Tailwind color palette: `dark-green`, `mint-green`, `aqua`, `light-gray`, `green-highlight`, `green-lowlight`. Fonts: Inter (body), Joan (display/serif). Dark mode uses class strategy.
+
+## Design System (from Figma: XWFo3TP9n8ofaehzjwWXiH)
+
+### Color Tokens (`app/globals.css`)
+| Token | Hex | Usage |
+|---|---|---|
+| `--dark-green` | `#02353c` | Card/toolbar background |
+| `--dark-green-highlight` | `#044c56` | Toolbar buttons, active states |
+| `--dark-mint-green` | `#3b4c49` | Auth page background base |
+| `--dark-page` | `#3c3c3c` | Dark mode editor canvas |
+| `--aqua` | `#3fd0c9` | Logo "Re", accent headings, links |
+| `--mint-green` | `#c1f6ed` | Input field backgrounds, light mode bg |
+| `--light-gray` | `#f3f3f3` | Body text on dark backgrounds |
+| `--green-highlight` | `#34c18a` | Primary action buttons |
+| `--green-lowlight` | `#2ca274` | Secondary links |
+
+Logo colon (`:`) is always **black** — not aqua or mint-green.
+
+### Typography
+- **Display font**: Joan (serif) — `font-display` / `.joan-regular` class
+- **Logo**: 96px Joan — `Re` (aqua) `:` (black) `Write` (light-gray)
+- **Welcome heading**: 64px Joan — "Hello, Author," (aqua) + page-specific text (light-gray)
+- **Menu/labels**: 24px Joan, white
+- **Chapter name pill**: 32px Joan
+- **Body/editor text**: 20px Joan
+
+### Screen Layouts
+
+#### Auth Pages (Login & Signup) — `app/login/page.tsx`, `app/signup/page.tsx`
+- Full-screen background: `forest_bg.jpg` at 40% opacity over `--dark-mint-green`
+- Centered card: `--dark-green` bg, `rounded-[10px]`, shadow, `px-[30px] py-[40px]`
+- Input fields: `--mint-green` bg, `3px solid black` border, `rounded-[20px]`, 32px Joan
+- Primary button: `--green-highlight` bg, `3px solid black` border, `rounded-[30px]`, 36px Joan
+- Signup has First Name + Last Name in a side-by-side row
+
+#### Editor — `app/editor/[chapterId]/page.tsx`
+- **Toolbar** (top, full-width, max-h 120px): `--dark-green` bg with drop shadow
+  - Left: "Re:" logo (64px Joan, aqua)
+  - Chapter name pill: `--mint-green` bg, `rounded-[20px]`, white border
+  - File menu bar below: File · Edit · Scenes · Versions (24px Joan, white)
+  - Center: primary formatting toolbar in `--dark-green-highlight` pill (`rounded-[30px]`, `p-[20px]`)
+  - Right: "Scene Manager" + "Version History" buttons — `--dark-green-highlight`, `rounded-[30px]`, 24px Joan, white text
+- **Editor canvas**: centered, `w-[800px]`, shadow
+  - Dark mode: `--dark-page` (`#3c3c3c`) bg, white text
+  - Light mode: white bg, black text
+- **Page background**: forest image visible on left/right of canvas
+  - Dark mode: `--dark-mint-green` base + forest at 40% opacity
+  - Light mode: `--mint-green` base + forest at 40% opacity
+
+### Background Images
+- `public/images/forest_bg.jpg` — used on auth pages and editor background
+- `public/images/woman.jpg` — original body background (global CSS fallback)

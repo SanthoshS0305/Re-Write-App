@@ -16,12 +16,14 @@ interface VersionDiffProps {
 
 export function VersionDiff({ version1, version2, chapterId }: VersionDiffProps) {
   const editor1 = useEditor({
+    immediatelyRender: false,
     extensions: editorExtensions,
     content: version1?.content || null,
     editable: false,
   });
 
   const editor2 = useEditor({
+    immediatelyRender: false,
     extensions: editorExtensions,
     content: version2?.content || null,
     editable: false,

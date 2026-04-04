@@ -5,9 +5,10 @@ import { countWords } from "@/lib/utils/word-count";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -17,7 +18,7 @@ export async function GET(
     // Verify user owns the chapter
     const chapter = await prisma.chapter.findFirst({
       where: {
-        id: params.id,
+        id,
         story: {
           userId: session.user.id,
         },
@@ -29,7 +30,7 @@ export async function GET(
     }
 
     const versions = await prisma.chapterVersion.findMany({
-      where: { chapterId: params.id },
+      where: { chapterId: id },
       orderBy: { createdAt: "desc" },
     });
 
@@ -45,9 +46,10 @@ export async function GET(
 
 export async function POST(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const session = await getServerSession();
 
     if (!session?.user?.id) {
@@ -66,7 +68,7 @@ export async function POST(
     // Verify user owns the chapter
     const chapter = await prisma.chapter.findFirst({
       where: {
-        id: params.id,
+        id,
         story: {
           userId: session.user.id,
         },
@@ -91,7 +93,7 @@ export async function POST(
 
     const version = await prisma.chapterVersion.create({
       data: {
-        chapterId: params.id,
+        chapterId: id,
         label: label?.trim() || null,
         content,
         wordCount,
@@ -108,4 +110,3 @@ export async function POST(
     );
   }
 }
-

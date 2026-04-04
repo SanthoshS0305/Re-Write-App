@@ -27,18 +27,21 @@ export function ConflictResolutionDialog({
   const [mergedContent, setMergedContent] = useState<any>(null);
 
   const localEditor = useEditor({
+    immediatelyRender: false,
     extensions: editorExtensions,
     content: conflict?.localData?.content || null,
     editable: false,
   });
 
   const serverEditor = useEditor({
+    immediatelyRender: false,
     extensions: editorExtensions,
     content: conflict?.serverData?.content || null,
     editable: false,
   });
 
   const mergedEditor = useEditor({
+    immediatelyRender: false,
     extensions: editorExtensions,
     content: mergedContent || conflict?.localData?.content || null,
     editable: resolution === "merge",

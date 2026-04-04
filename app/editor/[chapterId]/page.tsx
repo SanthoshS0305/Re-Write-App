@@ -6,8 +6,9 @@ import { EditorPageContent } from "@/components/editor/EditorPageContent";
 export default async function EditorPage({
   params,
 }: {
-  params: { chapterId: string };
+  params: Promise<{ chapterId: string }>;
 }) {
+  const { chapterId } = await params;
   const session = await getServerSession();
 
   if (!session?.user?.id) {
@@ -16,7 +17,7 @@ export default async function EditorPage({
 
   const chapter = await prisma.chapter.findFirst({
     where: {
-      id: params.chapterId,
+      id: chapterId,
       story: {
         userId: session.user.id,
       },
