@@ -71,7 +71,7 @@ export function Editor({
     editorProps: {
       attributes: {
         class:
-          "prose prose-lg dark:prose-invert max-w-none focus:outline-none min-h-[500px] px-[30px] py-[40px] text-white text-[20px] font-display",
+          "prose prose-lg dark:prose-invert max-w-none focus:outline-none min-h-[500px] px-[30px] py-[40px] text-[20px] font-display text-black dark:text-white",
       },
     },
   });

@@ -1,10 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Upload } from "lucide-react";
 import { importFromRewr, validateRewrFile } from "@/lib/utils/rewr-format";
 import { useRouter } from "next/navigation";
@@ -24,68 +21,47 @@ export function ImportDialog({ open, onOpenChange }: ImportDialogProps) {
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     if (!file.name.endsWith(".rewr")) {
       setError("Please select a .rewr file");
       return;
     }
-
     try {
       const text = await file.text();
       const data = JSON.parse(text);
-
       if (!validateRewrFile(data)) {
         setError("Invalid .rewr file format");
         return;
       }
-
       setPreview(importFromRewr(data));
       setError("");
-    } catch (err) {
+    } catch {
       setError("Failed to parse file. Please ensure it's a valid .rewr file.");
     }
   };
 
   const handleImport = async () => {
     if (!preview) return;
-
     setLoading(true);
     try {
-      // Create story if needed
       const storyResponse = await fetch("/api/stories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: preview.story.title }),
       });
-
-      if (!storyResponse.ok) {
-        throw new Error("Failed to create story");
-      }
-
+      if (!storyResponse.ok) throw new Error("Failed to create story");
       const story = await storyResponse.json();
 
-      // Create chapter
       const chapterResponse = await fetch("/api/chapters", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: preview.chapter.title,
-          storyId: story.id,
-          content: preview.chapter.content,
-        }),
+        body: JSON.stringify({ title: preview.chapter.title, storyId: story.id, content: preview.chapter.content }),
       });
-
-      if (!chapterResponse.ok) {
-        throw new Error("Failed to create chapter");
-      }
-
+      if (!chapterResponse.ok) throw new Error("Failed to create chapter");
       const chapter = await chapterResponse.json();
 
-      // Import scenes and versions would be done via separate API calls
-      // For now, just redirect to the editor
       router.push(`/editor/${chapter.id}`);
       onOpenChange(false);
-    } catch (err) {
+    } catch {
       setError("Failed to import. Please try again.");
     } finally {
       setLoading(false);
@@ -94,58 +70,109 @@ export function ImportDialog({ open, onOpenChange }: ImportDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent style={{ backgroundColor: "var(--dark-green)", border: "1px solid var(--dark-green-highlight)", borderRadius: 12, maxWidth: 480 }}>
         <DialogHeader>
-          <DialogTitle>Import Chapter</DialogTitle>
-          <DialogDescription>
-            Select a .rewr file to import a chapter
-          </DialogDescription>
+          <DialogTitle className="font-display" style={{ color: "var(--light-gray)", fontSize: 24 }}>
+            Import Chapter
+          </DialogTitle>
         </DialogHeader>
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="file">Select .rewr file</Label>
-            <Input
-              id="file"
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 16, padding: "12px 0" }}>
+          {/* File picker */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <label className="font-display" style={{ color: "var(--light-gray)", fontSize: 16, opacity: 0.8 }}>
+              Select .rewr file
+            </label>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="font-display"
+              style={{
+                backgroundColor: "var(--dark-green-highlight)",
+                border: "1px solid var(--dark-green-highlight)",
+                borderRadius: 20,
+                padding: "10px 18px",
+                color: "var(--light-gray)",
+                fontSize: 16,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <Upload style={{ width: 16, height: 16 }} />
+              Choose File
+            </button>
+            <input
+              ref={fileInputRef}
               type="file"
               accept=".rewr"
-              ref={fileInputRef}
               onChange={handleFileSelect}
+              style={{ display: "none" }}
             />
           </div>
+
+          {/* Preview */}
           {preview && (
-            <div className="border rounded p-4 space-y-2">
-              <h4 className="font-semibold">Preview</h4>
-              <p className="text-sm">
-                <strong>Story:</strong> {preview.story.title}
+            <div style={{ backgroundColor: "var(--dark-green-highlight)", borderRadius: 10, padding: "12px 16px", display: "flex", flexDirection: "column", gap: 6 }}>
+              <p className="font-display" style={{ color: "var(--aqua)", fontSize: 14, marginBottom: 4 }}>Preview</p>
+              <p className="font-display" style={{ color: "var(--light-gray)", fontSize: 14 }}>
+                <span style={{ opacity: 0.6 }}>Story: </span>{preview.story.title}
               </p>
-              <p className="text-sm">
-                <strong>Chapter:</strong> {preview.chapter.title}
+              <p className="font-display" style={{ color: "var(--light-gray)", fontSize: 14 }}>
+                <span style={{ opacity: 0.6 }}>Chapter: </span>{preview.chapter.title}
               </p>
-              <p className="text-sm">
-                <strong>Scenes:</strong> {preview.scenes.length}
+              <p className="font-display" style={{ color: "var(--light-gray)", fontSize: 14 }}>
+                <span style={{ opacity: 0.6 }}>Scenes: </span>{preview.scenes.length}
               </p>
-              <p className="text-sm">
-                <strong>Versions:</strong> {preview.versions.length}
+              <p className="font-display" style={{ color: "var(--light-gray)", fontSize: 14 }}>
+                <span style={{ opacity: 0.6 }}>Versions: </span>{preview.versions.length}
               </p>
             </div>
           )}
+
           {error && (
-            <div className="text-sm text-destructive">{error}</div>
+            <p className="font-display" style={{ color: "#f87171", fontSize: 14 }}>{error}</p>
           )}
         </div>
-        <DialogFooter>
-          <Button
-            variant="outline"
+
+        <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 8 }}>
+          <button
+            type="button"
             onClick={() => onOpenChange(false)}
+            className="font-display"
+            style={{
+              backgroundColor: "var(--dark-green-highlight)",
+              border: "none",
+              borderRadius: 20,
+              padding: "10px 20px",
+              color: "var(--light-gray)",
+              fontSize: 16,
+              cursor: "pointer",
+            }}
           >
             Cancel
-          </Button>
-          <Button onClick={handleImport} disabled={!preview || loading}>
+          </button>
+          <button
+            type="button"
+            onClick={handleImport}
+            disabled={!preview || loading}
+            className="font-display"
+            style={{
+              backgroundColor: "var(--green-highlight)",
+              border: "3px solid black",
+              borderRadius: 20,
+              padding: "10px 20px",
+              color: "black",
+              fontSize: 16,
+              cursor: (!preview || loading) ? "not-allowed" : "pointer",
+              opacity: (!preview || loading) ? 0.5 : 1,
+            }}
+          >
             {loading ? "Importing..." : "Import"}
-          </Button>
-        </DialogFooter>
+          </button>
+        </div>
       </DialogContent>
     </Dialog>
   );
 }
-

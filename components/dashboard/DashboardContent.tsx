@@ -2,18 +2,13 @@
 
 import { useState } from "react";
 import { signOut } from "next-auth/react";
-import { Button } from "@/components/ui/button";
 import { StoryCard } from "@/components/dashboard/StoryCard";
 import { CreateStoryDialog } from "@/components/dashboard/CreateStoryDialog";
 import { ImportDialog } from "@/components/dashboard/ImportDialog";
-import { ThemeToggle } from "@/components/dashboard/ThemeToggle";
-import { BookOpen, LogOut, Upload } from "lucide-react";
-import type { Story } from "@prisma/client";
-import type { Chapter } from "@prisma/client";
+import { Upload, LogOut, Plus } from "lucide-react";
+import type { Story, Chapter } from "@prisma/client";
 
-type StoryWithChapters = Story & {
-  chapters: Chapter[];
-};
+type StoryWithChapters = Story & { chapters: Chapter[] };
 
 interface DashboardContentProps {
   stories: StoryWithChapters[];
@@ -34,69 +29,105 @@ export function DashboardContent({ stories: initialStories }: DashboardContentPr
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <BookOpen className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold">Re:Write</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Button variant="outline" onClick={() => signOut()}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Sign Out
-            </Button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Background */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0" style={{ backgroundColor: "var(--dark-mint-green)" }} />
+        <img
+          src="/images/forest_bg.jpg"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
+        />
+      </div>
 
-      <main className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-3xl font-bold">Your Stories</h2>
-          <div className="flex gap-2">
-            <Button variant="outline" onClick={() => setIsImportDialogOpen(true)}>
-              <Upload className="h-4 w-4 mr-2" />
-              Import
-            </Button>
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Header */}
+        <header
+          className="flex items-center gap-[10px] px-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] shrink-0"
+          style={{ backgroundColor: "var(--dark-green)", minHeight: "80px" }}
+        >
+          {/* Logo */}
+          <div className="flex items-center justify-center h-full px-[10px] shrink-0">
+            <span className="font-display leading-none" style={{ fontSize: "48px", color: "var(--aqua)" }}>
+              Re:
+            </span>
+          </div>
+
+          <div className="flex-1" />
+
+          {/* Actions */}
+          <button
+            onClick={() => setIsImportDialogOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-[20px] font-display text-[18px] text-white transition-opacity hover:opacity-80"
+            style={{ backgroundColor: "var(--dark-green-highlight)" }}
+          >
+            <Upload className="h-4 w-4" />
+            Import
+          </button>
+          <button
+            onClick={() => signOut()}
+            className="flex items-center gap-2 px-4 py-2 rounded-[20px] font-display text-[18px] transition-opacity hover:opacity-80"
+            style={{ color: "var(--light-gray)" }}
+          >
+            <LogOut className="h-4 w-4" />
+            Sign Out
+          </button>
+        </header>
+
+        {/* Main */}
+        <main className="flex-1 px-12 py-10">
+          {/* Page heading */}
+          <div className="fade-up mb-10 flex items-end justify-between">
+            <div>
+              <p className="font-display text-[20px] mb-1" style={{ color: "var(--aqua)" }}>
+                Hello, Author,
+              </p>
+              <h2 className="font-display text-[56px] leading-none" style={{ color: "var(--light-gray)" }}>
+                Your Stories
+              </h2>
+            </div>
+            <button
+              onClick={() => setIsCreateDialogOpen(true)}
+              className="flex items-center gap-2 rounded-[30px] px-6 py-3 font-display text-[20px] text-black border-[3px] border-black transition-opacity hover:opacity-90"
+              style={{ backgroundColor: "var(--green-highlight)" }}
+            >
+              <Plus className="h-5 w-5" />
               New Story
-            </Button>
+            </button>
           </div>
-        </div>
 
-        {stories.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground mb-4">
-              You don't have any stories yet.
-            </p>
-            <Button onClick={() => setIsCreateDialogOpen(true)}>
-              Create Your First Story
-            </Button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {stories.map((story) => (
-              <StoryCard
-                key={story.id}
-                story={story}
-                onDelete={handleStoryDeleted}
-              />
-            ))}
-          </div>
-        )}
+          {stories.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-24 gap-6">
+              <p className="font-display text-[24px]" style={{ color: "var(--light-gray)", opacity: 0.6 }}>
+                You don't have any stories yet.
+              </p>
+              <button
+                onClick={() => setIsCreateDialogOpen(true)}
+                className="rounded-[30px] px-8 py-3 font-display text-[20px] text-black border-[3px] border-black transition-opacity hover:opacity-90"
+                style={{ backgroundColor: "var(--green-highlight)" }}
+              >
+                Create Your First Story
+              </button>
+            </div>
+          ) : (
+            <div className="fade-up fade-up-delay-1 grid grid-cols-1 md:grid-cols-2 gap-6">
+              {stories.map((story) => (
+                <StoryCard key={story.id} story={story} onDelete={handleStoryDeleted} />
+              ))}
+            </div>
+          )}
+        </main>
+      </div>
 
-        <CreateStoryDialog
-          open={isCreateDialogOpen}
-          onOpenChange={setIsCreateDialogOpen}
-          onStoryCreated={handleStoryCreated}
-        />
-        <ImportDialog
-          open={isImportDialogOpen}
-          onOpenChange={setIsImportDialogOpen}
-        />
-      </main>
+      <CreateStoryDialog
+        open={isCreateDialogOpen}
+        onOpenChange={setIsCreateDialogOpen}
+        onStoryCreated={handleStoryCreated}
+      />
+      <ImportDialog
+        open={isImportDialogOpen}
+        onOpenChange={setIsImportDialogOpen}
+      />
     </div>
   );
 }
-

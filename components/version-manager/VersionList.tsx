@@ -1,11 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Save, RotateCcw } from "lucide-react";
 import type { ChapterVersion } from "./types";
 
@@ -39,10 +36,8 @@ export function VersionList({
   const handleCreateVersion = async () => {
     setSaving(true);
     try {
-      // Get current chapter content
       const chapterResponse = await fetch(`/api/chapters/${chapterId}`);
       if (!chapterResponse.ok) return;
-
       const chapter = await chapterResponse.json();
       const scenesResponse = await fetch(`/api/chapters/${chapterId}/scenes`);
       const scenes = scenesResponse.ok ? await scenesResponse.json() : [];
@@ -50,13 +45,8 @@ export function VersionList({
       const response = await fetch(`/api/chapters/${chapterId}/versions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          label: label.trim() || null,
-          content: chapter.content,
-          scenesState: scenes,
-        }),
+        body: JSON.stringify({ label: label.trim() || null, content: chapter.content, scenesState: scenes }),
       });
-
       if (response.ok) {
         onVersionCreated();
         setIsCreateDialogOpen(false);
@@ -70,76 +60,123 @@ export function VersionList({
   };
 
   const handleRestoreVersion = async (version: ChapterVersion) => {
-    if (!confirm(`Restore version from ${new Date(version.createdAt).toLocaleString()}?`)) {
-      return;
-    }
-
+    if (!confirm(`Restore version from ${new Date(version.createdAt).toLocaleString()}?`)) return;
     try {
       const response = await fetch(`/api/chapters/${chapterId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          content: version.content,
-        }),
+        body: JSON.stringify({ content: version.content }),
       });
-
-      if (response.ok) {
-        onRestored?.(version.content);
-      }
+      if (response.ok) onRestored?.(version.content);
     } catch (error) {
       console.error("Failed to restore version:", error);
     }
   };
 
   if (loading) {
-    return <div className="p-4 text-sm text-muted-foreground">Loading versions...</div>;
+    return (
+      <div className="p-4 font-display" style={{ color: "var(--light-gray)", opacity: 0.6, fontSize: 14 }}>
+        Loading versions...
+      </div>
+    );
   }
 
   return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold">Versions</h3>
-        <Button size="sm" onClick={() => setIsCreateDialogOpen(true)}>
-          <Save className="h-4 w-4 mr-2" />
+    <div style={{ padding: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+        <h3 className="font-display" style={{ color: "var(--light-gray)", fontSize: 18 }}>Versions</h3>
+        <button
+          onClick={() => setIsCreateDialogOpen(true)}
+          className="font-display"
+          style={{
+            backgroundColor: "var(--dark-green-highlight)",
+            border: "none",
+            borderRadius: 16,
+            padding: "6px 12px",
+            color: "var(--light-gray)",
+            fontSize: 13,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
+          <Save style={{ width: 14, height: 14 }} />
           Save Version
-        </Button>
+        </button>
       </div>
+
       <ScrollArea className="h-full">
-        <div className="space-y-2">
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {versions.map((version) => (
-            <div key={version.id} className="space-y-2">
-              <div className="flex flex-col gap-2">
-                <Button
-                  variant={selectedVersion1?.id === version.id ? "default" : "ghost"}
-                  className="w-full justify-start text-left"
-                  onClick={() => onVersion1Select(version)}
-                >
-                  <div className="flex flex-col items-start">
-                    <span className="font-medium">
-                      {version.label || new Date(version.createdAt).toLocaleString()}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      {version.wordCount} words • {new Date(version.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </Button>
-                <Button
-                  variant={selectedVersion2?.id === version.id ? "default" : "outline"}
-                  size="sm"
-                  className="w-full justify-start text-left"
+            <div key={version.id} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              {/* Primary select button */}
+              <button
+                onClick={() => onVersion1Select(version)}
+                className="font-display"
+                style={{
+                  textAlign: "left",
+                  background: selectedVersion1?.id === version.id ? "var(--dark-green-highlight)" : "none",
+                  border: selectedVersion1?.id === version.id ? "1px solid var(--aqua)" : "1px solid transparent",
+                  borderRadius: 8,
+                  padding: "8px 12px",
+                  cursor: "pointer",
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                }}
+              >
+                <span style={{ color: "var(--light-gray)", fontSize: 14, fontWeight: 500 }}>
+                  {version.label || new Date(version.createdAt).toLocaleString()}
+                </span>
+                <span style={{ color: "var(--aqua)", fontSize: 12, opacity: 0.7 }}>
+                  {version.wordCount} words · {new Date(version.createdAt).toLocaleDateString()}
+                </span>
+              </button>
+
+              {/* Compare + Restore row */}
+              <div style={{ display: "flex", gap: 6, paddingLeft: 4 }}>
+                <button
                   onClick={() => onVersion2Select(version)}
+                  className="font-display"
+                  style={{
+                    flex: 1,
+                    background: selectedVersion2?.id === version.id ? "var(--dark-green-highlight)" : "none",
+                    border: selectedVersion2?.id === version.id
+                      ? "1px solid var(--aqua)"
+                      : "1px solid var(--dark-green-highlight)",
+                    borderRadius: 12,
+                    padding: "4px 10px",
+                    color: "var(--light-gray)",
+                    fontSize: 12,
+                    cursor: "pointer",
+                  }}
                 >
                   Compare
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-start text-left"
+                </button>
+                <button
                   onClick={() => handleRestoreVersion(version)}
+                  className="font-display"
+                  style={{
+                    flex: 1,
+                    background: "none",
+                    border: "none",
+                    borderRadius: 12,
+                    padding: "4px 10px",
+                    color: "var(--light-gray)",
+                    fontSize: 12,
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: 4,
+                    opacity: 0.7,
+                  }}
                 >
-                  <RotateCcw className="h-4 w-4 mr-2" />
+                  <RotateCcw style={{ width: 12, height: 12 }} />
                   Restore
-                </Button>
+                </button>
               </div>
             </div>
           ))}
@@ -147,38 +184,71 @@ export function VersionList({
       </ScrollArea>
 
       <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent>
+        <DialogContent style={{ backgroundColor: "var(--dark-green)", border: "1px solid var(--dark-green-highlight)", borderRadius: 12 }}>
           <DialogHeader>
-            <DialogTitle>Save Version</DialogTitle>
-            <DialogDescription>
-              Save the current chapter state as a new version
-            </DialogDescription>
+            <DialogTitle className="font-display" style={{ color: "var(--light-gray)", fontSize: 22 }}>
+              Save Version
+            </DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="label">Version Label (optional)</Label>
-              <Input
-                id="label"
-                placeholder="First Draft"
-                value={label}
-                onChange={(e) => setLabel(e.target.value)}
-              />
-            </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: "12px 0" }}>
+            <label className="font-display" style={{ color: "var(--light-gray)", fontSize: 16, opacity: 0.8 }}>
+              Version Label (optional)
+            </label>
+            <input
+              placeholder="First Draft"
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              className="font-display"
+              style={{
+                backgroundColor: "var(--mint-green)",
+                border: "3px solid black",
+                borderRadius: 20,
+                padding: "10px 18px",
+                fontSize: 16,
+                color: "black",
+                outline: "none",
+                width: "100%",
+              }}
+            />
           </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 8 }}>
+            <button
+              type="button"
               onClick={() => setIsCreateDialogOpen(false)}
+              className="font-display"
+              style={{
+                backgroundColor: "var(--dark-green-highlight)",
+                border: "none",
+                borderRadius: 20,
+                padding: "10px 20px",
+                color: "var(--light-gray)",
+                fontSize: 16,
+                cursor: "pointer",
+              }}
             >
               Cancel
-            </Button>
-            <Button onClick={handleCreateVersion} disabled={saving}>
+            </button>
+            <button
+              type="button"
+              onClick={handleCreateVersion}
+              disabled={saving}
+              className="font-display"
+              style={{
+                backgroundColor: "var(--green-highlight)",
+                border: "3px solid black",
+                borderRadius: 20,
+                padding: "10px 20px",
+                color: "black",
+                fontSize: 16,
+                cursor: saving ? "not-allowed" : "pointer",
+                opacity: saving ? 0.7 : 1,
+              }}
+            >
               {saving ? "Saving..." : "Save Version"}
-            </Button>
-          </DialogFooter>
+            </button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
-

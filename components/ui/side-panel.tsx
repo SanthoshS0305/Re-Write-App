@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface SidePanelProps {
   open: boolean;
@@ -12,7 +11,6 @@ interface SidePanelProps {
 }
 
 export function SidePanel({ open, onClose, title, children }: SidePanelProps) {
-  // Close on Escape key
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === "Escape" && open) onClose();
@@ -22,32 +20,57 @@ export function SidePanel({ open, onClose, title, children }: SidePanelProps) {
   }, [open, onClose]);
 
   return (
-    <>
-      {/* Backdrop (subtle, doesn't block editor) */}
-      {open && (
-        <div
-          className="fixed inset-0 z-30 pointer-events-none"
-          aria-hidden="true"
-        />
-      )}
-
-      {/* Panel */}
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 40,
+        width: 640,
+        backgroundColor: "var(--dark-green)",
+        borderLeft: "1px solid var(--dark-green-highlight)",
+        boxShadow: "-4px 0 24px rgba(0,0,0,0.4)",
+        display: "flex",
+        flexDirection: "column",
+        transform: open ? "translateX(0)" : "translateX(100%)",
+        transition: "transform 0.3s ease-in-out",
+      }}
+    >
+      {/* Header */}
       <div
-        className={`fixed inset-y-0 right-0 z-40 w-[640px] bg-background border-l shadow-2xl flex flex-col
-          transition-transform duration-300 ease-in-out
-          ${open ? "translate-x-0" : "translate-x-full"}`}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "12px 20px",
+          borderBottom: "1px solid var(--dark-green-highlight)",
+          flexShrink: 0,
+        }}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b shrink-0">
-          <h2 className="font-semibold text-lg">{title}</h2>
-          <Button variant="ghost" size="icon" onClick={onClose}>
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 overflow-hidden">{children}</div>
+        <h2 style={{ fontFamily: "Joan, serif", fontSize: 20, color: "var(--light-gray)", margin: 0 }}>
+          {title}
+        </h2>
+        <button
+          onClick={onClose}
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            color: "var(--light-gray)",
+            opacity: 0.7,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 4,
+          }}
+        >
+          <X style={{ width: 18, height: 18 }} />
+        </button>
       </div>
-    </>
+
+      {/* Content */}
+      <div style={{ flex: 1, overflow: "hidden" }}>{children}</div>
+    </div>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import type { Editor } from "@tiptap/react";
-import { Button } from "@/components/ui/button";
 import {
   Bold,
   Italic,
@@ -12,10 +11,6 @@ import {
   List,
   ListOrdered,
   Link as LinkIcon,
-  Save,
-  Layers,
-  History,
-  Download,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -23,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type React from "react";
 
 interface EditorToolbarProps {
   editor: Editor;
@@ -32,174 +28,146 @@ interface EditorToolbarProps {
 }
 
 export function EditorToolbar({ editor, chapterId, onSceneManagerOpen, onVersionManagerOpen }: EditorToolbarProps) {
-  if (!editor) {
-    return null;
-  }
-  const handleSave = async () => {
-    const content = editor.getJSON();
-    const response = await fetch(`/api/chapters/${chapterId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content }),
-    });
-
-    if (response.ok) {
-      // Show success toast or indicator
-    }
-  };
+  if (!editor) return null;
 
   const setLink = () => {
     const previousUrl = editor.getAttributes("link").href;
     const url = window.prompt("URL", previousUrl);
-
-    if (url === null) {
-      return;
-    }
-
+    if (url === null) return;
     if (url === "") {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
       return;
     }
-
     editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
   };
 
+  const btn = (active = false): React.CSSProperties => ({
+    background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    opacity: active ? 0.45 : 1,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    transition: "opacity 0.15s",
+  });
+
+  const iconStyle: React.CSSProperties = { color: "white", width: 18, height: 18 };
+
   return (
-    <div className="bg-white flex items-start p-4 w-[891px]">
-      <div className="flex flex-1 gap-12 items-start">
-        {/* Text Formatting Group */}
-        <div className="flex gap-6 items-start">
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            disabled={!editor.can().chain().focus().toggleBold().run()}
-            className={`w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded ${editor.isActive("bold") ? "bg-gray-200" : ""}`}
-          >
-            <Bold className="h-6 w-6 text-gray-700" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            disabled={!editor.can().chain().focus().toggleItalic().run()}
-            className={`w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded ${editor.isActive("italic") ? "bg-gray-200" : ""}`}
-          >
-            <Italic className="h-6 w-6 text-gray-700" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            disabled={!editor.can().chain().focus().toggleUnderline().run()}
-            className={`w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded ${editor.isActive("underline") ? "bg-gray-200" : ""}`}
-          >
-            <Underline className="h-6 w-6 text-gray-700" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            disabled={!editor.can().chain().focus().toggleStrike().run()}
-            className={`w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded ${editor.isActive("strike") ? "bg-gray-200" : ""}`}
-          >
-            <span className="text-gray-700 text-sm font-bold line-through">S</span>
-          </button>
-        </div>
-
-        {/* Block Formatting Group */}
-        <div className="flex gap-6 items-start">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded"
-              >
-                <Heading1 className="h-6 w-6 text-gray-700" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem
-                onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-              >
-                <Heading1 className="h-4 w-4 mr-2" />
-                Heading 1
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-              >
-                <Heading2 className="h-4 w-4 mr-2" />
-                Heading 2
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-              >
-                <Heading3 className="h-4 w-4 mr-2" />
-                Heading 3
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
-            className={`w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded ${editor.isActive("bulletList") ? "bg-gray-200" : ""}`}
-          >
-            <List className="h-6 w-6 text-gray-700" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
-            className={`w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded ${editor.isActive("orderedList") ? "bg-gray-200" : ""}`}
-          >
-            <ListOrdered className="h-6 w-6 text-gray-700" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleBlockquote().run()}
-            className={`w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded ${editor.isActive("blockquote") ? "bg-gray-200" : ""}`}
-          >
-            <span className="text-gray-700 text-xs">"</span>
-          </button>
-        </div>
-
-        {/* Media/Content Group */}
-        <div className="flex gap-6 items-start">
-          <button
-            type="button"
-            onClick={setLink}
-            className={`w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded ${editor.isActive("link") ? "bg-gray-200" : ""}`}
-          >
-            <LinkIcon className="h-6 w-6 text-gray-700" />
-          </button>
-          <button
-            type="button"
-            onClick={() => editor.chain().focus().toggleCode().run()}
-            className={`w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded ${editor.isActive("code") ? "bg-gray-200" : ""}`}
-          >
-            <span className="text-gray-700 text-xs font-mono">{"<>"}</span>
-          </button>
-        </div>
+    <div
+      className="flex items-center gap-7 w-full"
+      style={{
+        backgroundColor: "var(--dark-green-highlight)",
+        borderRadius: 30,
+        padding: "12px 20px",
+      }}
+    >
+      {/* Text */}
+      <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
+        <button type="button" style={btn(editor.isActive("bold"))}
+          disabled={!editor.can().chain().focus().toggleBold().run()}
+          onClick={() => editor.chain().focus().toggleBold().run()}>
+          <Bold style={iconStyle} />
+        </button>
+        <button type="button" style={btn(editor.isActive("italic"))}
+          disabled={!editor.can().chain().focus().toggleItalic().run()}
+          onClick={() => editor.chain().focus().toggleItalic().run()}>
+          <Italic style={iconStyle} />
+        </button>
+        <button type="button" style={btn(editor.isActive("underline"))}
+          disabled={!editor.can().chain().focus().toggleUnderline().run()}
+          onClick={() => editor.chain().focus().toggleUnderline().run()}>
+          <Underline style={iconStyle} />
+        </button>
+        <button type="button" style={btn(editor.isActive("strike"))}
+          disabled={!editor.can().chain().focus().toggleStrike().run()}
+          onClick={() => editor.chain().focus().toggleStrike().run()}>
+          <span style={{ color: "white", fontSize: 14, fontWeight: 700, textDecoration: "line-through" }}>S</span>
+        </button>
       </div>
 
-      {/* Undo / Redo */}
-      <div className="flex gap-6 items-start">
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editor.can().undo()}
-          className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded disabled:opacity-30"
-          title="Undo"
-        >
-          <span className="text-gray-700 text-xs">↩</span>
+      {/* Block */}
+      <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button type="button" style={btn(editor.isActive("heading"))}>
+              <Heading1 style={iconStyle} />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            style={{
+              backgroundColor: "var(--dark-green)",
+              border: "1px solid var(--dark-green-highlight)",
+              display: "flex",
+              flexDirection: "row",
+              gap: 4,
+              padding: "6px 8px",
+            }}
+          >
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+              style={{ background: "none", cursor: "pointer", padding: "4px 8px", color: "white", fontFamily: "Joan, serif" }}
+            >
+              H1
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+              style={{ background: "none", cursor: "pointer", padding: "4px 8px", color: "white", fontFamily: "Joan, serif" }}
+            >
+              H2
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+              style={{ background: "none", cursor: "pointer", padding: "4px 8px", color: "white", fontFamily: "Joan, serif" }}
+            >
+              H3
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <button type="button" style={btn(editor.isActive("bulletList"))}
+          onClick={() => editor.chain().focus().toggleBulletList().run()}>
+          <List style={iconStyle} />
         </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().redo().run()}
+        <button type="button" style={btn(editor.isActive("orderedList"))}
+          onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+          <ListOrdered style={iconStyle} />
+        </button>
+        <button type="button" style={btn(editor.isActive("blockquote"))}
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+          <span style={{ color: "white", fontSize: 16 }}>&ldquo;</span>
+        </button>
+      </div>
+
+      {/* Media */}
+      <div style={{ display: "flex", gap: 18, alignItems: "center" }}>
+        <button type="button" style={btn(editor.isActive("link"))} onClick={setLink}>
+          <LinkIcon style={iconStyle} />
+        </button>
+        <button type="button" style={btn(editor.isActive("code"))}
+          onClick={() => editor.chain().focus().toggleCode().run()}>
+          <span style={{ color: "white", fontSize: 12, fontFamily: "monospace" }}>{"<>"}</span>
+        </button>
+      </div>
+
+      {/* Undo / Redo — right-justified */}
+      <div style={{ display: "flex", gap: 18, alignItems: "center", marginLeft: "auto" }}>
+        <button type="button"
+          style={{ ...btn(), opacity: editor.can().undo() ? 1 : 0.25 }}
+          disabled={!editor.can().undo()}
+          onClick={() => editor.chain().focus().undo().run()}
+          title="Undo">
+          <span style={{ color: "white", fontSize: 16 }}>↩</span>
+        </button>
+        <button type="button"
+          style={{ ...btn(), opacity: editor.can().redo() ? 1 : 0.25 }}
           disabled={!editor.can().redo()}
-          className="w-6 h-6 flex items-center justify-center hover:bg-gray-100 rounded disabled:opacity-30"
-          title="Redo"
-        >
-          <span className="text-gray-700 text-xs">↪</span>
+          onClick={() => editor.chain().focus().redo().run()}
+          title="Redo">
+          <span style={{ color: "white", fontSize: 16 }}>↪</span>
         </button>
       </div>
     </div>
   );
 }
-

@@ -7,29 +7,18 @@ type SyncStatus = "synced" | "syncing" | "offline";
 
 interface AutoSaveIndicatorProps {
   status: SyncStatus;
+  textHidden?: boolean;
 }
 
-export function AutoSaveIndicator({ status }: AutoSaveIndicatorProps) {
+export function AutoSaveIndicator({ status, textHidden = false }: AutoSaveIndicatorProps) {
   const getStatusConfig = () => {
     switch (status) {
       case "synced":
-        return {
-          icon: CheckCircle2,
-          text: "Saved",
-          className: "text-green-600",
-        };
+        return { icon: CheckCircle2, text: "Saved", color: "var(--green-highlight)" };
       case "syncing":
-        return {
-          icon: Loader2,
-          text: "Saving...",
-          className: "text-blue-600 animate-spin",
-        };
+        return { icon: Loader2, text: "Saving...", color: "var(--aqua)", spin: true };
       case "offline":
-        return {
-          icon: WifiOff,
-          text: "Offline",
-          className: "text-gray-500",
-        };
+        return { icon: WifiOff, text: "Offline", color: "var(--light-gray)" };
     }
   };
 
@@ -37,9 +26,9 @@ export function AutoSaveIndicator({ status }: AutoSaveIndicatorProps) {
   const Icon = config.icon;
 
   return (
-    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-      <Icon className={cn("h-4 w-4", config.className)} />
-      <span>{config.text}</span>
+    <div className="flex items-center gap-1 text-xs font-display" style={{ color: "var(--light-gray)", opacity: 0.7 }}>
+      <Icon className={cn("h-4 w-4", (config as any).spin ? "animate-spin" : "")} style={{ color: config.color }} />
+      {!textHidden && <span>{config.text}</span>}
     </div>
   );
 }

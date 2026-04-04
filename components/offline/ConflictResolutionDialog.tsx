@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { editorExtensions } from "@/lib/editor/tiptap-config";
@@ -10,42 +9,17 @@ import type { SyncConflict } from "@/lib/offline/sync";
 
 interface ConflictResolutionDialogProps {
   conflict: SyncConflict | null;
-  onResolve: (
-    conflict: SyncConflict,
-    resolution: "local" | "server" | "merge",
-    mergedData?: any
-  ) => void;
+  onResolve: (conflict: SyncConflict, resolution: "local" | "server" | "merge", mergedData?: any) => void;
   onClose: () => void;
 }
 
-export function ConflictResolutionDialog({
-  conflict,
-  onResolve,
-  onClose,
-}: ConflictResolutionDialogProps) {
+export function ConflictResolutionDialog({ conflict, onResolve, onClose }: ConflictResolutionDialogProps) {
   const [resolution, setResolution] = useState<"local" | "server" | "merge">("local");
   const [mergedContent, setMergedContent] = useState<any>(null);
 
-  const localEditor = useEditor({
-    immediatelyRender: false,
-    extensions: editorExtensions,
-    content: conflict?.localData?.content || null,
-    editable: false,
-  });
-
-  const serverEditor = useEditor({
-    immediatelyRender: false,
-    extensions: editorExtensions,
-    content: conflict?.serverData?.content || null,
-    editable: false,
-  });
-
-  const mergedEditor = useEditor({
-    immediatelyRender: false,
-    extensions: editorExtensions,
-    content: mergedContent || conflict?.localData?.content || null,
-    editable: resolution === "merge",
-  });
+  const localEditor = useEditor({ immediatelyRender: false, extensions: editorExtensions, content: conflict?.localData?.content || null, editable: false });
+  const serverEditor = useEditor({ immediatelyRender: false, extensions: editorExtensions, content: conflict?.serverData?.content || null, editable: false });
+  const mergedEditor = useEditor({ immediatelyRender: false, extensions: editorExtensions, content: mergedContent || conflict?.localData?.content || null, editable: resolution === "merge" });
 
   useEffect(() => {
     if (conflict && resolution === "merge" && !mergedContent) {
@@ -57,50 +31,58 @@ export function ConflictResolutionDialog({
 
   const handleSubmit = () => {
     if (resolution === "merge" && mergedEditor) {
-      onResolve(conflict, "merge", {
-        ...conflict.localData,
-        content: mergedEditor.getJSON(),
-      });
+      onResolve(conflict, "merge", { ...conflict.localData, content: mergedEditor.getJSON() });
     } else {
       onResolve(conflict, resolution);
     }
     onClose();
   };
 
+  const resolutionOptions: { value: "local" | "server" | "merge"; label: string }[] = [
+    { value: "local", label: "Keep Local" },
+    { value: "server", label: "Keep Server" },
+    { value: "merge", label: "Manual Merge" },
+  ];
+
   return (
     <Dialog open={!!conflict} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl h-[80vh] flex flex-col">
+      <DialogContent style={{ backgroundColor: "var(--dark-green)", border: "1px solid var(--dark-green-highlight)", borderRadius: 12, maxWidth: "90vw", width: "1100px", height: "80vh", display: "flex", flexDirection: "column" }}>
         <DialogHeader>
-          <DialogTitle>Resolve Conflict</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="font-display" style={{ color: "var(--light-gray)", fontSize: 24 }}>
+            Resolve Conflict
+          </DialogTitle>
+          <p className="font-display" style={{ color: "var(--light-gray)", opacity: 0.6, fontSize: 14 }}>
             Choose how to resolve the conflict between local and server versions
-          </DialogDescription>
+          </p>
         </DialogHeader>
 
-        <div className="flex-1 grid grid-cols-3 gap-4 overflow-hidden">
-          <div className="border-r overflow-y-auto">
-            <h3 className="font-semibold mb-2">Local Version</h3>
-            <ScrollArea className="h-full">
-              <div className="prose prose-sm dark:prose-invert max-w-none">
+        <div style={{ flex: 1, display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, overflow: "hidden" }}>
+          {/* Local */}
+          <div style={{ borderRight: "1px solid var(--dark-green-highlight)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            <h3 className="font-display" style={{ color: "var(--aqua)", fontSize: 15, marginBottom: 8 }}>Local Version</h3>
+            <ScrollArea style={{ flex: 1 }}>
+              <div className="prose prose-sm dark:prose-invert max-w-none" style={{ color: "var(--light-gray)" }}>
                 <EditorContent editor={localEditor} />
               </div>
             </ScrollArea>
           </div>
 
-          <div className="border-r overflow-y-auto">
-            <h3 className="font-semibold mb-2">Server Version</h3>
-            <ScrollArea className="h-full">
-              <div className="prose prose-sm dark:prose-invert max-w-none">
+          {/* Server */}
+          <div style={{ borderRight: "1px solid var(--dark-green-highlight)", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+            <h3 className="font-display" style={{ color: "var(--aqua)", fontSize: 15, marginBottom: 8 }}>Server Version</h3>
+            <ScrollArea style={{ flex: 1 }}>
+              <div className="prose prose-sm dark:prose-invert max-w-none" style={{ color: "var(--light-gray)" }}>
                 <EditorContent editor={serverEditor} />
               </div>
             </ScrollArea>
           </div>
 
+          {/* Merged */}
           {resolution === "merge" && (
-            <div className="overflow-y-auto">
-              <h3 className="font-semibold mb-2">Merged Version (Editable)</h3>
-              <ScrollArea className="h-full">
-                <div className="prose prose-sm dark:prose-invert max-w-none">
+            <div style={{ overflow: "hidden", display: "flex", flexDirection: "column" }}>
+              <h3 className="font-display" style={{ color: "var(--aqua)", fontSize: 15, marginBottom: 8 }}>Merged (Editable)</h3>
+              <ScrollArea style={{ flex: 1 }}>
+                <div className="prose prose-sm dark:prose-invert max-w-none" style={{ color: "var(--light-gray)" }}>
                   <EditorContent editor={mergedEditor} />
                 </div>
               </ScrollArea>
@@ -108,31 +90,44 @@ export function ConflictResolutionDialog({
           )}
         </div>
 
-        <div className="flex items-center justify-between pt-4 border-t">
-          <div className="flex gap-2">
-            <Button
-              variant={resolution === "local" ? "default" : "outline"}
-              onClick={() => setResolution("local")}
-            >
-              Keep Local
-            </Button>
-            <Button
-              variant={resolution === "server" ? "default" : "outline"}
-              onClick={() => setResolution("server")}
-            >
-              Keep Server
-            </Button>
-            <Button
-              variant={resolution === "merge" ? "default" : "outline"}
-              onClick={() => setResolution("merge")}
-            >
-              Manual Merge
-            </Button>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 16, borderTop: "1px solid var(--dark-green-highlight)", flexShrink: 0 }}>
+          <div style={{ display: "flex", gap: 8 }}>
+            {resolutionOptions.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setResolution(opt.value)}
+                className="font-display"
+                style={{
+                  backgroundColor: resolution === opt.value ? "var(--dark-green-highlight)" : "none",
+                  border: resolution === opt.value ? "1px solid var(--aqua)" : "1px solid var(--dark-green-highlight)",
+                  borderRadius: 20,
+                  padding: "8px 16px",
+                  color: "var(--light-gray)",
+                  fontSize: 14,
+                  cursor: "pointer",
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
-          <Button onClick={handleSubmit}>Resolve</Button>
+          <button
+            onClick={handleSubmit}
+            className="font-display"
+            style={{
+              backgroundColor: "var(--green-highlight)",
+              border: "3px solid black",
+              borderRadius: 20,
+              padding: "10px 24px",
+              color: "black",
+              fontSize: 16,
+              cursor: "pointer",
+            }}
+          >
+            Resolve
+          </button>
         </div>
       </DialogContent>
     </Dialog>
   );
 }
-

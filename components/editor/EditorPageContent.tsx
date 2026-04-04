@@ -20,6 +20,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTheme } from "next-themes";
+import Link from "next/link";
 
 type ChapterWithStory = Chapter & {
   story: Story;
@@ -30,6 +32,7 @@ interface EditorPageContentProps {
 }
 
 export function EditorPageContent({ chapter: initialChapter }: EditorPageContentProps) {
+  const { resolvedTheme } = useTheme();
   const [content, setContent] = useState<JSONContent>(
     (initialChapter.content as JSONContent) || {
       type: "doc",
@@ -39,7 +42,22 @@ export function EditorPageContent({ chapter: initialChapter }: EditorPageContent
   const [isSceneManagerOpen, setIsSceneManagerOpen] = useState(false);
   const [isVersionManagerOpen, setIsVersionManagerOpen] = useState(false);
   const [editorInstance, setEditorInstance] = useState<TiptapEditor | null>(null);
+  const [chapterTitle, setChapterTitle] = useState(initialChapter.title);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleTitleRename = async (newTitle: string) => {
+    const trimmed = newTitle.trim();
+    if (!trimmed || trimmed === initialChapter.title) return;
+    try {
+      await fetch(`/api/chapters/${initialChapter.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: trimmed }),
+      });
+    } catch (err) {
+      console.error("Failed to rename chapter:", err);
+    }
+  };
 
   // Offline sync — replaces manual online/offline detection
   const { isOnline, isSyncing, conflicts, handleConflictResolution } = useOfflineSync();
@@ -158,65 +176,86 @@ export function EditorPageContent({ chapter: initialChapter }: EditorPageContent
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="absolute bg-dark-mint-green inset-0" />
+    <div style={{ position: "fixed", inset: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      {/* Background — fixed behind everything */}
+      <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+        <div style={{ position: "absolute", inset: 0, backgroundColor: "var(--dark-mint-green)" }} />
         <img
           src="/images/forest_bg.jpg"
           alt=""
-          className="absolute max-w-none object-cover opacity-40 w-full h-full"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: 0.4 }}
         />
       </div>
 
-      <div className="relative z-10">
-        {/* Header */}
-        <header className="bg-dark-green shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] h-[120px] flex items-center gap-[10px] px-[10px]">
+      {/* Header — persistent, never scrolls */}
+      <header
+        className="shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] flex items-center gap-[10px] px-[10px] overflow-clip shrink-0"
+        style={{ backgroundColor: "var(--dark-green)", minHeight: "120px", maxHeight: "120px", position: "relative", zIndex: 10 }}
+      >
           {/* Logo */}
           <div className="flex items-center justify-center h-full px-[10px] shrink-0">
-            <div className="font-display text-[64px] text-aqua leading-none">
-              <span>Re</span>
-              <span>:</span>
-            </div>
+            <Link href="/dashboard">
+              <img src="/images/icon.png" alt="Re:Write" style={{ height: 96, width: 96, borderRadius: 16, cursor: "pointer", display: "block" }} />
+            </Link>
           </div>
 
           {/* Chapter name + menu */}
           <div className="flex flex-col gap-[5px] px-[10px] shrink-0">
-            <div className="flex gap-5 items-end py-[5px] w-[313px]">
-              <div className="bg-mint-green border border-white rounded-[20px] flex-1 flex items-center px-[10px] min-h-[41px]">
-                <span className="font-display text-[32px] text-black bg-transparent w-full">
-                  {initialChapter.title}
-                </span>
-              </div>
-              <div className="w-[41px] h-[41px] rounded-full bg-white/20 shrink-0 flex items-center justify-center">
-                <div className="w-6 h-6 rounded-full bg-white/40" />
-              </div>
+            <div className="flex gap-[5px] items-center py-[5px]">
+              <input
+                value={chapterTitle}
+                onChange={(e) => setChapterTitle(e.target.value)}
+                onBlur={(e) => handleTitleRename(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
+                className="font-display whitespace-nowrap px-[10px] rounded-[20px] min-h-[41px] outline-none"
+                style={{
+                  backgroundColor: "var(--mint-green)",
+                  border: "1px solid white",
+                  color: "black",
+                  fontSize: 18,
+                  minWidth: 120,
+                  width: `${Math.max(chapterTitle.length, 8)}ch`,
+                  maxWidth: 260,
+                }}
+              />
             </div>
 
-            <div className="flex gap-[10px] font-display text-[24px] text-white">
+            <div className="flex gap-[10px] font-display items-center" style={{ color: "white", fontSize: 16 }}>
+              {/* Story name — links back to story */}
+              <Link
+                href={`/dashboard/stories/${initialChapter.story.id}`}
+                style={{ color: "var(--aqua)", fontFamily: "inherit", fontSize: "inherit", textDecoration: "none" }}
+                className="hover:opacity-70 transition-opacity whitespace-nowrap"
+              >
+                {initialChapter.story.title}
+              </Link>
+              <span style={{ opacity: 0.3 }}>|</span>
+
               {/* File menu */}
               <DropdownMenu>
-                <DropdownMenuTrigger className="hover:opacity-80 transition-opacity">
+                <DropdownMenuTrigger style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "white", fontFamily: "inherit", fontSize: "inherit", opacity: 1 }} className="hover:opacity-70 transition-opacity">
                   File
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={handleExportChapter}>
+                <DropdownMenuContent style={{ backgroundColor: "var(--dark-green)", border: "1px solid var(--dark-green-highlight)" }}>
+                  <DropdownMenuItem onClick={handleExportChapter} style={{ color: "var(--light-gray)", fontFamily: "Joan, serif", cursor: "pointer" }}>
                     Export Chapter (.rewr)
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => fileInputRef.current?.click()}>
+                  <DropdownMenuItem onClick={() => fileInputRef.current?.click()} style={{ color: "var(--light-gray)", fontFamily: "Joan, serif", cursor: "pointer" }}>
                     Open Local File (.rewr)
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
               <button
-                className="hover:opacity-80 transition-opacity"
+                style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "white", fontFamily: "inherit", fontSize: "inherit" }}
+                className="hover:opacity-70 transition-opacity"
                 onClick={openSceneManager}
               >
                 Scenes
               </button>
               <button
-                className="hover:opacity-80 transition-opacity"
+                style={{ background: "none", border: "none", padding: 0, cursor: "pointer", color: "white", fontFamily: "inherit", fontSize: "inherit" }}
+                className="hover:opacity-70 transition-opacity"
                 onClick={openVersionManager}
               >
                 Versions
@@ -224,8 +263,13 @@ export function EditorPageContent({ chapter: initialChapter }: EditorPageContent
             </div>
           </div>
 
-          {/* Formatting toolbar */}
-          <div className="flex-1 flex items-center justify-center">
+          {/* Save indicator + word count + Formatting toolbar */}
+          <div className="flex-1 flex items-center gap-3 min-w-0">
+            {/* Status — left of toolbar */}
+            <div className="flex flex-col items-center shrink-0" style={{ gap: 2 }}>
+              <AutoSaveIndicator status={syncStatus} textHidden />
+              <span className="font-display" style={{ color: "white", opacity: 0.6, fontSize: 10 }}>{wordCount}w</span>
+            </div>
             {editorInstance && (
               <EditorToolbar
                 editor={editorInstance}
@@ -236,40 +280,54 @@ export function EditorPageContent({ chapter: initialChapter }: EditorPageContent
             )}
           </div>
 
-          {/* Status + quick-access buttons */}
+          {/* Quick-access buttons */}
           <div className="flex items-center gap-3 shrink-0 pr-2">
-            <div className="flex flex-col items-end gap-1">
-              <AutoSaveIndicator status={syncStatus} />
-              <span className="text-xs text-white/60">{wordCount} words</span>
-            </div>
             <button
               onClick={openSceneManager}
-              className="bg-dark-green-highlight flex items-center justify-center px-4 py-4 rounded-[30px] h-[63px] hover:opacity-90 transition-opacity"
+              className="flex items-center justify-center px-4 rounded-[30px] hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: "var(--dark-green-highlight)", padding: "12px 16px" }}
             >
-              <span className="font-display text-[24px] text-white whitespace-nowrap">
+              <span className="font-display whitespace-nowrap" style={{ fontSize: 16, color: "white" }}>
                 Scene Manager
               </span>
             </button>
             <button
               onClick={openVersionManager}
-              className="bg-dark-green-highlight flex items-center justify-center px-4 py-4 rounded-[30px] h-[63px] hover:opacity-90 transition-opacity"
+              className="flex items-center justify-center rounded-[30px] hover:opacity-90 transition-opacity"
+              style={{ backgroundColor: "var(--dark-green-highlight)", padding: "12px 16px" }}
             >
-              <span className="font-display text-[24px] text-white whitespace-nowrap">
+              <span className="font-display whitespace-nowrap" style={{ fontSize: 16, color: "white" }}>
                 Version History
               </span>
             </button>
           </div>
         </header>
 
-        {/* Main editor area — shifts left when a panel is open */}
-        <main
-          className="flex justify-center py-[40px] px-[30px] transition-all duration-300"
-          style={{
-            marginRight:
-              isSceneManagerOpen || isVersionManagerOpen ? "640px" : "0px",
-          }}
-        >
-          <div className="w-[800px] bg-dark-page shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] min-h-[940px] rounded-lg overflow-hidden">
+      {/* Scrollable editor area */}
+      <main
+        className="transition-all duration-300"
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          overflowX: "hidden",
+          position: "relative",
+          zIndex: 5,
+          marginRight: isSceneManagerOpen || isVersionManagerOpen ? "640px" : "0px",
+          display: "flex",
+          justifyContent: "center",
+          padding: "40px 30px",
+        }}
+      >
+          <div
+            className="w-[800px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-lg overflow-hidden"
+            style={{
+              backgroundColor: resolvedTheme === "dark"
+                ? "rgba(60, 60, 60, 0.8)"
+                : "rgba(255, 255, 255, 0.8)",
+              alignSelf: "flex-start",
+              minHeight: "calc(100vh - 200px)",
+            }}
+          >
             <Editor
               content={content}
               onUpdate={handleContentUpdate}
@@ -281,59 +339,6 @@ export function EditorPageContent({ chapter: initialChapter }: EditorPageContent
             />
           </div>
         </main>
-
-        {/* Attribution */}
-        <div
-          className="pb-4 text-center transition-all duration-300"
-          style={{
-            marginRight:
-              isSceneManagerOpen || isVersionManagerOpen ? "640px" : "0px",
-          }}
-        >
-          <p className="attribution text-xs text-white/60 leading-relaxed max-w-4xl mx-auto px-4">
-            &quot;
-            <a
-              rel="noopener noreferrer"
-              href="https://www.flickr.com/photos/91171136@N03/10003026715"
-              className="text-aqua hover:underline"
-            >
-              Serra de Sintra, Portugal
-            </a>
-            &quot; by{" "}
-            <a
-              rel="noopener noreferrer"
-              href="https://www.flickr.com/photos/91171136@N03"
-              className="text-aqua hover:underline"
-            >
-              Joao Ferrao dos Santos
-            </a>{" "}
-            is licensed under{" "}
-            <a
-              rel="noopener noreferrer"
-              href="https://creativecommons.org/licenses/by-nc/2.0/?ref=openverse"
-              className="text-aqua hover:underline inline-flex items-center gap-1"
-            >
-              CC BY-NC 2.0{" "}
-              <img
-                src="https://mirrors.creativecommons.org/presskit/icons/cc.svg"
-                className="h-4 w-4 inline"
-                alt="CC"
-              />
-              <img
-                src="https://mirrors.creativecommons.org/presskit/icons/by.svg"
-                className="h-4 w-4 inline"
-                alt="BY"
-              />
-              <img
-                src="https://mirrors.creativecommons.org/presskit/icons/nc.svg"
-                className="h-4 w-4 inline"
-                alt="NC"
-              />
-            </a>
-            .
-          </p>
-        </div>
-      </div>
 
       {/* Side panels (outside the shifted content area) */}
       <SceneManager

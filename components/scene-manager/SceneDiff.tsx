@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { editorExtensions } from "@/lib/editor/tiptap-config";
@@ -38,8 +37,6 @@ export function SceneDiff({ scene, version, chapterId, onVersionApplied }: Scene
 
   const handleShowDiff = async () => {
     if (!version) return;
-
-    // Fetch current chapter content to compare against
     let currentContent: any = null;
     try {
       const res = await fetch(`/api/chapters/${chapterId}`);
@@ -64,11 +61,10 @@ export function SceneDiff({ scene, version, chapterId, onVersionApplied }: Scene
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/\n/g, "<br>");
-
       if (op === 1) {
-        html += `<ins class="bg-green-100 dark:bg-green-900 no-underline">${escaped}</ins>`;
+        html += `<ins style="background:rgba(52,193,138,0.2);text-decoration:none">${escaped}</ins>`;
       } else if (op === -1) {
-        html += `<del class="bg-red-100 dark:bg-red-900">${escaped}</del>`;
+        html += `<del style="background:rgba(192,57,43,0.2)">${escaped}</del>`;
       } else {
         html += escaped;
       }
@@ -87,7 +83,6 @@ export function SceneDiff({ scene, version, chapterId, onVersionApplied }: Scene
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ versionId: version.id }),
       });
-
       if (response.ok) {
         onVersionApplied?.(scene.id, version.content);
       }
@@ -100,7 +95,7 @@ export function SceneDiff({ scene, version, chapterId, onVersionApplied }: Scene
 
   if (!scene) {
     return (
-      <div className="p-4 text-sm text-muted-foreground">
+      <div className="p-4 font-display" style={{ color: "var(--light-gray)", opacity: 0.6, fontSize: 14 }}>
         Select a scene to view details
       </div>
     );
@@ -108,37 +103,60 @@ export function SceneDiff({ scene, version, chapterId, onVersionApplied }: Scene
 
   if (!version) {
     return (
-      <div className="p-4 text-sm text-muted-foreground">
+      <div className="p-4 font-display" style={{ color: "var(--light-gray)", opacity: 0.6, fontSize: 14 }}>
         Select a version to preview
       </div>
     );
   }
 
   return (
-    <div className="p-4 flex flex-col h-full">
-      <div className="flex items-center justify-between mb-4 shrink-0">
-        <h3 className="font-semibold">Preview</h3>
-        <div className="flex gap-2">
-          <Button
-            size="sm"
-            variant="outline"
+    <div style={{ padding: 16, display: "flex", flexDirection: "column", height: "100%" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12, flexShrink: 0 }}>
+        <h3 className="font-display" style={{ color: "var(--light-gray)", fontSize: 18 }}>Preview</h3>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button
             onClick={showDiff ? () => setShowDiff(false) : handleShowDiff}
+            className="font-display"
+            style={{
+              backgroundColor: "var(--dark-green-highlight)",
+              border: "none",
+              borderRadius: 16,
+              padding: "6px 12px",
+              color: "var(--light-gray)",
+              fontSize: 13,
+              cursor: "pointer",
+            }}
           >
             {showDiff ? "Hide Diff" : "Show Diff"}
-          </Button>
-          <Button size="sm" onClick={handleApplyVersion} disabled={applying}>
+          </button>
+          <button
+            onClick={handleApplyVersion}
+            disabled={applying}
+            className="font-display"
+            style={{
+              backgroundColor: "var(--green-highlight)",
+              border: "2px solid black",
+              borderRadius: 16,
+              padding: "6px 12px",
+              color: "black",
+              fontSize: 13,
+              cursor: applying ? "not-allowed" : "pointer",
+              opacity: applying ? 0.7 : 1,
+            }}
+          >
             {applying ? "Applying..." : "Apply Version"}
-          </Button>
+          </button>
         </div>
       </div>
-      <ScrollArea className="flex-1">
+      <ScrollArea style={{ flex: 1 }}>
         {showDiff && diffHtml ? (
           <div
-            className="prose prose-sm dark:prose-invert max-w-none leading-relaxed"
+            className="prose prose-sm dark:prose-invert max-w-none leading-relaxed font-display"
+            style={{ color: "var(--light-gray)" }}
             dangerouslySetInnerHTML={{ __html: diffHtml }}
           />
         ) : (
-          <div className="prose prose-sm dark:prose-invert max-w-none">
+          <div className="prose prose-sm dark:prose-invert max-w-none" style={{ color: "var(--light-gray)" }}>
             <EditorContent editor={editor} />
           </div>
         )}
