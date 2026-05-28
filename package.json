@@ -24,7 +24,7 @@
   "homepage": "https://github.com/SanthoshS0305/RevisionHistoryApp#readme",
   "description": "",
   "dependencies": {
-    "@auth/core": "^0.41.0",
+    "@clerk/nextjs": "^7.4.2",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -44,7 +44,6 @@
     "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "diff-match-patch": "^1.0.5",
@@ -53,7 +52,6 @@
     "jsondiffpatch": "^0.7.3",
     "lucide-react": "^0.561.0",
     "next": "^16.0.10",
-    "next-auth": "^5.0.0-beta.30",
     "next-themes": "^0.4.6",
     "pg": "^8.18.0",
     "react": "^19.2.3",
@@ -66,7 +64,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
-    "@types/bcryptjs": "^2.4.6",
+    "@types/diff-match-patch": "^1.0.36",
     "@types/file-saver": "^2.0.7",
     "autoprefixer": "^10.4.23",
     "eslint": "^9.39.2",

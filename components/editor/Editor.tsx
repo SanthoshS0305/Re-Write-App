@@ -52,7 +52,7 @@ export function Editor({
       positionSyncTimer.current = setTimeout(async () => {
         const updates = sceneExt.storage
           .pendingPositionUpdates as { id: string; startPos: number; endPos: number }[];
-        sceneExt.storage.pendingPositionUpdates = [];
+        (sceneExt.storage as any).pendingPositionUpdates = [];
         for (const { id, startPos, endPos } of updates) {
           try {
             await fetch(`/api/scenes/${id}`, {
@@ -119,8 +119,8 @@ export function Editor({
       (ext) => ext.name === "scene"
     );
     if (sceneExt) {
-      sceneExt.storage.scenes = data;
-      sceneExt.storage.pendingPositionUpdates = [];
+      (sceneExt.storage as any).scenes = data;
+      (sceneExt.storage as any).pendingPositionUpdates = [];
       editor.view.dispatch(editor.state.tr);
     }
   }

@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useSignIn } from "@clerk/nextjs/legacy";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { signIn, isLoaded, setActive } = useSignIn();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -14,27 +15,32 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isLoaded) return;
     setError("");
     setLoading(true);
 
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        setError("Invalid email or password");
-      } else {
+      const result = await signIn.create({ identifier: email, password });
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
         router.push("/dashboard");
-        router.refresh();
+      } else {
+        setError("Invalid email or password");
       }
     } catch {
-      setError("An error occurred. Please try again.");
+      setError("Invalid email or password");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleSignIn = () => {
+    if (!isLoaded) return;
+    signIn.authenticateWithRedirect({
+      strategy: "oauth_google",
+      redirectUrl: "/sso-callback",
+      redirectUrlComplete: "/dashboard",
+    });
   };
 
   return (
@@ -122,7 +128,7 @@ export default function LoginPage() {
 
             <button
               type="button"
-              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              onClick={handleGoogleSignIn}
               className="font-display hover:opacity-90 transition-opacity"
               style={{ backgroundColor: "white", border: "3px solid black", borderRadius: 30, fontSize: 24, color: "black", height: 60, padding: "0 24px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, alignSelf: "center" }}
             >

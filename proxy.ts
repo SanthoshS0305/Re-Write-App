@@ -1,28 +1,13 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-export async function proxy(request: NextRequest) {
-  const token = await getToken({ 
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET 
-  });
+const isPublicRoute = createRouteMatcher(['/login(.*)', '/signup(.*)', '/sso-callback(.*)'])
 
-  const { pathname } = request.nextUrl;
-
-  // Protect dashboard and editor routes
-  if (pathname.startsWith("/dashboard") || pathname.startsWith("/editor")) {
-    if (!token) {
-      const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("callbackUrl", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+export default clerkMiddleware(async (auth, request) => {
+  if (!isPublicRoute(request)) {
+    await auth.protect()
   }
-
-  return NextResponse.next();
-}
+})
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/editor/:path*"],
-};
-
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|images).*)'],
+}

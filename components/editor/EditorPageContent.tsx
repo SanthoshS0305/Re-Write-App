@@ -45,6 +45,29 @@ export function EditorPageContent({ chapter: initialChapter }: EditorPageContent
   const [chapterTitle, setChapterTitle] = useState(initialChapter.title);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Custom scrollbar state
+  const mainRef = useRef<HTMLDivElement>(null);
+  const [scrollMeta, setScrollMeta] = useState({ scrollTop: 0, scrollHeight: 1, clientHeight: 1 });
+  const [sbHover, setSbHover] = useState(false);
+  const [tooltipY, setTooltipY] = useState(0);
+
+  const PAGE_HEIGHT = 1123;
+  const PAGE_GAP = 20;
+  const PAGE_STEP = PAGE_HEIGHT + PAGE_GAP;
+
+  const handleScroll = () => {
+    const el = mainRef.current;
+    if (!el) return;
+    setScrollMeta({ scrollTop: el.scrollTop, scrollHeight: el.scrollHeight, clientHeight: el.clientHeight });
+  };
+
+  const { scrollTop, scrollHeight, clientHeight } = scrollMeta;
+  const maxScroll = Math.max(1, scrollHeight - clientHeight);
+  const thumbHeight = Math.max(40, (clientHeight / Math.max(1, scrollHeight)) * clientHeight);
+  const thumbTop = (scrollTop / maxScroll) * (clientHeight - thumbHeight);
+  const totalPages = Math.max(1, Math.ceil(scrollHeight / PAGE_STEP));
+  const hoverPage = Math.max(1, Math.min(totalPages, Math.floor(((tooltipY / clientHeight) * maxScroll) / PAGE_STEP) + 1));
+
   const handleTitleRename = async (newTitle: string) => {
     const trimmed = newTitle.trim();
     if (!trimmed || trimmed === initialChapter.title) return;
@@ -123,8 +146,8 @@ export function EditorPageContent({ chapter: initialChapter }: EditorPageContent
         fetch(`/api/chapters/${initialChapter.id}/scenes`)
           .then((r) => r.json())
           .then((data) => {
-            sceneExt.storage.scenes = data;
-            sceneExt.storage.pendingPositionUpdates = [];
+            (sceneExt.storage as any).scenes = data;
+            (sceneExt.storage as any).pendingPositionUpdates = [];
             editorInstance.view.dispatch(editorInstance.state.tr);
           })
           .catch(console.error);
@@ -303,29 +326,43 @@ export function EditorPageContent({ chapter: initialChapter }: EditorPageContent
           </div>
         </header>
 
-      {/* Scrollable editor area */}
-      <main
+      {/* Scrollable editor area + custom scrollbar wrapper */}
+      <div
         className="transition-all duration-300"
         style={{
           flex: 1,
-          overflowY: "auto",
-          overflowX: "hidden",
           position: "relative",
+          overflow: "hidden",
           zIndex: 5,
           marginRight: isSceneManagerOpen || isVersionManagerOpen ? "640px" : "0px",
-          display: "flex",
-          justifyContent: "center",
-          padding: "40px 30px",
         }}
       >
+        <main
+          ref={mainRef}
+          onScroll={handleScroll}
+          className="editor-scroll"
+          style={{
+            position: "absolute",
+            inset: 0,
+            overflowY: "auto",
+            overflowX: "hidden",
+            scrollbarWidth: "none",
+            display: "flex",
+            justifyContent: "center",
+            padding: "40px 50px 40px 30px",
+          }}
+        >
           <div
-            className="w-[800px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] rounded-lg overflow-hidden"
+            className="w-[800px] relative"
             style={{
+              borderRadius: 16,
+              overflow: "hidden",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
               backgroundColor: resolvedTheme === "dark"
-                ? "rgba(60, 60, 60, 0.8)"
-                : "rgba(255, 255, 255, 0.8)",
+                ? "rgba(0, 0, 0, 0.8)"
+                : "rgba(255, 255, 255, 0.92)",
               alignSelf: "flex-start",
-              minHeight: "calc(100vh - 200px)",
+              minHeight: `${PAGE_STEP}px`,
             }}
           >
             <Editor
@@ -337,8 +374,84 @@ export function EditorPageContent({ chapter: initialChapter }: EditorPageContent
               showToolbarInHeader={true}
               onEditorReady={setEditorInstance}
             />
+            {/* Page break overlay — pointer-events:none so it doesn't block editing */}
+            <div
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                pointerEvents: "none",
+                backgroundImage: resolvedTheme === "dark"
+                  ? `repeating-linear-gradient(to bottom, transparent 0, transparent ${PAGE_HEIGHT}px, rgba(30,46,43,0.95) ${PAGE_HEIGHT}px, rgba(30,46,43,0.95) ${PAGE_STEP}px)`
+                  : `repeating-linear-gradient(to bottom, transparent 0, transparent ${PAGE_HEIGHT}px, rgba(180,230,222,0.95) ${PAGE_HEIGHT}px, rgba(180,230,222,0.95) ${PAGE_STEP}px)`,
+                zIndex: 2,
+              }}
+            />
           </div>
         </main>
+
+        {/* Custom scrollbar */}
+        <div
+          style={{
+            position: "absolute",
+            right: 6,
+            top: 8,
+            bottom: 8,
+            width: 8,
+            zIndex: 20,
+            cursor: "pointer",
+          }}
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            setTooltipY(e.clientY - rect.top);
+          }}
+          onMouseEnter={() => setSbHover(true)}
+          onMouseLeave={() => setSbHover(false)}
+          onClick={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const frac = (e.clientY - rect.top) / rect.height;
+            if (mainRef.current) mainRef.current.scrollTop = frac * maxScroll;
+          }}
+        >
+          {/* Track */}
+          <div style={{ position: "absolute", inset: 0, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: 4 }} />
+          {/* Thumb */}
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: thumbTop,
+              height: thumbHeight,
+              backgroundColor: sbHover ? "rgba(63,208,201,0.75)" : "rgba(255,255,255,0.3)",
+              borderRadius: 4,
+              transition: "background-color 0.15s",
+            }}
+          />
+          {/* Page number tooltip */}
+          {sbHover && (
+            <div
+              className="font-display"
+              style={{
+                position: "absolute",
+                right: 14,
+                top: Math.max(0, tooltipY - 14),
+                backgroundColor: "var(--dark-green)",
+                border: "1px solid var(--dark-green-highlight)",
+                color: "var(--light-gray)",
+                fontSize: 13,
+                padding: "3px 10px",
+                borderRadius: 8,
+                whiteSpace: "nowrap",
+                pointerEvents: "none",
+                zIndex: 30,
+              }}
+            >
+              Page {hoverPage} / {totalPages}
+            </div>
+          )}
+        </div>
+      </div>
 
       {/* Side panels (outside the shifted content area) */}
       <SceneManager

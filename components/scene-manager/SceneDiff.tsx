@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { editorExtensions } from "@/lib/editor/tiptap-config";
-import { DiffMatchPatch } from "diff-match-patch";
+import DiffMatchPatch from "diff-match-patch";
 import { extractTextFromJSON } from "@/lib/utils/extract-text";
 import type { Scene, SceneVersion } from "./types";
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -20,20 +21,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="icon" href="/images/icon.png" type="image/png" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Joan&display=swap" rel="stylesheet" />
-      </head>
-      <body className={`${inter.variable} font-sans`}>
-        <Providers>
-          {children}
-          <Toaster />
-        </Providers>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <head>
+          <link rel="icon" href="/images/icon.png" type="image/png" />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link href="https://fonts.googleapis.com/css2?family=Joan&display=swap" rel="stylesheet" />
+        </head>
+        <body className={`${inter.variable} font-sans`}>
+          <Providers>
+            {children}
+            <Toaster />
+          </Providers>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
 

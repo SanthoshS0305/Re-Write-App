@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signOut } from "next-auth/react";
+import { useClerk } from "@clerk/nextjs";
 import { StoryCard } from "@/components/dashboard/StoryCard";
 import { CreateStoryDialog } from "@/components/dashboard/CreateStoryDialog";
 import { ImportDialog } from "@/components/dashboard/ImportDialog";
@@ -15,6 +15,7 @@ interface DashboardContentProps {
 }
 
 export function DashboardContent({ stories: initialStories }: DashboardContentProps) {
+  const { signOut } = useClerk();
   const [stories, setStories] = useState(initialStories);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
@@ -65,7 +66,7 @@ export function DashboardContent({ stories: initialStories }: DashboardContentPr
             Import
           </button>
           <button
-            onClick={() => signOut()}
+            onClick={() => signOut({ redirectUrl: "/login" })}
             className="flex items-center gap-2 px-4 py-2 rounded-[20px] font-display text-[18px] transition-opacity hover:opacity-80"
             style={{ color: "var(--light-gray)" }}
           >

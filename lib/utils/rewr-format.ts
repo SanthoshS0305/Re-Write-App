@@ -46,14 +46,14 @@ export function exportToRewr(
       versions: Array<{
         id: string;
         content: any;
-        createdAt: string;
+        createdAt: string | Date;
       }>;
     }>;
     versions: Array<{
       id: string;
       label: string | null;
       content: any;
-      createdAt: string;
+      createdAt: string | Date;
     }>;
   }
 ): RewrFile {
@@ -81,14 +81,14 @@ export function exportToRewr(
       versions: scene.versions.map((v) => ({
         id: v.id,
         content: v.content,
-        createdAt: v.createdAt.toISOString(),
+        createdAt: typeof v.createdAt === "string" ? v.createdAt : v.createdAt.toISOString(),
       })),
     })),
     versions: chapter.versions.map((v) => ({
       id: v.id,
       label: v.label,
       content: v.content,
-      createdAt: v.createdAt.toISOString(),
+      createdAt: typeof v.createdAt === "string" ? v.createdAt : v.createdAt.toISOString(),
     })),
   };
 }

@@ -80,22 +80,22 @@ export function getDB() {
   return dbPromise;
 }
 
-export async function saveToIndexedDB(store: string, key: string, value: any) {
+export async function saveToIndexedDB(store: "chapters" | "stories" | "scenes" | "sceneVersions" | "chapterVersions" | "syncQueue", key: string, value: any) {
   const db = await getDB();
   await db.put(store, value, key);
 }
 
-export async function getFromIndexedDB(store: string, key: string) {
+export async function getFromIndexedDB(store: "chapters" | "stories" | "scenes" | "sceneVersions" | "chapterVersions" | "syncQueue", key: string) {
   const db = await getDB();
   return db.get(store, key);
 }
 
-export async function getAllFromIndexedDB(store: string) {
+export async function getAllFromIndexedDB(store: "chapters" | "stories" | "scenes" | "sceneVersions" | "chapterVersions" | "syncQueue") {
   const db = await getDB();
   return db.getAll(store);
 }
 
-export async function deleteFromIndexedDB(store: string, key: string) {
+export async function deleteFromIndexedDB(store: "chapters" | "stories" | "scenes" | "sceneVersions" | "chapterVersions" | "syncQueue", key: string) {
   const db = await getDB();
   await db.delete(store, key);
 }

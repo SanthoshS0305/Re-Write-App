@@ -121,6 +121,16 @@
     color: var(--aqua);
   }
 
+  /* Dark mode editor text */
+  .dark .ProseMirror {
+    color: white;
+  }
+
+  /* Hide native scrollbar in editor main area */
+  .editor-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Ensure Joan font is applied */
   .font-display {
     font-family: "Joan", serif;

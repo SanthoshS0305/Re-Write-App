@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { useSignUp } from "@clerk/nextjs/legacy";
 import Link from "next/link";
 
 export default function SignupPage() {
   const router = useRouter();
+  const { signUp, isLoaded, setActive } = useSignUp();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -18,6 +19,7 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isLoaded) return;
     setError("");
     setLoading(true);
 
@@ -27,31 +29,34 @@ export default function SignupPage() {
       return;
     }
 
-    const displayName = [firstName, lastName].filter(Boolean).join(" ") || username;
-
     try {
-      const response = await fetch("/api/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: displayName,
-          email,
-          password,
-        }),
+      const result = await signUp.create({
+        firstName: firstName || username || undefined,
+        lastName: lastName || undefined,
+        emailAddress: email,
+        password,
       });
 
-      if (!response.ok) {
-        const data = await response.json();
-        setError(data.error || "An error occurred");
-        return;
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        router.push("/dashboard");
+      } else {
+        setError("Signup failed. Please try again.");
       }
-
-      router.push("/login");
-    } catch {
-      setError("An error occurred. Please try again.");
+    } catch (err: any) {
+      setError(err?.errors?.[0]?.message ?? "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleSignUp = () => {
+    if (!isLoaded) return;
+    signUp.authenticateWithRedirect({
+      strategy: "oauth_google",
+      redirectUrl: "/sso-callback",
+      redirectUrlComplete: "/dashboard",
+    });
   };
 
   return (
@@ -181,7 +186,7 @@ export default function SignupPage() {
 
             <button
               type="button"
-              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              onClick={handleGoogleSignUp}
               className="font-display hover:opacity-90 transition-opacity"
               style={{ backgroundColor: "white", border: "3px solid black", borderRadius: 30, fontSize: 24, color: "black", height: 60, padding: "0 24px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, alignSelf: "center" }}
             >

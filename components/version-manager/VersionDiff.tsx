@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import { editorExtensions } from "@/lib/editor/tiptap-config";
-import { DiffMatchPatch } from "diff-match-patch";
+import DiffMatchPatch from "diff-match-patch";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { extractTextFromJSON } from "@/lib/utils/extract-text";
 import type { ChapterVersion } from "./types";
