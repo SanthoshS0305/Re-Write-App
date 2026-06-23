@@ -8,8 +8,9 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Re:Write - Collaborative Writing App",
-  description: "A web-based collaborative writing application with advanced version control",
+  title: "Re:Write — Story Writing App for Authors",
+  description: "Re:Write is a web-based story writing app made by authors, for authors. You get scene management, version control, and offline writing, so your story is always organized and saved.",
+  keywords: ["story writing app", "novel writing app", "scene management", "version control for writers", "offline writing tool", "web-based writing software", "collaborative writing"],
   icons: {
     icon: "/images/icon.png",
   },
