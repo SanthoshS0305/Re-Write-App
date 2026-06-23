@@ -36,11 +36,15 @@ export default function LoginPage() {
 
   const handleGoogleSignIn = () => {
     if (!isLoaded) return;
-    signIn.authenticateWithRedirect({
-      strategy: "oauth_google",
-      redirectUrl: "/sso-callback",
-      redirectUrlComplete: "/dashboard",
-    });
+    try {
+      signIn.authenticateWithRedirect({
+        strategy: "oauth_google",
+        redirectUrl: "/sso-callback",
+        redirectUrlComplete: "/dashboard",
+      });
+    } catch {
+      setError("Google sign-in failed. Please try again.");
+    }
   };
 
   return (
