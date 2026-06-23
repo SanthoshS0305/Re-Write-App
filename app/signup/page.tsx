@@ -31,8 +31,9 @@ export default function SignupPage() {
 
     try {
       const result = await signUp.create({
-        firstName: firstName || username || undefined,
+        firstName: firstName || undefined,
         lastName: lastName || undefined,
+        username: username || undefined,
         emailAddress: email,
         password,
       });
@@ -52,11 +53,15 @@ export default function SignupPage() {
 
   const handleGoogleSignUp = () => {
     if (!isLoaded) return;
-    signUp.authenticateWithRedirect({
-      strategy: "oauth_google",
-      redirectUrl: "/sso-callback",
-      redirectUrlComplete: "/dashboard",
-    });
+    try {
+      signUp.authenticateWithRedirect({
+        strategy: "oauth_google",
+        redirectUrl: "/sso-callback",
+        redirectUrlComplete: "/dashboard",
+      });
+    } catch {
+      setError("Google sign-up failed. Please try again.");
+    }
   };
 
   return (
