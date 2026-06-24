@@ -1,12 +1,9 @@
 import { describe, it, expect } from 'vitest'
 
 /**
- * These tests verify the route-matching logic that the middleware is expected
- * to implement. They test the createRouteMatcher patterns in isolation,
- * without importing the (currently unimplemented) middleware.ts file.
- *
- * When middleware.ts is implemented using Clerk's clerkMiddleware + createRouteMatcher,
- * it should protect exactly the routes that match the patterns below.
+ * These tests verify the route-matching logic used in middleware.ts.
+ * middleware.ts protects /dashboard and /editor — API routes are authenticated
+ * inside each handler via getServerSession(), not at the middleware layer.
  */
 
 function createRouteMatcher(patterns: string[]) {
@@ -19,7 +16,7 @@ function createRouteMatcher(patterns: string[]) {
   return (pathname: string) => regexes.some((re) => re.test(pathname))
 }
 
-const isProtectedRoute = createRouteMatcher(['/dashboard', '/editor/(.*)', '/api/stories(.*)', '/api/chapters(.*)', '/api/scenes(.*)'])
+const isProtectedRoute = createRouteMatcher(['/dashboard(.*)', '/editor(.*)'])
 
 describe('Middleware route protection', () => {
   describe('protected routes', () => {
@@ -38,17 +35,19 @@ describe('Middleware route protection', () => {
     it('/editor/ch_abc123 is a protected route', () => {
       expect(isProtectedRoute('/editor/ch_abc123')).toBe(true)
     })
+  })
 
-    it('/api/stories is a protected route', () => {
-      expect(isProtectedRoute('/api/stories')).toBe(true)
+  describe('API routes (auth handled in handler, not middleware)', () => {
+    it('/api/stories is NOT redirected by middleware', () => {
+      expect(isProtectedRoute('/api/stories')).toBe(false)
     })
 
-    it('/api/chapters/456 is a protected route', () => {
-      expect(isProtectedRoute('/api/chapters/456')).toBe(true)
+    it('/api/chapters/456 is NOT redirected by middleware', () => {
+      expect(isProtectedRoute('/api/chapters/456')).toBe(false)
     })
 
-    it('/api/scenes/789 is a protected route', () => {
-      expect(isProtectedRoute('/api/scenes/789')).toBe(true)
+    it('/api/scenes/789 is NOT redirected by middleware', () => {
+      expect(isProtectedRoute('/api/scenes/789')).toBe(false)
     })
   })
 

@@ -50,19 +50,7 @@ export async function POST(req: Request) {
   }
 
   switch (event.type) {
-    case 'user.created': {
-      const { id, email_addresses, first_name, last_name, image_url } = event.data
-      const email = email_addresses[0]?.email_address ?? ''
-      const name = [first_name, last_name].filter(Boolean).join(' ') || null
-
-      await prisma.user.upsert({
-        where: { clerkId: id },
-        create: { clerkId: id, email, name, image: image_url ?? null },
-        update: { email, name, image: image_url ?? null },
-      })
-      break
-    }
-
+    case 'user.created':
     case 'user.updated': {
       const { id, email_addresses, first_name, last_name, image_url } = event.data
       const email = email_addresses[0]?.email_address ?? ''
@@ -83,7 +71,7 @@ export async function POST(req: Request) {
     }
 
     default:
-      return Response.json({ error: 'Unhandled event type' }, { status: 400 })
+      break
   }
 
   return Response.json({ data: 'Webhook processed' })

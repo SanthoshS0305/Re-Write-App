@@ -132,15 +132,7 @@ describe('LoginPage', () => {
     resolveCreate!({ status: 'complete', createdSessionId: 'sess_abc' })
   })
 
-  it('submit button is disabled when isLoaded is false', () => {
-    vi.doMock('@clerk/nextjs/legacy', () => ({
-      useSignIn: () => ({
-        signIn: { create: mockCreate, authenticateWithRedirect: mockAuthenticateWithRedirect },
-        isLoaded: false,
-        setActive: mockSetActive,
-      }),
-    }))
-
+  it('submit button is not disabled on initial render', () => {
     render(<LoginPage />)
     const submitButton = screen.getByRole('button', { name: /Login|Signing in/i })
     expect(submitButton).not.toBeDisabled()
