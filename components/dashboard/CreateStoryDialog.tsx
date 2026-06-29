@@ -1,53 +1,60 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import type { Story, Chapter } from "@prisma/client";
-
-type StoryWithChapters = Story & {
-  chapters: Chapter[];
-};
+import type { Story } from "@/types/dashboard";
 
 interface CreateStoryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onStoryCreated: (story: StoryWithChapters) => void;
 }
 
-export function CreateStoryDialog({ open, onOpenChange, onStoryCreated }: CreateStoryDialogProps) {
+export function CreateStoryDialog({ open, onOpenChange }: CreateStoryDialogProps) {
   const [title, setTitle] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const queryClient = useQueryClient();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
-    try {
+  const mutation = useMutation({
+    mutationFn: async (storyTitle: string): Promise<Story> => {
       const response = await fetch("/api/stories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
+        body: JSON.stringify({ title: storyTitle }),
       });
       if (!response.ok) {
         const data = await response.json();
-        setError(data.error || "Failed to create story");
-        return;
+        throw new Error(data.error || "Failed to create story");
       }
-      const newStory = await response.json();
-      onStoryCreated(newStory);
+      const json = await response.json();
+      return json.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stories"] });
       setTitle("");
       onOpenChange(false);
-    } catch {
-      setError("An error occurred. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    },
+  });
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) mutation.reset();
+    onOpenChange(nextOpen);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (title.trim()) mutation.mutate(title.trim());
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent style={{ backgroundColor: "var(--dark-green)", border: "1px solid var(--dark-green-highlight)", borderRadius: 12, maxWidth: 480 }}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogContent
+        style={{
+          backgroundColor: "var(--dark-green)",
+          border: "1px solid var(--dark-green-highlight)",
+          borderRadius: 12,
+          maxWidth: 480,
+        }}
+      >
         <DialogHeader>
           <DialogTitle className="font-display" style={{ color: "var(--light-gray)", fontSize: 24 }}>
             Create New Story
@@ -77,14 +84,16 @@ export function CreateStoryDialog({ open, onOpenChange, onStoryCreated }: Create
                 }}
               />
             </div>
-            {error && (
-              <p className="font-display" style={{ color: "#f87171", fontSize: 14 }}>{error}</p>
+            {mutation.isError && (
+              <p className="font-display" style={{ color: "#f87171", fontSize: 14 }}>
+                {mutation.error instanceof Error ? mutation.error.message : "An error occurred. Please try again."}
+              </p>
             )}
           </div>
           <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 8 }}>
             <button
               type="button"
-              onClick={() => onOpenChange(false)}
+              onClick={() => handleOpenChange(false)}
               className="font-display"
               style={{
                 backgroundColor: "var(--dark-green-highlight)",
@@ -100,7 +109,7 @@ export function CreateStoryDialog({ open, onOpenChange, onStoryCreated }: Create
             </button>
             <button
               type="submit"
-              disabled={loading}
+              disabled={mutation.isPending}
               className="font-display"
               style={{
                 backgroundColor: "var(--green-highlight)",
@@ -109,11 +118,11 @@ export function CreateStoryDialog({ open, onOpenChange, onStoryCreated }: Create
                 padding: "10px 20px",
                 color: "black",
                 fontSize: 16,
-                cursor: loading ? "not-allowed" : "pointer",
-                opacity: loading ? 0.7 : 1,
+                cursor: mutation.isPending ? "not-allowed" : "pointer",
+                opacity: mutation.isPending ? 0.7 : 1,
               }}
             >
-              {loading ? "Creating..." : "Create Story"}
+              {mutation.isPending ? "Creating..." : "Create Story"}
             </button>
           </div>
         </form>

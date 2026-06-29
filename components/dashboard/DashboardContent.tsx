@@ -2,32 +2,29 @@
 
 import { useState } from "react";
 import { useClerk } from "@clerk/nextjs";
+import { useQuery } from "@tanstack/react-query";
 import { StoryCard } from "@/components/dashboard/StoryCard";
 import { CreateStoryDialog } from "@/components/dashboard/CreateStoryDialog";
 import { ImportDialog } from "@/components/dashboard/ImportDialog";
 import { Upload, LogOut, Plus } from "lucide-react";
-import type { Story, Chapter } from "@prisma/client";
+import type { Story } from "@/types/dashboard";
 
-type StoryWithChapters = Story & { chapters: Chapter[] };
-
-interface DashboardContentProps {
-  stories: StoryWithChapters[];
+async function fetchStories(): Promise<Story[]> {
+  const res = await fetch("/api/stories");
+  if (!res.ok) throw new Error("Failed to fetch stories");
+  const json = await res.json();
+  return json.data;
 }
 
-export function DashboardContent({ stories: initialStories }: DashboardContentProps) {
+export function DashboardContent() {
   const { signOut } = useClerk();
-  const [stories, setStories] = useState(initialStories);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
 
-  const handleStoryCreated = (newStory: StoryWithChapters) => {
-    setStories([newStory, ...stories]);
-    setIsCreateDialogOpen(false);
-  };
-
-  const handleStoryDeleted = (storyId: string) => {
-    setStories(stories.filter((s) => s.id !== storyId));
-  };
+  const { data: stories = [], isLoading } = useQuery({
+    queryKey: ["stories"],
+    queryFn: fetchStories,
+  });
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -49,8 +46,10 @@ export function DashboardContent({ stories: initialStories }: DashboardContentPr
         >
           {/* Logo */}
           <div className="flex items-center justify-center h-full px-[10px] shrink-0">
-            <span className="font-display leading-none" style={{ fontSize: "48px", color: "var(--aqua)" }}>
-              Re:
+            <span className="font-display leading-none" style={{ fontSize: "48px" }}>
+              <span style={{ color: "var(--aqua)" }}>Re</span>
+              <span style={{ color: "black" }}>:</span>
+              <span style={{ color: "var(--light-gray)" }}>Write</span>
             </span>
           </div>
 
@@ -97,10 +96,16 @@ export function DashboardContent({ stories: initialStories }: DashboardContentPr
             </button>
           </div>
 
-          {stories.length === 0 ? (
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-24">
+              <p className="font-display text-[20px]" style={{ color: "var(--light-gray)", opacity: 0.5 }}>
+                Loading...
+              </p>
+            </div>
+          ) : stories.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 gap-6">
               <p className="font-display text-[24px]" style={{ color: "var(--light-gray)", opacity: 0.6 }}>
-                You don't have any stories yet.
+                You don&apos;t have any stories yet.
               </p>
               <button
                 onClick={() => setIsCreateDialogOpen(true)}
@@ -113,7 +118,7 @@ export function DashboardContent({ stories: initialStories }: DashboardContentPr
           ) : (
             <div className="fade-up fade-up-delay-1 grid grid-cols-1 md:grid-cols-2 gap-6">
               {stories.map((story) => (
-                <StoryCard key={story.id} story={story} onDelete={handleStoryDeleted} />
+                <StoryCard key={story.id} story={story} />
               ))}
             </div>
           )}
@@ -123,7 +128,6 @@ export function DashboardContent({ stories: initialStories }: DashboardContentPr
       <CreateStoryDialog
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
-        onStoryCreated={handleStoryCreated}
       />
       <ImportDialog
         open={isImportDialogOpen}
