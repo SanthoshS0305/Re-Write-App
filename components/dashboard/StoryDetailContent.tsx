@@ -1,36 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Plus } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { ChapterList } from "@/components/dashboard/ChapterList";
 import { CreateChapterDialog } from "@/components/dashboard/CreateChapterDialog";
-import type { Story, Chapter } from "@prisma/client";
-
-type StoryWithChapters = Story & { chapters: Chapter[] };
+import type { Story } from "@/types/dashboard";
 
 interface StoryDetailContentProps {
-  story: StoryWithChapters;
+  storyId: string;
 }
 
-export function StoryDetailContent({ story: initialStory }: StoryDetailContentProps) {
-  const [story, setStory] = useState(initialStory);
+async function fetchStory(storyId: string): Promise<Story> {
+  const res = await fetch(`/api/stories/${storyId}`);
+  if (res.status === 404) throw new Error("not_found");
+  if (!res.ok) throw new Error("Failed to fetch story");
+  const json = await res.json();
+  return json.data;
+}
+
+export function StoryDetailContent({ storyId }: StoryDetailContentProps) {
+  const router = useRouter();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
-  const handleChapterCreated = (newChapter: Chapter) => {
-    setStory({
-      ...story,
-      chapters: [...story.chapters, newChapter].sort((a, b) => a.order - b.order),
-    });
-    setIsCreateDialogOpen(false);
-  };
+  const { data: story, isLoading, isError, error } = useQuery({
+    queryKey: ["story", storyId],
+    queryFn: () => fetchStory(storyId),
+  });
 
-  const handleChapterDeleted = (chapterId: string) => {
-    setStory({
-      ...story,
-      chapters: story.chapters.filter((c) => c.id !== chapterId),
-    });
-  };
+  useEffect(() => {
+    if (isError && error instanceof Error && error.message === "not_found") {
+      router.push("/dashboard");
+    }
+  }, [isError, error, router]);
+
+  if (isLoading) {
+    return (
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundColor: "var(--dark-mint-green)" }}
+      >
+        <p className="font-display text-[20px]" style={{ color: "var(--light-gray)", opacity: 0.5 }}>
+          Loading...
+        </p>
+      </div>
+    );
+  }
+
+  if (isError || !story) return null;
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -51,8 +70,10 @@ export function StoryDetailContent({ story: initialStory }: StoryDetailContentPr
           style={{ backgroundColor: "var(--dark-green)", minHeight: "80px" }}
         >
           <div className="flex items-center justify-center h-full px-[10px] shrink-0">
-            <span className="font-display leading-none" style={{ fontSize: "48px", color: "var(--aqua)" }}>
-              Re:
+            <span className="font-display leading-none" style={{ fontSize: "48px" }}>
+              <span style={{ color: "var(--aqua)" }}>Re</span>
+              <span style={{ color: "black" }}>:</span>
+              <span style={{ color: "var(--light-gray)" }}>Write</span>
             </span>
           </div>
           <div className="flex-1" />
@@ -70,7 +91,7 @@ export function StoryDetailContent({ story: initialStory }: StoryDetailContentPr
         {/* Main */}
         <main className="flex-1 px-12 py-10">
           {/* Page heading */}
-          <div className="mb-10 flex items-end justify-between">
+          <div className="fade-up mb-10 flex items-end justify-between">
             <div>
               <p className="font-display text-[20px] mb-1" style={{ color: "var(--aqua)" }}>
                 {story.chapters.length} {story.chapters.length === 1 ? "chapter" : "chapters"}
@@ -103,11 +124,7 @@ export function StoryDetailContent({ story: initialStory }: StoryDetailContentPr
               </button>
             </div>
           ) : (
-            <ChapterList
-              chapters={story.chapters}
-              storyId={story.id}
-              onChapterDeleted={handleChapterDeleted}
-            />
+            <ChapterList chapters={story.chapters} storyId={story.id} />
           )}
         </main>
       </div>
@@ -116,7 +133,6 @@ export function StoryDetailContent({ story: initialStory }: StoryDetailContentPr
         open={isCreateDialogOpen}
         onOpenChange={setIsCreateDialogOpen}
         storyId={story.id}
-        onChapterCreated={handleChapterCreated}
       />
     </div>
   );
