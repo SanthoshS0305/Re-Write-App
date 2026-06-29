@@ -2,6 +2,16 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-server";
 import { prisma } from "@/lib/db/prisma";
 
+const CHAPTER_DASHBOARD_SELECT = {
+  id: true,
+  title: true,
+  order: true,
+  wordCount: true,
+  storyId: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
 export async function GET() {
   try {
     const session = await getServerSession();
@@ -15,12 +25,13 @@ export async function GET() {
       include: {
         chapters: {
           orderBy: { order: "asc" },
+          select: CHAPTER_DASHBOARD_SELECT,
         },
       },
       orderBy: { updatedAt: "desc" },
     });
 
-    return NextResponse.json(stories);
+    return NextResponse.json({ data: stories });
   } catch (error) {
     console.error("Error fetching stories:", error);
     return NextResponse.json(
@@ -53,11 +64,13 @@ export async function POST(request: Request) {
         userId: session.user.id,
       },
       include: {
-        chapters: true,
+        chapters: {
+          select: CHAPTER_DASHBOARD_SELECT,
+        },
       },
     });
 
-    return NextResponse.json(story);
+    return NextResponse.json({ data: story }, { status: 201 });
   } catch (error) {
     console.error("Error creating story:", error);
     return NextResponse.json(
@@ -66,4 +79,3 @@ export async function POST(request: Request) {
     );
   }
 }
-
