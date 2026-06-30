@@ -26,22 +26,22 @@ export default async function Home() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-[33vw] [container-type:inline-size]">
-        {/* Card — contains everything */}
+      <div className="relative z-10 w-[33vw] [container-type:inline-size] flex flex-col gap-[10px]">
+        {/* Intro */}
+        <div className="fade-up flex gap-[10px] items-center justify-center flex-wrap px-[10px]">
+          <span className="font-display text-[36px] leading-normal" style={{ color: "var(--aqua)" }}>
+            Hello, Author,
+          </span>
+          <span className="font-display text-[36px] leading-normal" style={{ color: "var(--light-gray)" }}>
+            Welcome to
+          </span>
+        </div>
+
+        {/* Card */}
         <div
-          className="fade-up flex flex-col items-center gap-[20px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
+          className="fade-up fade-up-delay-1 flex flex-col items-center gap-[20px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
           style={{ backgroundColor: "var(--dark-green)" }}
         >
-          {/* Intro */}
-          <div className="flex gap-[10px] items-center justify-center flex-wrap">
-            <span className="font-display text-[36px] leading-normal" style={{ color: "var(--aqua)" }}>
-              Hello, Author,
-            </span>
-            <span className="font-display text-[36px] leading-normal" style={{ color: "var(--light-gray)" }}>
-              Welcome to
-            </span>
-          </div>
-
           {/* Logo */}
           <div className="font-display leading-none select-none" style={{ fontSize: "23cqw" }}>
             <span style={{ color: "var(--aqua)" }}>Re</span>
