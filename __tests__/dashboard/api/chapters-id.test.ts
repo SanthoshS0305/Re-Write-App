@@ -12,11 +12,11 @@ vi.mock('@/lib/auth-server', () => ({
 const {
   mockChapterFindFirst,
   mockChapterUpdate,
-  mockChapterDeleteMany,
+  mockChapterDelete,
 } = vi.hoisted(() => ({
   mockChapterFindFirst: vi.fn(),
   mockChapterUpdate: vi.fn(),
-  mockChapterDeleteMany: vi.fn(),
+  mockChapterDelete: vi.fn(),
 }))
 
 vi.mock('@/lib/db/prisma', () => ({
@@ -24,7 +24,7 @@ vi.mock('@/lib/db/prisma', () => ({
     chapter: {
       findFirst: mockChapterFindFirst,
       update: mockChapterUpdate,
-      deleteMany: mockChapterDeleteMany,
+      delete: mockChapterDelete,
     },
   },
 }))
@@ -52,7 +52,7 @@ describe('PATCH /api/chapters/[id]', () => {
     vi.clearAllMocks()
   })
 
-  it('updates title and returns updated chapter', async () => {
+  it('updates title and returns updated chapter wrapped in { data }', async () => {
     const existing = makeChapter()
     const updated = makeChapter({ title: 'Revised Title' })
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
@@ -68,10 +68,10 @@ describe('PATCH /api/chapters/[id]', () => {
     const body = await res.json()
 
     expect(res.status).toBe(200)
-    expect(body).toMatchObject({ id: 'chapter-1', title: 'Revised Title' })
+    expect(body.data).toMatchObject({ id: 'chapter-1', title: 'Revised Title' })
   })
 
-  it('updates wordCount and returns updated chapter', async () => {
+  it('updates wordCount and returns updated chapter wrapped in { data }', async () => {
     const existing = makeChapter()
     const updated = makeChapter({ wordCount: 150 })
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
@@ -87,7 +87,7 @@ describe('PATCH /api/chapters/[id]', () => {
     const body = await res.json()
 
     expect(res.status).toBe(200)
-    expect(body).toMatchObject({ wordCount: 150 })
+    expect(body.data).toMatchObject({ wordCount: 150 })
   })
 
   it('only updates provided fields', async () => {
@@ -169,30 +169,28 @@ describe('DELETE /api/chapters/[id]', () => {
     vi.clearAllMocks()
   })
 
-  it('deletes chapter for owner and returns success message', async () => {
+  it('deletes chapter for owner and returns { data: { id } }', async () => {
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
-    mockChapterDeleteMany.mockResolvedValueOnce({ count: 1 })
+    mockChapterFindFirst.mockResolvedValueOnce(makeChapter({ id: 'chapter-1' }))
+    mockChapterDelete.mockResolvedValueOnce({ id: 'chapter-1' })
 
-    const req = new Request('http://localhost/api/chapters/chapter-1', {
-      method: 'DELETE',
-    })
+    const req = new Request('http://localhost/api/chapters/chapter-1', { method: 'DELETE' })
     const res = await DELETE(req, { params: makeParams('chapter-1') })
     const body = await res.json()
 
     expect(res.status).toBe(200)
-    expect(body).toHaveProperty('message')
+    expect(body.data).toMatchObject({ id: 'chapter-1' })
   })
 
-  it('deletes only the chapter owned by the authenticated user', async () => {
+  it('verifies ownership before deleting', async () => {
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
-    mockChapterDeleteMany.mockResolvedValueOnce({ count: 1 })
+    mockChapterFindFirst.mockResolvedValueOnce(makeChapter())
+    mockChapterDelete.mockResolvedValueOnce({ id: 'chapter-1' })
 
-    const req = new Request('http://localhost/api/chapters/chapter-1', {
-      method: 'DELETE',
-    })
+    const req = new Request('http://localhost/api/chapters/chapter-1', { method: 'DELETE' })
     await DELETE(req, { params: makeParams('chapter-1') })
 
-    expect(mockChapterDeleteMany).toHaveBeenCalledWith(
+    expect(mockChapterFindFirst).toHaveBeenCalledWith(
       expect.objectContaining({
         where: expect.objectContaining({
           id: 'chapter-1',
@@ -200,14 +198,13 @@ describe('DELETE /api/chapters/[id]', () => {
         }),
       })
     )
+    expect(mockChapterDelete).toHaveBeenCalledWith({ where: { id: 'chapter-1' } })
   })
 
   it('returns 401 when there is no session', async () => {
     mockGetServerSession.mockResolvedValueOnce(null)
 
-    const req = new Request('http://localhost/api/chapters/chapter-1', {
-      method: 'DELETE',
-    })
+    const req = new Request('http://localhost/api/chapters/chapter-1', { method: 'DELETE' })
     const res = await DELETE(req, { params: makeParams('chapter-1') })
     const body = await res.json()
 
@@ -217,15 +214,14 @@ describe('DELETE /api/chapters/[id]', () => {
 
   it('returns 404 when chapter belongs to a different user', async () => {
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
-    mockChapterDeleteMany.mockResolvedValueOnce({ count: 0 })
+    mockChapterFindFirst.mockResolvedValueOnce(null)
 
-    const req = new Request('http://localhost/api/chapters/other-chapter', {
-      method: 'DELETE',
-    })
+    const req = new Request('http://localhost/api/chapters/other-chapter', { method: 'DELETE' })
     const res = await DELETE(req, { params: makeParams('other-chapter') })
     const body = await res.json()
 
     expect(res.status).toBe(404)
     expect(body.error).toBe('Chapter not found')
+    expect(mockChapterDelete).not.toHaveBeenCalled()
   })
 })

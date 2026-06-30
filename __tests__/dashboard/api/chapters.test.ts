@@ -63,7 +63,7 @@ describe('GET /api/chapters', () => {
     vi.clearAllMocks()
   })
 
-  it('returns chapter array for valid owned storyId', async () => {
+  it('returns chapter array wrapped in { data } for valid owned storyId', async () => {
     const chapters = [makeChapter(), makeChapter({ id: 'chapter-2', title: 'Chapter 2', order: 2 })]
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
     mockStoryFindFirst.mockResolvedValueOnce(makeStory())
@@ -74,9 +74,9 @@ describe('GET /api/chapters', () => {
     const body = await res.json()
 
     expect(res.status).toBe(200)
-    expect(Array.isArray(body)).toBe(true)
-    expect(body).toHaveLength(2)
-    expect(body[0]).toMatchObject({ id: 'chapter-1', title: 'Chapter 1' })
+    expect(Array.isArray(body.data)).toBe(true)
+    expect(body.data).toHaveLength(2)
+    expect(body.data[0]).toMatchObject({ id: 'chapter-1', title: 'Chapter 1' })
   })
 
   it('verifies story ownership before returning chapters', async () => {
@@ -136,7 +136,7 @@ describe('POST /api/chapters', () => {
     vi.clearAllMocks()
   })
 
-  it('creates chapter with correct order and returns it', async () => {
+  it('creates chapter with correct order and returns it wrapped in { data } with 201', async () => {
     const created = makeChapter({ id: 'new-chapter', title: 'New Chapter', order: 2 })
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
     mockStoryFindFirst.mockResolvedValueOnce(makeStory())
@@ -151,8 +151,8 @@ describe('POST /api/chapters', () => {
     const res = await POST(req)
     const body = await res.json()
 
-    expect(res.status).toBe(200)
-    expect(body).toMatchObject({ id: 'new-chapter', title: 'New Chapter' })
+    expect(res.status).toBe(201)
+    expect(body.data).toMatchObject({ id: 'new-chapter', title: 'New Chapter' })
   })
 
   it('assigns order 1 when no chapters exist yet', async () => {

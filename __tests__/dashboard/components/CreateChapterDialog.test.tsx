@@ -1,16 +1,24 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { CreateChapterDialog } from '@/components/dashboard/CreateChapterDialog'
 
+const createWrapper = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  })
+  return ({ children }: { children: React.ReactNode }) => (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  )
+}
+
 const mockOnOpenChange = vi.fn()
-const mockOnChapterCreated = vi.fn()
 
 const defaultProps = {
   open: true,
   onOpenChange: mockOnOpenChange,
   storyId: 'story-1',
-  onChapterCreated: mockOnChapterCreated,
 }
 
 beforeEach(() => {
@@ -18,11 +26,13 @@ beforeEach(() => {
   vi.spyOn(global, 'fetch').mockResolvedValue({
     ok: true,
     json: async () => ({
-      id: 'chapter-1',
-      title: 'Chapter 1',
-      order: 1,
-      wordCount: 0,
-      storyId: 'story-1',
+      data: {
+        id: 'chapter-1',
+        title: 'Chapter 1',
+        order: 1,
+        wordCount: 0,
+        storyId: 'story-1',
+      },
     }),
   } as Response)
 })
@@ -33,28 +43,28 @@ afterEach(() => {
 
 describe('CreateChapterDialog', () => {
   it('renders dialog title when open', () => {
-    render(<CreateChapterDialog {...defaultProps} />)
+    render(<CreateChapterDialog {...defaultProps} />, { wrapper: createWrapper() })
     expect(screen.getByText('Create New Chapter')).toBeInTheDocument()
   })
 
   it('renders chapter title input when open', () => {
-    render(<CreateChapterDialog {...defaultProps} />)
+    render(<CreateChapterDialog {...defaultProps} />, { wrapper: createWrapper() })
     expect(screen.getByPlaceholderText('Chapter 1: The Beginning')).toBeInTheDocument()
   })
 
   it('renders Create Chapter submit button when open', () => {
-    render(<CreateChapterDialog {...defaultProps} />)
+    render(<CreateChapterDialog {...defaultProps} />, { wrapper: createWrapper() })
     expect(screen.getByRole('button', { name: 'Create Chapter' })).toBeInTheDocument()
   })
 
   it('does not render dialog content when closed', () => {
-    render(<CreateChapterDialog {...defaultProps} open={false} />)
+    render(<CreateChapterDialog {...defaultProps} open={false} />, { wrapper: createWrapper() })
     expect(screen.queryByText('Create New Chapter')).not.toBeInTheDocument()
   })
 
   it('POSTs to /api/chapters with entered title and storyId on submit', async () => {
     const user = userEvent.setup()
-    render(<CreateChapterDialog {...defaultProps} />)
+    render(<CreateChapterDialog {...defaultProps} />, { wrapper: createWrapper() })
 
     await user.type(
       screen.getByPlaceholderText('Chapter 1: The Beginning'),
@@ -76,7 +86,9 @@ describe('CreateChapterDialog', () => {
 
   it('sends the storyId from props in the request body', async () => {
     const user = userEvent.setup()
-    render(<CreateChapterDialog {...defaultProps} storyId="specific-story-id" />)
+    render(<CreateChapterDialog {...defaultProps} storyId="specific-story-id" />, {
+      wrapper: createWrapper(),
+    })
 
     await user.type(
       screen.getByPlaceholderText('Chapter 1: The Beginning'),
@@ -94,36 +106,9 @@ describe('CreateChapterDialog', () => {
     })
   })
 
-  it('calls onChapterCreated with the response data after successful submit', async () => {
-    const newChapter = {
-      id: 'chapter-new',
-      title: 'The Beginning',
-      order: 1,
-      wordCount: 0,
-      storyId: 'story-1',
-    }
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce({
-      ok: true,
-      json: async () => newChapter,
-    } as Response)
-
-    const user = userEvent.setup()
-    render(<CreateChapterDialog {...defaultProps} />)
-
-    await user.type(
-      screen.getByPlaceholderText('Chapter 1: The Beginning'),
-      'The Beginning'
-    )
-    await user.click(screen.getByRole('button', { name: 'Create Chapter' }))
-
-    await waitFor(() => {
-      expect(mockOnChapterCreated).toHaveBeenCalledWith(newChapter)
-    })
-  })
-
   it('calls onOpenChange(false) after successful submit', async () => {
     const user = userEvent.setup()
-    render(<CreateChapterDialog {...defaultProps} />)
+    render(<CreateChapterDialog {...defaultProps} />, { wrapper: createWrapper() })
 
     await user.type(
       screen.getByPlaceholderText('Chapter 1: The Beginning'),
@@ -143,7 +128,7 @@ describe('CreateChapterDialog', () => {
     } as Response)
 
     const user = userEvent.setup()
-    render(<CreateChapterDialog {...defaultProps} />)
+    render(<CreateChapterDialog {...defaultProps} />, { wrapper: createWrapper() })
 
     await user.type(
       screen.getByPlaceholderText('Chapter 1: The Beginning'),
@@ -154,12 +139,11 @@ describe('CreateChapterDialog', () => {
     await waitFor(() => {
       expect(screen.getByText('Failed to create chapter')).toBeInTheDocument()
     })
-    expect(mockOnChapterCreated).not.toHaveBeenCalled()
   })
 
   it('calls onOpenChange(false) when Cancel button is clicked', async () => {
     const user = userEvent.setup()
-    render(<CreateChapterDialog {...defaultProps} />)
+    render(<CreateChapterDialog {...defaultProps} />, { wrapper: createWrapper() })
 
     await user.click(screen.getByRole('button', { name: 'Cancel' }))
 
