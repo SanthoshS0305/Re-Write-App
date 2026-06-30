@@ -9,26 +9,21 @@ vi.mock('@/lib/auth-server', () => ({
   getServerSession: mockGetServerSession,
 }))
 
-const {
-  mockStoryFindFirst,
-  mockStoryUpdateMany,
-  mockStoryFindUnique,
-  mockStoryDeleteMany,
-} = vi.hoisted(() => ({
+const { mockStoryFindFirst, mockStoryUpdate, mockStoryDelete, mockTransaction } = vi.hoisted(() => ({
   mockStoryFindFirst: vi.fn(),
-  mockStoryUpdateMany: vi.fn(),
-  mockStoryFindUnique: vi.fn(),
-  mockStoryDeleteMany: vi.fn(),
+  mockStoryUpdate: vi.fn(),
+  mockStoryDelete: vi.fn(),
+  mockTransaction: vi.fn(),
 }))
 
 vi.mock('@/lib/db/prisma', () => ({
   prisma: {
     story: {
       findFirst: mockStoryFindFirst,
-      updateMany: mockStoryUpdateMany,
-      findUnique: mockStoryFindUnique,
-      deleteMany: mockStoryDeleteMany,
+      update: mockStoryUpdate,
+      delete: mockStoryDelete,
     },
+    $transaction: mockTransaction,
   },
 }))
 
@@ -46,15 +41,14 @@ const makeStory = (overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 })
 
-const makeParams = (id: string) =>
-  Promise.resolve({ id })
+const makeParams = (id: string) => Promise.resolve({ id })
 
 describe('GET /api/stories/[id]', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('returns story for owner', async () => {
+  it('returns story wrapped in { data } for owner', async () => {
     const story = makeStory()
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
     mockStoryFindFirst.mockResolvedValueOnce(story)
@@ -64,7 +58,7 @@ describe('GET /api/stories/[id]', () => {
     const body = await res.json()
 
     expect(res.status).toBe(200)
-    expect(body).toMatchObject({ id: 'story-1', title: 'My Story' })
+    expect(body.data).toMatchObject({ id: 'story-1', title: 'My Story' })
   })
 
   it('queries story scoped to authenticated user', async () => {
@@ -110,11 +104,19 @@ describe('PATCH /api/stories/[id]', () => {
     vi.clearAllMocks()
   })
 
-  it('renames story and returns updated story', async () => {
+  it('renames story via transaction and returns updated story wrapped in { data }', async () => {
     const updated = makeStory({ title: 'Renamed Story' })
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
-    mockStoryUpdateMany.mockResolvedValueOnce({ count: 1 })
-    mockStoryFindUnique.mockResolvedValueOnce(updated)
+    mockTransaction.mockImplementationOnce(async (fn: (tx: {
+      story: { findFirst: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn> }
+    }) => Promise<unknown>) =>
+      fn({
+        story: {
+          findFirst: vi.fn().mockResolvedValueOnce(makeStory()),
+          update: vi.fn().mockResolvedValueOnce(updated),
+        },
+      })
+    )
 
     const req = new Request('http://localhost/api/stories/story-1', {
       method: 'PATCH',
@@ -125,7 +127,7 @@ describe('PATCH /api/stories/[id]', () => {
     const body = await res.json()
 
     expect(res.status).toBe(200)
-    expect(body).toMatchObject({ title: 'Renamed Story' })
+    expect(body.data).toMatchObject({ title: 'Renamed Story' })
   })
 
   it('returns 401 when there is no session', async () => {
@@ -145,7 +147,17 @@ describe('PATCH /api/stories/[id]', () => {
 
   it('returns 404 when story belongs to a different user', async () => {
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
-    mockStoryUpdateMany.mockResolvedValueOnce({ count: 0 })
+    // Transaction finds no matching story for this user → returns null
+    mockTransaction.mockImplementationOnce(async (fn: (tx: {
+      story: { findFirst: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn> }
+    }) => Promise<unknown>) =>
+      fn({
+        story: {
+          findFirst: vi.fn().mockResolvedValueOnce(null),
+          update: vi.fn(),
+        },
+      })
+    )
 
     const req = new Request('http://localhost/api/stories/other-story', {
       method: 'PATCH',
@@ -180,42 +192,39 @@ describe('DELETE /api/stories/[id]', () => {
     vi.clearAllMocks()
   })
 
-  it('deletes story for owner and returns success message', async () => {
+  it('deletes story for owner and returns { data: { id } }', async () => {
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
-    mockStoryDeleteMany.mockResolvedValueOnce({ count: 1 })
+    mockStoryFindFirst.mockResolvedValueOnce(makeStory({ id: 'story-1' }))
+    mockStoryDelete.mockResolvedValueOnce({ id: 'story-1' })
 
-    const req = new Request('http://localhost/api/stories/story-1', {
-      method: 'DELETE',
-    })
+    const req = new Request('http://localhost/api/stories/story-1', { method: 'DELETE' })
     const res = await DELETE(req, { params: makeParams('story-1') })
     const body = await res.json()
 
     expect(res.status).toBe(200)
-    expect(body).toHaveProperty('message')
+    expect(body.data).toMatchObject({ id: 'story-1' })
   })
 
-  it('deletes only the story owned by the authenticated user', async () => {
+  it('verifies ownership before deleting', async () => {
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
-    mockStoryDeleteMany.mockResolvedValueOnce({ count: 1 })
+    mockStoryFindFirst.mockResolvedValueOnce(makeStory())
+    mockStoryDelete.mockResolvedValueOnce({ id: 'story-1' })
 
-    const req = new Request('http://localhost/api/stories/story-1', {
-      method: 'DELETE',
-    })
+    const req = new Request('http://localhost/api/stories/story-1', { method: 'DELETE' })
     await DELETE(req, { params: makeParams('story-1') })
 
-    expect(mockStoryDeleteMany).toHaveBeenCalledWith(
+    expect(mockStoryFindFirst).toHaveBeenCalledWith(
       expect.objectContaining({
         where: expect.objectContaining({ id: 'story-1', userId: 'test-user-id' }),
       })
     )
+    expect(mockStoryDelete).toHaveBeenCalledWith({ where: { id: 'story-1' } })
   })
 
   it('returns 401 when there is no session', async () => {
     mockGetServerSession.mockResolvedValueOnce(null)
 
-    const req = new Request('http://localhost/api/stories/story-1', {
-      method: 'DELETE',
-    })
+    const req = new Request('http://localhost/api/stories/story-1', { method: 'DELETE' })
     const res = await DELETE(req, { params: makeParams('story-1') })
     const body = await res.json()
 
@@ -225,15 +234,14 @@ describe('DELETE /api/stories/[id]', () => {
 
   it('returns 404 when story belongs to a different user', async () => {
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
-    mockStoryDeleteMany.mockResolvedValueOnce({ count: 0 })
+    mockStoryFindFirst.mockResolvedValueOnce(null)
 
-    const req = new Request('http://localhost/api/stories/other-story', {
-      method: 'DELETE',
-    })
+    const req = new Request('http://localhost/api/stories/other-story', { method: 'DELETE' })
     const res = await DELETE(req, { params: makeParams('other-story') })
     const body = await res.json()
 
     expect(res.status).toBe(404)
     expect(body.error).toBe('Story not found')
+    expect(mockStoryDelete).not.toHaveBeenCalled()
   })
 })

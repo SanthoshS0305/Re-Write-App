@@ -42,7 +42,7 @@ describe('GET /api/stories', () => {
     vi.clearAllMocks()
   })
 
-  it('returns story array for authenticated user', async () => {
+  it('returns story array wrapped in { data } for authenticated user', async () => {
     const stories = [makeStory(), makeStory({ id: 'story-2', title: 'Second Story' })]
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
     mockStoryFindMany.mockResolvedValueOnce(stories)
@@ -52,9 +52,9 @@ describe('GET /api/stories', () => {
     const body = await res.json()
 
     expect(res.status).toBe(200)
-    expect(Array.isArray(body)).toBe(true)
-    expect(body).toHaveLength(2)
-    expect(body[0]).toMatchObject({ id: 'story-1', title: 'My Story' })
+    expect(Array.isArray(body.data)).toBe(true)
+    expect(body.data).toHaveLength(2)
+    expect(body.data[0]).toMatchObject({ id: 'story-1', title: 'My Story' })
   })
 
   it('queries only stories belonging to the authenticated user', async () => {
@@ -89,7 +89,7 @@ describe('POST /api/stories', () => {
     vi.clearAllMocks()
   })
 
-  it('creates a story and returns it for authenticated user', async () => {
+  it('creates a story and returns it wrapped in { data } with 201', async () => {
     const created = makeStory({ id: 'new-story', title: 'Brand New Story' })
     mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
     mockStoryCreate.mockResolvedValueOnce(created)
@@ -102,8 +102,8 @@ describe('POST /api/stories', () => {
     const res = await POST(req)
     const body = await res.json()
 
-    expect(res.status).toBe(200)
-    expect(body).toMatchObject({ id: 'new-story', title: 'Brand New Story' })
+    expect(res.status).toBe(201)
+    expect(body.data).toMatchObject({ id: 'new-story', title: 'Brand New Story' })
   })
 
   it('creates a story owned by the authenticated user', async () => {
