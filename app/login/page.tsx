@@ -77,11 +77,11 @@ export default function LoginPage() {
           style={{ backgroundColor: "var(--dark-green)" }}
         >
           {/* Logo */}
-          <div className="flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]">
+          <Link href='/' className="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]">
             <span style={{ color: "var(--aqua)" }}>Re</span>
             <span style={{ color: "black" }}>:</span>
             <span style={{ color: "var(--light-gray)" }}>Write</span>
-          </div>
+          </Link>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-[20px] w-full px-[5px]">

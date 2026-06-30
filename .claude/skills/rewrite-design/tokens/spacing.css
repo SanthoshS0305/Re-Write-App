@@ -1,0 +1,32 @@
+/* Re:Write — Spacing, radii, shadow, borders
+   Soft generous radii (pills everywhere), one consistent drop shadow. */
+
+:root {
+  /* Spacing scale */
+  --rw-space-1: 5px;
+  --rw-space-2: 10px;
+  --rw-space-3: 16px;
+  --rw-space-4: 20px;
+  --rw-space-5: 30px;
+  --rw-space-6: 40px;
+
+  /* Radii — Re:Write leans on big rounded pills */
+  --rw-radius-card: 10px;
+  --rw-radius-input: 20px;    /* input fields, chapter pill */
+  --rw-radius-pill: 30px;     /* buttons, toolbar */
+  --rw-radius-round: 999px;
+
+  /* Borders */
+  --rw-border-width: 3px;     /* hard black borders on inputs & primary buttons */
+  --rw-border-thin: 1px;
+
+  /* Shadow — single consistent elevation */
+  --rw-shadow-card: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  --rw-shadow-canvas: 0 8px 32px rgba(0, 0, 0, 0.35);
+  --rw-shadow-panel: -4px 0 24px rgba(0, 0, 0, 0.4);
+
+  /* Motion */
+  --rw-ease: ease; /* @kind other */
+  --rw-dur-fast: 0.15s; /* @kind other */
+  --rw-dur: 0.3s; /* @kind other */
+}
