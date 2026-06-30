@@ -71,7 +71,7 @@ export default function SignupPage() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center gap-[10px] py-[10px]">
+      <div className="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]">
         {/* Welcome Text */}
         <div className="fade-up flex gap-[10px] items-center justify-center px-[10px]">
           <span className="font-display text-[36px] leading-normal" style={{ color: "var(--aqua)" }}>
@@ -84,7 +84,7 @@ export default function SignupPage() {
 
         {/* Signup Card */}
         <div
-          className="fade-up fade-up-delay-1 flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px] overflow-clip"
+          className="fade-up fade-up-delay-1 flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
           style={{ backgroundColor: "var(--dark-green)" }}
         >
           {/* Logo */}
