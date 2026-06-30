@@ -62,11 +62,11 @@ export default function LoginPage() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center gap-[10px] py-[10px]">
         {/* Welcome Text */}
-        <div className="fade-up flex gap-[10px] items-center justify-center h-[100px] px-[10px]">
-          <span className="font-display text-[64px] leading-normal" style={{ color: "var(--aqua)" }}>
+        <div className="fade-up flex gap-[10px] items-center justify-center px-[10px]">
+          <span className="font-display text-[36px] leading-normal" style={{ color: "var(--aqua)" }}>
             Hello, Author,
           </span>
-          <span className="font-display text-[64px] leading-normal" style={{ color: "var(--light-gray)" }}>
+          <span className="font-display text-[36px] leading-normal" style={{ color: "var(--light-gray)" }}>
             Welcome back to
           </span>
         </div>
@@ -93,7 +93,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="font-display"
-              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 32, color: "black", padding: "10px 20px", outline: "none", width: "100%", height: 56 }}
+              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" }}
             />
             <input
               id="password"
@@ -103,7 +103,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="font-display"
-              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 32, color: "black", padding: "10px 20px", outline: "none", width: "100%", height: 56 }}
+              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" }}
             />
 
             {error && (
