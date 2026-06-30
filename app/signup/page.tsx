@@ -214,6 +214,7 @@ export default function SignupPage() {
                 Log In
               </Link>
             </div>
+            <div id="clerk-captcha" />
           </form>
         </div>
       </div>

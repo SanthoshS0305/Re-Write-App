@@ -155,6 +155,7 @@ export default function LoginPage() {
                 Create One
               </Link>
             </div>
+            <div id="clerk-captcha" />
           </form>
         </div>
       </div>
