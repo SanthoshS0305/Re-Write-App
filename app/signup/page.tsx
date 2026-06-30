@@ -8,10 +8,7 @@ import Link from "next/link";
 export default function SignupPage() {
   const router = useRouter();
   const { signUp, isLoaded, setActive } = useSignUp();
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [error, setError] = useState("");
@@ -31,9 +28,6 @@ export default function SignupPage() {
 
     try {
       const result = await signUp.create({
-        firstName: firstName || undefined,
-        lastName: lastName || undefined,
-        username: username || undefined,
         emailAddress: email,
         password,
       });
@@ -79,11 +73,11 @@ export default function SignupPage() {
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center gap-[10px] py-[10px]">
         {/* Welcome Text */}
-        <div className="fade-up flex gap-[10px] items-center justify-center h-[100px] px-[10px]">
-          <span className="font-display text-[64px] leading-normal" style={{ color: "var(--aqua)" }}>
+        <div className="fade-up flex gap-[10px] items-center justify-center px-[10px]">
+          <span className="font-display text-[36px] leading-normal" style={{ color: "var(--aqua)" }}>
             Hello, Author,
           </span>
-          <span className="font-display text-[64px] leading-normal" style={{ color: "var(--light-gray)" }}>
+          <span className="font-display text-[36px] leading-normal" style={{ color: "var(--light-gray)" }}>
             Welcome to
           </span>
         </div>
@@ -103,16 +97,6 @@ export default function SignupPage() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-[20px] w-full px-[5px]">
             <input
-              id="username"
-              type="text"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="font-display"
-              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 32, color: "black", padding: "10px 20px", outline: "none", width: "100%", height: 56 }}
-            />
-            <input
               id="email"
               type="email"
               placeholder="Email"
@@ -120,28 +104,8 @@ export default function SignupPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="font-display"
-              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 32, color: "black", padding: "10px 20px", outline: "none", width: "100%", height: 56 }}
+              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" }}
             />
-            <div style={{ display: "flex", gap: 10 }}>
-              <input
-                id="firstName"
-                type="text"
-                placeholder="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="font-display"
-                style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 32, color: "black", padding: "10px 20px", outline: "none", flex: 1, height: 56 }}
-              />
-              <input
-                id="lastName"
-                type="text"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="font-display"
-                style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 32, color: "black", padding: "10px 20px", outline: "none", flex: 1, height: 56 }}
-              />
-            </div>
             <input
               id="password"
               type="password"
@@ -151,7 +115,7 @@ export default function SignupPage() {
               required
               minLength={6}
               className="font-display"
-              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 32, color: "black", padding: "10px 20px", outline: "none", width: "100%", height: 56 }}
+              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" }}
             />
             <input
               id="repeatPassword"
@@ -162,7 +126,7 @@ export default function SignupPage() {
               required
               minLength={6}
               className="font-display"
-              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 32, color: "black", padding: "10px 20px", outline: "none", width: "100%", height: 56 }}
+              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" }}
             />
 
             {error && (
