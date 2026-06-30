@@ -54,9 +54,9 @@ export default async function Home() {
             className="font-display text-[24px] leading-snug text-center flex flex-col items-center gap-0"
             style={{ color: "var(--light-gray)" }}
           >
-            <p>A web-based story writing app made by authors, for authors.</p>
-            <p>You get scene management, version control, and offline writing, so your story is always organized and saved.</p>
-            <p>Create an account and start writing today.</p>
+            <p className="m-0">A web-based story writing app made by authors, for authors.</p>
+            <p className="m-0">You get scene management, version control, and offline writing, so your story is always organized and saved.</p>
+            <p className="m-0">Create an account and start writing today.</p>
           </div>
 
           {/* CTAs */}
