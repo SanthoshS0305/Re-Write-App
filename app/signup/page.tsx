@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSignUp } from "@clerk/nextjs/legacy";
+import { useSignUp } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default function SignupPage() {
