@@ -2,6 +2,16 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-server";
 import { prisma } from "@/lib/db/prisma";
 
+const CHAPTER_DASHBOARD_SELECT = {
+  id: true,
+  title: true,
+  order: true,
+  wordCount: true,
+  storyId: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -22,6 +32,7 @@ export async function GET(
       include: {
         chapters: {
           orderBy: { order: "asc" },
+          select: CHAPTER_DASHBOARD_SELECT,
         },
       },
     });
@@ -30,7 +41,7 @@ export async function GET(
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
-    return NextResponse.json(story);
+    return NextResponse.json({ data: story });
   } catch (error) {
     console.error("Error fetching story:", error);
     return NextResponse.json(
@@ -61,25 +72,24 @@ export async function PATCH(
       );
     }
 
-    const story = await prisma.story.updateMany({
-      where: {
-        id,
-        userId: session.user.id,
-      },
-      data: {
-        title: title.trim(),
-      },
+    const story = await prisma.$transaction(async (tx) => {
+      const existing = await tx.story.findFirst({
+        where: { id, userId: session.user.id },
+      });
+
+      if (!existing) return null;
+
+      return tx.story.update({
+        where: { id },
+        data: { title: title.trim() },
+      });
     });
 
-    if (story.count === 0) {
+    if (!story) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
-    const updatedStory = await prisma.story.findUnique({
-      where: { id },
-    });
-
-    return NextResponse.json(updatedStory);
+    return NextResponse.json({ data: story });
   } catch (error) {
     console.error("Error updating story:", error);
     return NextResponse.json(
@@ -101,18 +111,17 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const story = await prisma.story.deleteMany({
-      where: {
-        id,
-        userId: session.user.id,
-      },
+    const existing = await prisma.story.findFirst({
+      where: { id, userId: session.user.id },
     });
 
-    if (story.count === 0) {
+    if (!existing) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Story deleted successfully" });
+    await prisma.story.delete({ where: { id } });
+
+    return NextResponse.json({ data: { id } });
   } catch (error) {
     console.error("Error deleting story:", error);
     return NextResponse.json(

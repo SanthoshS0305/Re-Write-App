@@ -26,7 +26,9 @@ Use the Skill tool: `rewrite-design`. Read the relevant sections before finalisi
 
 ## Branch & commit workflow
 
-1. **At the start of every task**, check your branch (`git branch --show-current`). If on `main`, create and switch: `git checkout -b feat/backend-<short-description>`.
+Branch structure: `feature/all` integrates into `dev`. Sub-branches: `feature/frontend`, `feature/backend`, `feature/testing`.
+
+1. **At the start of every task**, check your branch (`git branch --show-current`). You should be on a `*/backend` sub-branch (e.g. `dashboard/backend`). If not, switch to the correct one before writing any code — never commit directly to `main`, `staging`, `dev`, or a `*/all` branch.
 2. Build the feature incrementally. After each **major, self-contained unit** (a complete API route, a schema change + regenerated client, a working server utility) — not every file save — prepare a commit.
 3. **Before committing**, run the code-review skill and apply all suggested fixes:
    - Invoke the `code-review` skill with args `--fix`
