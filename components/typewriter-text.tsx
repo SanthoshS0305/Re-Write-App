@@ -1,30 +1,32 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "rw_intro_text";
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 export default function TypewriterText({ text }: { text: string }) {
   const [displayed, setDisplayed] = useState(text);
-  const ranRef = useRef(false);
 
   useEffect(() => {
-    if (ranRef.current) return;
-    ranRef.current = true;
-
     const prev = sessionStorage.getItem(STORAGE_KEY);
     sessionStorage.setItem(STORAGE_KEY, text);
 
+    // Restore sessionStorage on cleanup so React Strict Mode's double-invoke
+    // sees the correct previous value on the second run.
+    const restore = () => {
+      if (prev) sessionStorage.setItem(STORAGE_KEY, prev);
+      else sessionStorage.removeItem(STORAGE_KEY);
+    };
+
     if (!prev || prev === text) {
       setDisplayed(text);
-      return;
+      return restore;
     }
 
     let cancelled = false;
 
     (async () => {
-      // Show what was there before, then delete it
       setDisplayed(prev);
       await sleep(80);
 
@@ -40,8 +42,11 @@ export default function TypewriterText({ text }: { text: string }) {
       }
     })();
 
-    return () => { cancelled = true; };
-  }, [text]);
+    return () => {
+      cancelled = true;
+      restore();
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <span>{displayed}</span>;
 }
