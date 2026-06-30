@@ -73,7 +73,7 @@ export default async function Home() {
               className="flex-1 font-display text-[27px] flex items-center justify-center px-[16px] py-[8px] rounded-[30px] hover:opacity-90 transition-opacity"
               style={{ backgroundColor: "var(--green-highlight)", border: "3px solid black", color: "black" }}
             >
-              Create an Account
+              Sign Up
             </Link>
           </div>
         </div>
