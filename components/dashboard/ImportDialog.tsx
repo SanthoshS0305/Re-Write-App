@@ -49,7 +49,8 @@ export function ImportDialog({ open, onOpenChange }: ImportDialogProps) {
         body: JSON.stringify({ title: preview.story.title }),
       });
       if (!storyResponse.ok) throw new Error("Failed to create story");
-      const story = await storyResponse.json();
+      const storyJson = await storyResponse.json();
+      const story = storyJson.data;
 
       const chapterResponse = await fetch("/api/chapters", {
         method: "POST",
@@ -57,7 +58,8 @@ export function ImportDialog({ open, onOpenChange }: ImportDialogProps) {
         body: JSON.stringify({ title: preview.chapter.title, storyId: story.id, content: preview.chapter.content }),
       });
       if (!chapterResponse.ok) throw new Error("Failed to create chapter");
-      const chapter = await chapterResponse.json();
+      const chapterJson = await chapterResponse.json();
+      const chapter = chapterJson.data;
 
       router.push(`/editor/${chapter.id}`);
       onOpenChange(false);
