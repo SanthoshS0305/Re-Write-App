@@ -26,7 +26,7 @@ export default async function Home() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-[40vw] [container-type:inline-size]">
+      <div className="relative z-10 w-[33vw] [container-type:inline-size]">
         {/* Card — contains everything */}
         <div
           className="fade-up flex flex-col items-center gap-[20px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
@@ -51,7 +51,7 @@ export default async function Home() {
 
           {/* Blurb */}
           <div
-            className="font-display text-[24px] leading-snug text-center flex flex-col items-center gap-[2px]"
+            className="font-display text-[24px] leading-snug text-center flex flex-col items-center gap-0"
             style={{ color: "var(--light-gray)" }}
           >
             <p>A web-based story writing app made by authors, for authors.</p>
