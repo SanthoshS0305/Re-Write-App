@@ -1,0 +1,38 @@
+<!-- @dsCard group="Type" viewport="700x210" name="Body Type — swappable" subtitle="Joan by default; the body font is a token you can change" -->
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8" /><link rel="stylesheet" href="../styles.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital@0;1&family=EB+Garamond&family=DM+Sans:wght@400;500&display=swap" />
+<style>
+  body { margin:0; background:var(--rw-canvas-light); padding:22px; color:#111; }
+  .opts { display:flex; gap:8px; margin-bottom:14px; }
+  .opt { font-family:var(--rw-font-sans); font-size:12px; padding:5px 12px; border-radius:999px; border:2px solid #000; background:#fff; cursor:pointer; }
+  .opt.active { background:var(--rw-green-highlight); }
+  #spec { font-size:20px; line-height:1.7; margin:0; max-width:600px; transition:font-family .1s; }
+</style></head>
+<body>
+<div class="opts" id="opts"></div>
+<p id="spec">The harbor was quiet that evening, and the lighthouse kept its lonely vigil over the bay. Body text defaults to <strong>Joan</strong> — but it's driven by the <code>--rw-font-body</code> token, so an author (or a consuming project) can swap it.</p>
+<script>
+  var fonts = [
+    { name: "Joan (default)", stack: "'Joan', Georgia, serif" },
+    { name: "Lora", stack: "'Lora', serif" },
+    { name: "EB Garamond", stack: "'EB Garamond', serif" },
+    { name: "DM Sans", stack: "'DM Sans', sans-serif" }
+  ];
+  var spec = document.getElementById("spec"), opts = document.getElementById("opts");
+  fonts.forEach(function (f, i) {
+    var b = document.createElement("button");
+    b.className = "opt" + (i === 0 ? " active" : "");
+    b.textContent = f.name;
+    b.onclick = function () {
+      document.documentElement.style.setProperty("--rw-font-body", f.stack);
+      spec.style.fontFamily = "var(--rw-font-body)";
+      [].forEach.call(opts.children, function (c) { c.className = "opt"; });
+      b.className = "opt active";
+    };
+    opts.appendChild(b);
+  });
+</script>
+</body>
+</html>

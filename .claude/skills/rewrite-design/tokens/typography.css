@@ -1,0 +1,25 @@
+/* Re:Write — Typography tokens
+   Joan (serif) is the brand voice: used for nearly everything, display + body.
+   DM Sans is a sans companion used sparingly. */
+
+:root {
+  --rw-font-display: "Joan", Georgia, serif;
+  --rw-font-body: "Joan", Georgia, serif;
+  --rw-font-sans: "DM Sans", system-ui, sans-serif;
+
+  /* Type scale (from the source screens) */
+  --rw-text-logo: 96px;        /* full logo on auth card */
+  --rw-text-welcome: 64px;     /* "Hello, Author," hero */
+  --rw-text-display: 56px;     /* page heading "Your Stories" */
+  --rw-text-h1: 36px;          /* primary button text, large headings */
+  --rw-text-h2: 32px;          /* input text, chapter pill */
+  --rw-text-card-title: 28px;
+  --rw-text-menu: 24px;        /* menu labels */
+  --rw-text-body: 20px;        /* editor body */
+  --rw-text-label: 18px;
+  --rw-text-meta: 16px;
+  --rw-text-small: 13px;
+
+  --rw-leading-tight: 1.1;
+  --rw-leading-normal: 1.4;
+}

@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useSignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import TypewriterText from "@/components/typewriter-text";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -85,7 +84,7 @@ export default function SignupPage() {
             Hello, Author,
           </span>
           <span className="font-display text-[36px] leading-normal" style={{ color: "var(--light-gray)" }}>
-            <TypewriterText text="Welcome to" />
+            Welcome to
           </span>
         </motion.div>
 

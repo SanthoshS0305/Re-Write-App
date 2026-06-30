@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import TypewriterText from "@/components/typewriter-text";
 
 export default function LandingContent() {
   return (
@@ -28,7 +27,7 @@ export default function LandingContent() {
         >
           <span style={{ color: "var(--aqua)" }}>Hello, Author,</span>
           <span style={{ color: "var(--light-gray)" }}>
-            <TypewriterText text="Welcome to" />
+            Welcome to
           </span>
         </motion.div>
 
