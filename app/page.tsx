@@ -26,56 +26,51 @@ export default async function Home() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 w-[33vw] [container-type:inline-size] flex flex-col gap-[10px]">
+      <div className="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]">
         {/* Intro */}
-        <div className="fade-up flex gap-[10px] items-center justify-center flex-wrap px-[10px]">
-          <span className="font-display text-[36px] leading-normal" style={{ color: "var(--aqua)" }}>
-            Hello, Author,
-          </span>
-          <span className="font-display text-[36px] leading-normal" style={{ color: "var(--light-gray)" }}>
-            Welcome to
-          </span>
+        <div className="fade-up flex items-center gap-[10px] font-display text-[36px] leading-normal text-center">
+          <span style={{ color: "var(--aqua)" }}>Hello, Author,</span>
+          <span style={{ color: "var(--light-gray)" }}>Welcome to</span>
         </div>
 
-        {/* Card */}
+        {/* Logo card */}
         <div
-          className="fade-up fade-up-delay-1 flex flex-col items-center gap-[20px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
-          style={{ backgroundColor: "var(--dark-green)" }}
+          className="fade-up fade-up-delay-1 w-full flex flex-col items-center rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] select-none"
+          style={{ backgroundColor: "var(--dark-green)", padding: "3cqw" }}
         >
-          {/* Logo */}
-          <div className="font-display leading-none select-none" style={{ fontSize: "23cqw" }}>
+          <div className="font-display leading-none" style={{ fontSize: "23cqw" }}>
             <span style={{ color: "var(--aqua)" }}>Re</span>
             <span style={{ color: "black" }}>:</span>
             <span style={{ color: "var(--light-gray)" }}>Write</span>
           </div>
+        </div>
 
-          {/* Blurb */}
-          <div
-            className="font-display text-[24px] leading-snug text-center flex flex-col items-center gap-0"
-            style={{ color: "var(--light-gray)" }}
+        {/* Blurb */}
+        <div
+          className="fade-up fade-up-delay-1 font-display text-[24px] leading-snug text-center flex flex-col items-center"
+          style={{ color: "var(--light-gray)" }}
+        >
+          <p className="m-0">A web-based story writing app made by authors, for authors.</p>
+          <p className="m-0">You get scene management, version control, and offline writing, so your story is always organized and saved.</p>
+          <p className="m-0">Create an account and start writing today.</p>
+        </div>
+
+        {/* CTAs */}
+        <div className="fade-up fade-up-delay-2 flex gap-[8px] items-center justify-center px-[8px] py-[16px] w-full">
+          <Link
+            href="/login"
+            className="flex-1 font-display text-[27px] flex items-center justify-center px-[16px] py-[8px] rounded-[30px] hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: "var(--green-highlight)", border: "3px solid black", color: "black" }}
           >
-            <p className="m-0">A web-based story writing app made by authors, for authors.</p>
-            <p className="m-0">You get scene management, version control, and offline writing, so your story is always organized and saved.</p>
-            <p className="m-0">Create an account and start writing today.</p>
-          </div>
-
-          {/* CTAs */}
-          <div className="flex gap-[8px] items-center justify-center w-full">
-            <Link
-              href="/login"
-              className="flex-1 font-display text-[27px] flex items-center justify-center px-[16px] py-[8px] rounded-[30px] hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: "var(--green-highlight)", border: "3px solid black", color: "black" }}
-            >
-              Log In
-            </Link>
-            <Link
-              href="/signup"
-              className="flex-1 font-display text-[27px] flex items-center justify-center px-[16px] py-[8px] rounded-[30px] hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: "var(--green-highlight)", border: "3px solid black", color: "black" }}
-            >
-              Sign Up
-            </Link>
-          </div>
+            Log In
+          </Link>
+          <Link
+            href="/signup"
+            className="flex-1 font-display text-[27px] flex items-center justify-center px-[16px] py-[8px] rounded-[30px] hover:opacity-90 transition-opacity"
+            style={{ backgroundColor: "var(--green-highlight)", border: "3px solid black", color: "black" }}
+          >
+            Sign Up
+          </Link>
         </div>
       </div>
     </div>
