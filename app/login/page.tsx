@@ -34,13 +34,17 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     if (!isLoaded) return;
-    signIn.authenticateWithRedirect({
-      strategy: "oauth_google",
-      redirectUrl: "/sso-callback",
-      redirectUrlComplete: "/dashboard",
-    });
+    try {
+      await signIn.authenticateWithRedirect({
+        strategy: "oauth_google",
+        redirectUrl: "/sso-callback",
+        redirectUrlComplete: "/dashboard",
+      });
+    } catch {
+      setError("Google sign-in failed. Please try again.");
+    }
   };
 
   return (
@@ -56,28 +60,28 @@ export default function LoginPage() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center gap-[10px] py-[10px]">
+      <div className="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]">
         {/* Welcome Text */}
-        <div className="fade-up flex gap-[10px] items-center justify-center h-[100px] px-[10px]">
-          <span className="font-display text-[64px] leading-normal" style={{ color: "var(--aqua)" }}>
+        <div className="fade-up flex gap-[10px] items-center justify-center px-[10px]">
+          <span className="font-display text-[36px] leading-normal" style={{ color: "var(--aqua)" }}>
             Hello, Author,
           </span>
-          <span className="font-display text-[64px] leading-normal" style={{ color: "var(--light-gray)" }}>
+          <span className="font-display text-[36px] leading-normal" style={{ color: "var(--light-gray)" }}>
             Welcome back to
           </span>
         </div>
 
         {/* Login Card */}
         <div
-          className="fade-up fade-up-delay-1 flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px] overflow-clip"
+          className="fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
           style={{ backgroundColor: "var(--dark-green)" }}
         >
           {/* Logo */}
-          <div className="flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]">
+          <Link href="/" className="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]">
             <span style={{ color: "var(--aqua)" }}>Re</span>
             <span style={{ color: "black" }}>:</span>
             <span style={{ color: "var(--light-gray)" }}>Write</span>
-          </div>
+          </Link>
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-[20px] w-full px-[5px]">
@@ -89,7 +93,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="font-display"
-              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 32, color: "black", padding: "10px 20px", outline: "none", width: "100%", height: 56 }}
+              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" }}
             />
             <input
               id="password"
@@ -99,7 +103,7 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="font-display"
-              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 32, color: "black", padding: "10px 20px", outline: "none", width: "100%", height: 56 }}
+              style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" }}
             />
 
             {error && (
@@ -143,14 +147,11 @@ export default function LoginPage() {
 
             <div className="flex gap-[10px] items-start justify-center font-display text-[24px] px-[16px] py-[16px]">
               <span style={{ color: "var(--light-gray)" }}>No Account?</span>
-              <Link
-                href="/signup"
-                className="hover:opacity-80"
-                style={{ color: "var(--green-lowlight)" }}
-              >
+              <Link href="/signup" className="hover:opacity-80" style={{ color: "var(--green-lowlight)" }}>
                 Create One
               </Link>
             </div>
+            <div id="clerk-captcha" />
           </form>
         </div>
       </div>

@@ -2,6 +2,7 @@
 node_modules/
 package-lock.json
 yarn.lock
+npm-shrinkwrap.json
 
 # Environment variables
 .env
@@ -43,3 +44,8 @@ coverage/
 tmp/
 temp/
 
+
+# clerk configuration (can include secrets)
+/.clerk/
+.claude/skills/
+ReWrite Mockup.fig

@@ -1,0 +1,5 @@
+/* Re:Write — Webfonts
+   Joan (serif display + body), DM Sans (occasional sans).
+   Both are on Google Fonts; loaded via CDN here to match the source design. */
+
+@import url("https://fonts.googleapis.com/css2?family=Joan&family=DM+Sans:wght@400;500;600;700&display=swap");

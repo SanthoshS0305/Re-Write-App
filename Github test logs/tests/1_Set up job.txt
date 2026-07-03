@@ -1,0 +1,33 @@
+﻿2026-07-03T22:59:56.0027838Z Current runner version: '2.335.1'
+2026-07-03T22:59:56.0054881Z ##[group]Runner Image Provisioner
+2026-07-03T22:59:56.0055890Z Hosted Compute Agent
+2026-07-03T22:59:56.0056461Z Version: 20260624.560
+2026-07-03T22:59:56.0057119Z Commit: 925d229a51159bc391ae97e54a2dd1fe20af789d
+2026-07-03T22:59:56.0057850Z Build Date: 2026-06-24T18:26:47Z
+2026-07-03T22:59:56.0058513Z Worker ID: {965342f5-88a2-4f6b-86a6-38b060905823}
+2026-07-03T22:59:56.0059292Z Azure Region: westus
+2026-07-03T22:59:56.0059843Z ##[endgroup]
+2026-07-03T22:59:56.0061262Z ##[group]Operating System
+2026-07-03T22:59:56.0062306Z Ubuntu
+2026-07-03T22:59:56.0062817Z 24.04.4
+2026-07-03T22:59:56.0063373Z LTS
+2026-07-03T22:59:56.0063881Z ##[endgroup]
+2026-07-03T22:59:56.0064415Z ##[group]Runner Image
+2026-07-03T22:59:56.0065041Z Image: ubuntu-24.04
+2026-07-03T22:59:56.0065584Z Version: 20260628.225.1
+2026-07-03T22:59:56.0066608Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260628.225/images/ubuntu/Ubuntu2404-Readme.md
+2026-07-03T22:59:56.0068359Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260628.225
+2026-07-03T22:59:56.0069329Z ##[endgroup]
+2026-07-03T22:59:56.0070506Z ##[group]GITHUB_TOKEN Permissions
+2026-07-03T22:59:56.0072927Z Contents: read
+2026-07-03T22:59:56.0073567Z Metadata: read
+2026-07-03T22:59:56.0074102Z Packages: read
+2026-07-03T22:59:56.0074684Z ##[endgroup]
+2026-07-03T22:59:56.0076727Z Secret source: Actions
+2026-07-03T22:59:56.0077502Z Prepare workflow directory
+2026-07-03T22:59:56.0422964Z Prepare all required actions
+2026-07-03T22:59:56.0464191Z Getting action download info
+2026-07-03T22:59:56.4076881Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-07-03T22:59:56.4876502Z Download action repository 'pnpm/action-setup@v4' (SHA:b906affcce14559ad1aafd4ab0e942779e9f58b1)
+2026-07-03T22:59:57.2281022Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-07-03T22:59:57.7384524Z Complete job name: test

@@ -1,0 +1,93 @@
+﻿2026-07-03T23:00:01.4815222Z ##[group]Run pnpm install --frozen-lockfile
+2026-07-03T23:00:01.4815666Z [36;1mpnpm install --frozen-lockfile[0m
+2026-07-03T23:00:01.4996065Z shell: /usr/bin/bash -e {0}
+2026-07-03T23:00:01.4996389Z env:
+2026-07-03T23:00:01.4996654Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-07-03T23:00:01.4997016Z ##[endgroup]
+2026-07-03T23:00:02.1283306Z ? Verifying lockfile against supply-chain policies (798 entries)...
+2026-07-03T23:00:02.1386645Z Lockfile is up to date, resolution step is skipped
+2026-07-03T23:00:02.2790964Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-07-03T23:00:02.4043351Z Packages: +681
+2026-07-03T23:00:02.4043896Z ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2026-07-03T23:00:03.2857574Z Progress: resolved 681, reused 0, downloaded 0, added 0
+2026-07-03T23:00:04.2888417Z Progress: resolved 681, reused 0, downloaded 18, added 0
+2026-07-03T23:00:05.3318523Z Progress: resolved 681, reused 0, downloaded 87, added 4
+2026-07-03T23:00:06.3515073Z Progress: resolved 681, reused 0, downloaded 135, added 8
+2026-07-03T23:00:07.3551985Z Progress: resolved 681, reused 0, downloaded 159, added 8
+2026-07-03T23:00:08.3583271Z Progress: resolved 681, reused 0, downloaded 300, added 24
+2026-07-03T23:00:09.3587238Z Progress: resolved 681, reused 0, downloaded 500, added 40
+2026-07-03T23:00:10.4013576Z Progress: resolved 681, reused 0, downloaded 681, added 164
+2026-07-03T23:00:11.1627885Z Progress: resolved 681, reused 0, downloaded 681, added 681, done
+2026-07-03T23:00:12.3124277Z ✓ Lockfile passes supply-chain policies (798 entries in 10.1s)
+2026-07-03T23:00:12.3170006Z .../node_modules/@prisma/engines postinstall$ node scripts/postinstall.js
+2026-07-03T23:00:12.3460174Z .../node_modules/unrs-resolver postinstall$ node postinstall.js
+2026-07-03T23:00:12.3493044Z .../sharp@0.34.5/node_modules/sharp install$ node install/check.js || npm run build
+2026-07-03T23:00:12.4223949Z .../esbuild@0.28.1/node_modules/esbuild postinstall$ node install.js
+2026-07-03T23:00:12.4613211Z .../node_modules/unrs-resolver postinstall: Done
+2026-07-03T23:00:12.5078556Z .../sharp@0.34.5/node_modules/sharp install: Done
+2026-07-03T23:00:12.5170797Z .../esbuild@0.28.1/node_modules/esbuild postinstall: Done
+2026-07-03T23:00:12.8826664Z .../node_modules/@prisma/engines postinstall: Done
+2026-07-03T23:00:12.9455377Z .../node_modules/prisma preinstall$ node scripts/preinstall-entry.js
+2026-07-03T23:00:13.0175774Z .../node_modules/prisma preinstall: Done
+2026-07-03T23:00:13.4310005Z 
+2026-07-03T23:00:13.4311007Z dependencies:
+2026-07-03T23:00:13.4311821Z + @clerk/nextjs 7.5.7
+2026-07-03T23:00:13.4312332Z + @prisma/adapter-pg 7.8.0
+2026-07-03T23:00:13.4312775Z + @prisma/client 7.8.0
+2026-07-03T23:00:13.4313280Z + @radix-ui/react-alert-dialog 1.1.17
+2026-07-03T23:00:13.4313816Z + @radix-ui/react-dialog 1.1.17
+2026-07-03T23:00:13.4314344Z + @radix-ui/react-dropdown-menu 2.1.18
+2026-07-03T23:00:13.4314930Z + @radix-ui/react-label 2.1.10
+2026-07-03T23:00:13.4315436Z + @radix-ui/react-scroll-area 1.2.12
+2026-07-03T23:00:13.4315965Z + @radix-ui/react-select 2.3.1
+2026-07-03T23:00:13.4316410Z + @radix-ui/react-slot 1.3.0
+2026-07-03T23:00:13.4316883Z + @supabase/supabase-js 2.108.2
+2026-07-03T23:00:13.4317401Z + @tanstack/react-query 5.101.0
+2026-07-03T23:00:13.4317757Z + @tiptap/extension-link 3.27.1
+2026-07-03T23:00:13.4318094Z + @tiptap/extension-placeholder 3.27.1
+2026-07-03T23:00:13.4318459Z + @tiptap/extension-underline 3.27.1
+2026-07-03T23:00:13.4318759Z + @tiptap/react 3.27.1
+2026-07-03T23:00:13.4319016Z + @tiptap/starter-kit 3.27.1
+2026-07-03T23:00:13.4319272Z + @types/node 25.9.4
+2026-07-03T23:00:13.4320080Z + @types/react 19.2.17
+2026-07-03T23:00:13.4320478Z + @types/react-dom 19.2.3
+2026-07-03T23:00:13.4320930Z + class-variance-authority 0.7.1
+2026-07-03T23:00:13.4321353Z + clsx 2.1.1
+2026-07-03T23:00:13.4321895Z + diff-match-patch 1.0.5
+2026-07-03T23:00:13.4322151Z + file-saver 2.0.5
+2026-07-03T23:00:13.4322384Z + framer-motion 12.42.0
+2026-07-03T23:00:13.4322606Z + idb 8.0.3
+2026-07-03T23:00:13.4323112Z + jsondiffpatch 0.7.6
+2026-07-03T23:00:13.4323351Z + lucide-react 0.561.0
+2026-07-03T23:00:13.4323569Z + next 16.2.9
+2026-07-03T23:00:13.4323783Z + next-themes 0.4.6
+2026-07-03T23:00:13.4323994Z + pg 8.22.0
+2026-07-03T23:00:13.4324299Z + react 19.2.7
+2026-07-03T23:00:13.4324668Z + react-dom 19.2.7
+2026-07-03T23:00:13.4325009Z + sonner 2.0.7
+2026-07-03T23:00:13.4325334Z + svix 1.96.0
+2026-07-03T23:00:13.4325698Z + tailwind-merge 3.6.0
+2026-07-03T23:00:13.4326108Z + tailwindcss-animate 1.0.7
+2026-07-03T23:00:13.4326542Z + typescript 5.9.3
+2026-07-03T23:00:13.4326761Z + zustand 5.0.14
+2026-07-03T23:00:13.4326901Z 
+2026-07-03T23:00:13.4326992Z devDependencies:
+2026-07-03T23:00:13.4327224Z + @clerk/testing 2.1.5
+2026-07-03T23:00:13.4327481Z + @tailwindcss/postcss 4.3.1
+2026-07-03T23:00:13.4327798Z + @testing-library/jest-dom 6.9.1
+2026-07-03T23:00:13.4328113Z + @testing-library/react 16.3.2
+2026-07-03T23:00:13.4328433Z + @testing-library/user-event 14.6.1
+2026-07-03T23:00:13.4328762Z + @types/diff-match-patch 1.0.36
+2026-07-03T23:00:13.4329047Z + @types/file-saver 2.0.7
+2026-07-03T23:00:13.4329299Z + @vitejs/plugin-react 6.0.2
+2026-07-03T23:00:13.4329544Z + autoprefixer 10.5.0
+2026-07-03T23:00:13.4329753Z + eslint 9.39.4
+2026-07-03T23:00:13.4329975Z + eslint-config-next 16.2.9
+2026-07-03T23:00:13.4330199Z + jsdom 29.1.1
+2026-07-03T23:00:13.4330393Z + postcss 8.5.15
+2026-07-03T23:00:13.4330586Z + prisma 7.8.0
+2026-07-03T23:00:13.4330783Z + tailwindcss 4.3.1
+2026-07-03T23:00:13.4330976Z + tsx 4.22.4
+2026-07-03T23:00:13.4331155Z + vitest 4.1.9
+2026-07-03T23:00:13.4331266Z 
+2026-07-03T23:00:13.4933804Z Done in 11.9s using pnpm v11.9.0

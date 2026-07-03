@@ -1,0 +1,2177 @@
+﻿2026-07-03T23:00:13.6115181Z ##[group]Run pnpm test:run
+2026-07-03T23:00:13.6115496Z [36;1mpnpm test:run[0m
+2026-07-03T23:00:13.6148573Z shell: /usr/bin/bash -e {0}
+2026-07-03T23:00:13.6148825Z env:
+2026-07-03T23:00:13.6149075Z   PNPM_HOME: /home/runner/setup-pnpm/node_modules/.bin
+2026-07-03T23:00:13.6149383Z ##[endgroup]
+2026-07-03T23:00:14.0808853Z $ vitest run
+2026-07-03T23:00:14.4440505Z 
+2026-07-03T23:00:14.4445163Z [1m[30m[46m RUN [49m[39m[22m [36mv4.1.9 [39m[90m/home/runner/work/Re-Write-App/Re-Write-App[39m
+2026-07-03T23:00:14.4445891Z 
+2026-07-03T23:00:16.0936621Z  [32m✓[39m __tests__/middleware.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+2026-07-03T23:00:17.1925445Z  [31m❯[39m __tests__/signup.test.tsx [2m([22m[2m11 tests[22m[2m | [22m[31m7 failed[39m[2m)[22m[33m 850[2mms[22m[39m
+2026-07-03T23:00:17.1958145Z [31m     [31m×[31m renders email, password, repeat password, first name, and last name inputs[39m[32m 165[2mms[22m[39m
+2026-07-03T23:00:17.1963194Z      [32m✓[39m renders Create Account submit button[32m 298[2mms[22m[39m
+2026-07-03T23:00:17.1964701Z      [32m✓[39m renders Continue with Google button[32m 62[2mms[22m[39m
+2026-07-03T23:00:17.1966234Z      [32m✓[39m renders a link to /login for existing users[32m 48[2mms[22m[39m
+2026-07-03T23:00:17.2013145Z [31m     [31m×[31m shows Passwords do not match error when passwords differ[39m[32m 29[2mms[22m[39m
+2026-07-03T23:00:17.2033241Z [31m     [31m×[31m shows error from Clerk on failed signup[39m[32m 16[2mms[22m[39m
+2026-07-03T23:00:17.2062943Z [31m     [31m×[31m shows generic error when Clerk error has no message[39m[32m 15[2mms[22m[39m
+2026-07-03T23:00:17.2093040Z [31m     [31m×[31m calls router.push with /dashboard on successful signup[39m[32m 23[2mms[22m[39m
+2026-07-03T23:00:17.2114109Z [31m     [31m×[31m shows Signup failed error when status is not complete[39m[32m 21[2mms[22m[39m
+2026-07-03T23:00:17.2124112Z      [32m✓[39m calls authenticateWithRedirect with oauth_google when Google button clicked[32m 125[2mms[22m[39m
+2026-07-03T23:00:17.2153867Z [31m     [31m×[31m shows loading state while account creation is in progress[39m[32m 44[2mms[22m[39m
+2026-07-03T23:00:17.6327429Z  [32m✓[39m __tests__/auth-server.test.ts [2m([22m[2m6 tests[22m[2m | [22m[90m4 todo[39m[2m)[22m[32m 5[2mms[22m[39m
+2026-07-03T23:00:17.8407480Z [90mstderr[2m | __tests__/login.test.tsx[2m > [22m[2mLoginPage[2m > [22m[2mshows loading state while submitting
+2026-07-03T23:00:17.8409492Z [22m[39mAn update to LoginPage inside a test was not wrapped in act(...).
+2026-07-03T23:00:17.8410405Z 
+2026-07-03T23:00:17.8411337Z When testing, code that causes React state updates should be wrapped into act(...):
+2026-07-03T23:00:17.8412153Z 
+2026-07-03T23:00:17.8412277Z act(() => {
+2026-07-03T23:00:17.8412539Z   /* fire events that update state */
+2026-07-03T23:00:17.8412810Z });
+2026-07-03T23:00:17.8413063Z /* assert on the output */
+2026-07-03T23:00:17.8413234Z 
+2026-07-03T23:00:17.8413817Z This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+2026-07-03T23:00:17.8414324Z 
+2026-07-03T23:00:17.8655776Z  [32m✓[39m __tests__/login.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 1472[2mms[22m[39m
+2026-07-03T23:00:17.8656740Z      [33m[2m✓[22m[39m shows error message when signIn.create throws [33m 369[2mms[22m[39m
+2026-07-03T23:00:17.8684386Z 
+2026-07-03T23:00:17.8685371Z [31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 7 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+2026-07-03T23:00:17.8685882Z 
+2026-07-03T23:00:17.8688270Z [41m[1m FAIL [22m[49m __tests__/signup.test.tsx[2m > [22mSignupPage[2m > [22mrenders email, password, repeat password, first name, and last name inputs
+2026-07-03T23:00:17.8695366Z [31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the placeholder text of: First Name
+2026-07-03T23:00:17.8696195Z 
+2026-07-03T23:00:17.8696474Z Ignored nodes: comments, script, style
+2026-07-03T23:00:17.8697414Z [36m<body>[39m
+2026-07-03T23:00:17.8697741Z   [36m<div>[39m
+2026-07-03T23:00:17.8698131Z     [36m<div[39m
+2026-07-03T23:00:17.8699011Z       [33mclass[39m=[32m"min-h-screen flex flex-col items-center justify-center relative overflow-hidden"[39m
+2026-07-03T23:00:17.8699540Z     [36m>[39m
+2026-07-03T23:00:17.8699766Z       [36m<div[39m
+2026-07-03T23:00:17.8700165Z         [33mclass[39m=[32m"fixed inset-0 pointer-events-none z-0"[39m
+2026-07-03T23:00:17.8700547Z       [36m>[39m
+2026-07-03T23:00:17.8700771Z         [36m<div[39m
+2026-07-03T23:00:17.8701088Z           [33mclass[39m=[32m"absolute inset-0"[39m
+2026-07-03T23:00:17.8701903Z           [33mstyle[39m=[32m"background-color: var(--dark-mint-green);"[39m
+2026-07-03T23:00:17.8702327Z         [36m/>[39m
+2026-07-03T23:00:17.8702564Z         [36m<img[39m
+2026-07-03T23:00:17.8702837Z           [33malt[39m=[32m""[39m
+2026-07-03T23:00:17.8703362Z           [33mclass[39m=[32m"absolute inset-0 w-full h-full object-cover opacity-40"[39m
+2026-07-03T23:00:17.8703913Z           [33msrc[39m=[32m"/images/forest_bg.jpg"[39m
+2026-07-03T23:00:17.8704231Z         [36m/>[39m
+2026-07-03T23:00:17.8704464Z       [36m</div>[39m
+2026-07-03T23:00:17.8704695Z       [36m<div[39m
+2026-07-03T23:00:17.8705357Z         [33mclass[39m=[32m"relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"[39m
+2026-07-03T23:00:17.8705913Z       [36m>[39m
+2026-07-03T23:00:17.8706135Z         [36m<div[39m
+2026-07-03T23:00:17.8706621Z           [33mclass[39m=[32m"fade-up flex gap-[10px] items-center justify-center px-[10px]"[39m
+2026-07-03T23:00:17.8707066Z         [36m>[39m
+2026-07-03T23:00:17.8707305Z           [36m<span[39m
+2026-07-03T23:00:17.8707726Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.8708206Z             [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.8708818Z           [36m>[39m
+2026-07-03T23:00:17.8709100Z             [0mHello, Author,[0m
+2026-07-03T23:00:17.8709380Z           [36m</span>[39m
+2026-07-03T23:00:17.8709627Z           [36m<span[39m
+2026-07-03T23:00:17.8710029Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.8710532Z             [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.8710866Z           [36m>[39m
+2026-07-03T23:00:17.8711122Z             [0mWelcome to[0m
+2026-07-03T23:00:17.8711380Z           [36m</span>[39m
+2026-07-03T23:00:17.8712007Z         [36m</div>[39m
+2026-07-03T23:00:17.8712252Z         [36m<div[39m
+2026-07-03T23:00:17.8713136Z           [33mclass[39m=[32m"fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"[39m
+2026-07-03T23:00:17.8713990Z           [33mstyle[39m=[32m"background-color: var(--dark-green);"[39m
+2026-07-03T23:00:17.8714366Z         [36m>[39m
+2026-07-03T23:00:17.8714593Z           [36m<a[39m
+2026-07-03T23:00:17.8715285Z             [33mclass[39m=[32m"no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"[39m
+2026-07-03T23:00:17.8715934Z             [33mhref[39m=[32m"/"[39m
+2026-07-03T23:00:17.8716212Z           [36m>[39m
+2026-07-03T23:00:17.8716452Z             [36m<span[39m
+2026-07-03T23:00:17.8716799Z               [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.8717117Z             [36m>[39m
+2026-07-03T23:00:17.8717348Z               [0mRe[0m
+2026-07-03T23:00:17.8717595Z             [36m</span>[39m
+2026-07-03T23:00:17.8717843Z             [36m<span[39m
+2026-07-03T23:00:17.8718157Z               [33mstyle[39m=[32m"color: black;"[39m
+2026-07-03T23:00:17.8718461Z             [36m>[39m
+2026-07-03T23:00:17.8718688Z               [0m:[0m
+2026-07-03T23:00:17.8718925Z             [36m</span>[39m
+2026-07-03T23:00:17.8719174Z             [36m<span[39m
+2026-07-03T23:00:17.8719727Z               [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.8720060Z             [36m>[39m
+2026-07-03T23:00:17.8720291Z               [0mWrite[0m
+2026-07-03T23:00:17.8720537Z             [36m</span>[39m
+2026-07-03T23:00:17.8720785Z           [36m</a>[39m
+2026-07-03T23:00:17.8721029Z           [36m<form[39m
+2026-07-03T23:00:17.8721441Z             [33mclass[39m=[32m"flex flex-col gap-[20px] w-full px-[5px]"[39m
+2026-07-03T23:00:17.8722132Z           [36m>[39m
+2026-07-03T23:00:17.8722370Z             [36m<input[39m
+2026-07-03T23:00:17.8722694Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.8723056Z               [33mid[39m=[32m"email"[39m
+2026-07-03T23:00:17.8723419Z               [33mplaceholder[39m=[32m"Email"[39m
+2026-07-03T23:00:17.8723776Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.8724927Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.8725897Z               [33mtype[39m=[32m"email"[39m
+2026-07-03T23:00:17.8726238Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.8726525Z             [36m/>[39m
+2026-07-03T23:00:17.8726768Z             [36m<input[39m
+2026-07-03T23:00:17.8727096Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.8727459Z               [33mid[39m=[32m"password"[39m
+2026-07-03T23:00:17.8727806Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.8728232Z               [33mplaceholder[39m=[32m"Password"[39m
+2026-07-03T23:00:17.8728593Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.8729703Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.8730839Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.8731222Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.8731810Z             [36m/>[39m
+2026-07-03T23:00:17.8732078Z             [36m<input[39m
+2026-07-03T23:00:17.8732402Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.8732772Z               [33mid[39m=[32m"repeatPassword"[39m
+2026-07-03T23:00:17.8733127Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.8733520Z               [33mplaceholder[39m=[32m"Repeat Password"[39m
+2026-07-03T23:00:17.8733902Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.8735014Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.8735953Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.8736299Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.8736583Z             [36m/>[39m
+2026-07-03T23:00:17.8736827Z             [36m<button[39m
+2026-07-03T23:00:17.8737386Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity disabled:opacity-50"[39m
+2026-07-03T23:00:17.8738671Z               [33mstyle[39m=[32m"background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"[39m
+2026-07-03T23:00:17.8740072Z               [33mtype[39m=[32m"submit"[39m
+2026-07-03T23:00:17.8740608Z             [36m>[39m
+2026-07-03T23:00:17.8741061Z               [0mCreate Account[0m
+2026-07-03T23:00:17.8741375Z             [36m</button>[39m
+2026-07-03T23:00:17.8742011Z             [36m<div[39m
+2026-07-03T23:00:17.8742438Z               [33mstyle[39m=[32m"position: relative; margin: 8px 0px;"[39m
+2026-07-03T23:00:17.8743369Z             [36m>[39m
+2026-07-03T23:00:17.8743787Z               [36m<div[39m
+2026-07-03T23:00:17.8766555Z                 [33mstyle[39m=[32m"position: absolute; inset: 0px; display: flex; align-items: center;"[39m
+2026-07-03T23:00:17.8767550Z               [36m>[39m
+2026-07-03T23:00:17.8767962Z                 [36m<div[39m
+2026-07-03T23:00:17.8768569Z                   [33mstyle[39m=[32m"width: 100%; border-top: 1px solid var(--light-gray); opacity: 0.3;"[39m
+2026-07-03T23:00:17.8769080Z                 [36m/>[39m
+2026-07-03T23:00:17.8769371Z               [36m</div>[39m
+2026-07-03T23:00:17.8769792Z               [36m<div[39m
+2026-07-03T23:00:17.8770922Z                 [33mstyle[39m=[32m"position: relative; display: flex; justify-content: center; font-size: 14px;"[39m
+2026-07-03T23:00:17.8772033Z               [36m>[39m
+2026-07-03T23:00:17.8772524Z                 [36m<span[39m
+2026-07-03T23:00:17.8773145Z                   [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.8773929Z                   [33mstyle[39m=[32m"padding: 0px 8px; background-color: var(--dark-green); color: var(--light-gray);"[39m
+2026-07-03T23:00:17.8774720Z                 [36m>[39m
+2026-07-03T23:00:17.8775180Z                   [0mOR[0m
+2026-07-03T23:00:17.8775677Z                 [36m</span>[39m
+2026-07-03T23:00:17.8775994Z               [36m</div>[39m
+2026-07-03T23:00:17.8776257Z             [36m</div>[39m
+2026-07-03T23:00:17.8776511Z             [36m<button[39m
+2026-07-03T23:00:17.8777175Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity"[39m
+2026-07-03T23:00:17.8778713Z               [33mstyle[39m=[32m"background-color: white; border: 3px solid black; border-radius: 30px; font-size: 24px; color: black; height: 60px; padding: 0px 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; align-self: center;"[39m
+2026-07-03T23:00:17.8780337Z               [33mtype[39m=[32m"button"[39m
+2026-07-03T23:00:17.8780654Z             [36m>[39m
+2026-07-03T23:00:17.8780901Z               [36m<svg[39m
+2026-07-03T23:00:17.8781343Z                 [33mstyle[39m=[32m"width: 28px; height: 28px; flex-shrink: 0;"[39m
+2026-07-03T23:00:17.8782208Z                 [33mviewBox[39m=[32m"0 0 24 24"[39m
+2026-07-03T23:00:17.8782531Z               [36m>[39m
+2026-07-03T23:00:17.8782831Z                 [36m<path[39m
+2026-07-03T23:00:17.8783546Z                   [33md[39m=[32m"M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"[39m
+2026-07-03T23:00:17.8784176Z                   [33mfill[39m=[32m"#4285F4"[39m
+2026-07-03T23:00:17.8784478Z                 [36m/>[39m
+2026-07-03T23:00:17.8784755Z                 [36m<path[39m
+2026-07-03T23:00:17.8785486Z                   [33md[39m=[32m"M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"[39m
+2026-07-03T23:00:17.8786146Z                   [33mfill[39m=[32m"#34A853"[39m
+2026-07-03T23:00:17.8786448Z                 [36m/>[39m
+2026-07-03T23:00:17.8786719Z                 [36m<path[39m
+2026-07-03T23:00:17.8787428Z                   [33md[39m=[32m"M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"[39m
+2026-07-03T23:00:17.8788056Z                   [33mfill[39m=[32m"#FBBC05"[39m
+2026-07-03T23:00:17.8788357Z                 [36m/>[39m
+2026-07-03T23:00:17.8788628Z                 [36m<path[39m
+2026-07-03T23:00:17.8789338Z                   [33md[39m=[32m"M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"[39m
+2026-07-03T23:00:17.8789958Z                   [33mfill[39m=[32m"#EA4335"[39m
+2026-07-03T23:00:17.8790264Z                 [36m/>[39m
+2026-07-03T23:00:17.8790742Z               [36m</svg>[39m
+2026-07-03T23:00:17.8791056Z               [0mContinue with Google[0m
+2026-07-03T23:00:17.8791384Z             [36m</button>[39m
+2026-07-03T23:00:17.8791810Z             [36m<div[39m
+2026-07-03T23:00:17.8792454Z               [33mclass[39m=[32m"flex gap-[10px] items-start justify-center font-display text-[24px] px-[16px] py-[16px]"[39m
+2026-07-03T23:00:17.8793001Z             [36m>[39m
+2026-07-03T23:00:17.8793251Z               [36m<span[39m
+2026-07-03T23:00:17.8793634Z                 [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.8794156Z               [36m>[39m
+2026-07-03T23:00:17.8794614Z                 [0mGot an Account?[0m
+2026-07-03T23:00:17.8794939Z               [36m</span>[39m
+2026-07-03T23:00:17.8795201Z               [36m<a[39m
+2026-07-03T23:00:17.8795547Z                 [33mclass[39m=[32m"hover:opacity-80"[39m
+2026-07-03T23:00:17.8795946Z                 [33mhref[39m=[32m"/login"[39m
+2026-07-03T23:00:17.8796392Z                 [33mstyle[39m=[32m"color: var(--green-lowlight);"[39m
+2026-07-03T23:00:17.8796757Z               [36m>[39m
+2026-07-03T23:00:17.8797027Z                 [0mLog In[0m
+2026-07-03T23:00:17.8797289Z               [36m</a>[39m
+2026-07-03T23:00:17.8797545Z             [36m</div>[39m
+2026-07-03T23:00:17.8797792Z             [36m<div[39m
+2026-07-03T23:00:17.8798115Z               [33mid[39m=[32m"clerk-captcha"[39m
+2026-07-03T23:00:17.8798433Z             [36m/>[39m
+2026-07-03T23:00:17.8798682Z           [36m</form>[39m
+2026-07-03T23:00:17.8798930Z         [36m</div>[39m
+2026-07-03T23:00:17.8799169Z       [36m</div>[39m
+2026-07-03T23:00:17.8799403Z     [36m</div>[39m
+2026-07-03T23:00:17.8799893Z   [36m</div>[39m
+2026-07-03T23:00:17.8800248Z [36m</body>[39m
+2026-07-03T23:00:17.8801167Z [90m [2m❯[22m Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+2026-07-03T23:00:17.8802939Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+2026-07-03T23:00:17.8804056Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+2026-07-03T23:00:17.8805156Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+2026-07-03T23:00:17.8806280Z [36m [2m❯[22m __tests__/signup.test.tsx:[2m43:19[22m[39m
+2026-07-03T23:00:17.8807311Z     [90m 41|[39m     [34mexpect[39m(screen[33m.[39m[34mgetByPlaceholderText[39m([32m'Password'[39m))[33m.[39m[34mtoBeInTheDocument[39m()
+2026-07-03T23:00:17.8808187Z     [90m 42|[39m     expect(screen.getByPlaceholderText('Repeat Password')).toBeInTheDo…
+2026-07-03T23:00:17.8808856Z     [90m 43|[39m     expect(screen.getByPlaceholderText('First Name')).toBeInTheDocumen…
+2026-07-03T23:00:17.8809368Z     [90m   |[39m                   [31m^[39m
+2026-07-03T23:00:17.8810163Z     [90m 44|[39m     expect(screen.getByPlaceholderText('Last Name')).toBeInTheDocument…
+2026-07-03T23:00:17.8810754Z     [90m 45|[39m   })
+2026-07-03T23:00:17.8810898Z 
+2026-07-03T23:00:17.8811142Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯[22m[39m
+2026-07-03T23:00:17.8811353Z 
+2026-07-03T23:00:17.8812136Z [41m[1m FAIL [22m[49m __tests__/signup.test.tsx[2m > [22mSignupPage[2m > [22mshows Passwords do not match error when passwords differ
+2026-07-03T23:00:17.8813152Z [31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the placeholder text of: Username
+2026-07-03T23:00:17.8813570Z 
+2026-07-03T23:00:17.8813728Z Ignored nodes: comments, script, style
+2026-07-03T23:00:17.8814018Z [36m<body>[39m
+2026-07-03T23:00:17.8814246Z   [36m<div>[39m
+2026-07-03T23:00:17.8814468Z     [36m<div[39m
+2026-07-03T23:00:17.8815314Z       [33mclass[39m=[32m"min-h-screen flex flex-col items-center justify-center relative overflow-hidden"[39m
+2026-07-03T23:00:17.8816096Z     [36m>[39m
+2026-07-03T23:00:17.8816326Z       [36m<div[39m
+2026-07-03T23:00:17.8816728Z         [33mclass[39m=[32m"fixed inset-0 pointer-events-none z-0"[39m
+2026-07-03T23:00:17.8817108Z       [36m>[39m
+2026-07-03T23:00:17.8817333Z         [36m<div[39m
+2026-07-03T23:00:17.8817652Z           [33mclass[39m=[32m"absolute inset-0"[39m
+2026-07-03T23:00:17.8818147Z           [33mstyle[39m=[32m"background-color: var(--dark-mint-green);"[39m
+2026-07-03T23:00:17.8818539Z         [36m/>[39m
+2026-07-03T23:00:17.8818771Z         [36m<img[39m
+2026-07-03T23:00:17.8819040Z           [33malt[39m=[32m""[39m
+2026-07-03T23:00:17.8819549Z           [33mclass[39m=[32m"absolute inset-0 w-full h-full object-cover opacity-40"[39m
+2026-07-03T23:00:17.8820346Z           [33msrc[39m=[32m"/images/forest_bg.jpg"[39m
+2026-07-03T23:00:17.8820903Z         [36m/>[39m
+2026-07-03T23:00:17.8821142Z       [36m</div>[39m
+2026-07-03T23:00:17.8821381Z       [36m<div[39m
+2026-07-03T23:00:17.8822618Z         [33mclass[39m=[32m"relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"[39m
+2026-07-03T23:00:17.8823211Z       [36m>[39m
+2026-07-03T23:00:17.8823438Z         [36m<div[39m
+2026-07-03T23:00:17.8823936Z           [33mclass[39m=[32m"fade-up flex gap-[10px] items-center justify-center px-[10px]"[39m
+2026-07-03T23:00:17.8824382Z         [36m>[39m
+2026-07-03T23:00:17.8824616Z           [36m<span[39m
+2026-07-03T23:00:17.8825044Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.8825522Z             [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.8826050Z           [36m>[39m
+2026-07-03T23:00:17.8826402Z             [0mHello, Author,[0m
+2026-07-03T23:00:17.8826693Z           [36m</span>[39m
+2026-07-03T23:00:17.8827146Z           [36m<span[39m
+2026-07-03T23:00:17.8827563Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.8828106Z             [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.8828446Z           [36m>[39m
+2026-07-03T23:00:17.8828712Z             [0mWelcome to[0m
+2026-07-03T23:00:17.8828978Z           [36m</span>[39m
+2026-07-03T23:00:17.8829227Z         [36m</div>[39m
+2026-07-03T23:00:17.8829469Z         [36m<div[39m
+2026-07-03T23:00:17.8830322Z           [33mclass[39m=[32m"fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"[39m
+2026-07-03T23:00:17.8831199Z           [33mstyle[39m=[32m"background-color: var(--dark-green);"[39m
+2026-07-03T23:00:17.8831737Z         [36m>[39m
+2026-07-03T23:00:17.8831965Z           [36m<a[39m
+2026-07-03T23:00:17.8832665Z             [33mclass[39m=[32m"no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"[39m
+2026-07-03T23:00:17.8833328Z             [33mhref[39m=[32m"/"[39m
+2026-07-03T23:00:17.8833610Z           [36m>[39m
+2026-07-03T23:00:17.8833851Z             [36m<span[39m
+2026-07-03T23:00:17.8834192Z               [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.8834515Z             [36m>[39m
+2026-07-03T23:00:17.8834751Z               [0mRe[0m
+2026-07-03T23:00:17.8834999Z             [36m</span>[39m
+2026-07-03T23:00:17.8835252Z             [36m<span[39m
+2026-07-03T23:00:17.8835568Z               [33mstyle[39m=[32m"color: black;"[39m
+2026-07-03T23:00:17.8835875Z             [36m>[39m
+2026-07-03T23:00:17.8836112Z               [0m:[0m
+2026-07-03T23:00:17.8836349Z             [36m</span>[39m
+2026-07-03T23:00:17.8836603Z             [36m<span[39m
+2026-07-03T23:00:17.8836959Z               [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.8837292Z             [36m>[39m
+2026-07-03T23:00:17.8837532Z               [0mWrite[0m
+2026-07-03T23:00:17.8837776Z             [36m</span>[39m
+2026-07-03T23:00:17.8838200Z           [36m</a>[39m
+2026-07-03T23:00:17.8838444Z           [36m<form[39m
+2026-07-03T23:00:17.8838859Z             [33mclass[39m=[32m"flex flex-col gap-[20px] w-full px-[5px]"[39m
+2026-07-03T23:00:17.8839240Z           [36m>[39m
+2026-07-03T23:00:17.8839476Z             [36m<input[39m
+2026-07-03T23:00:17.8839812Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.8840460Z               [33mid[39m=[32m"email"[39m
+2026-07-03T23:00:17.8840849Z               [33mplaceholder[39m=[32m"Email"[39m
+2026-07-03T23:00:17.8841211Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.8842514Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.8843487Z               [33mtype[39m=[32m"email"[39m
+2026-07-03T23:00:17.8843838Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.8844122Z             [36m/>[39m
+2026-07-03T23:00:17.8844376Z             [36m<input[39m
+2026-07-03T23:00:17.8844712Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.8845083Z               [33mid[39m=[32m"password"[39m
+2026-07-03T23:00:17.8845439Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.8845821Z               [33mplaceholder[39m=[32m"Password"[39m
+2026-07-03T23:00:17.8846192Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.8847328Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.8848815Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.8849642Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.8850146Z             [36m/>[39m
+2026-07-03T23:00:17.8850595Z             [36m<input[39m
+2026-07-03T23:00:17.8851184Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.8866093Z               [33mid[39m=[32m"repeatPassword"[39m
+2026-07-03T23:00:17.8866646Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.8867337Z               [33mplaceholder[39m=[32m"Repeat Password"[39m
+2026-07-03T23:00:17.8868017Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.8870038Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.8872163Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.8872885Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.8873460Z             [36m/>[39m
+2026-07-03T23:00:17.8873914Z             [36m<button[39m
+2026-07-03T23:00:17.8874928Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity disabled:opacity-50"[39m
+2026-07-03T23:00:17.8877334Z               [33mstyle[39m=[32m"background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"[39m
+2026-07-03T23:00:17.8879094Z               [33mtype[39m=[32m"submit"[39m
+2026-07-03T23:00:17.8879698Z             [36m>[39m
+2026-07-03T23:00:17.8880288Z               [0mCreate Account[0m
+2026-07-03T23:00:17.8880908Z             [36m</button>[39m
+2026-07-03T23:00:17.8881443Z             [36m<div[39m
+2026-07-03T23:00:17.8882586Z               [33mstyle[39m=[32m"position: relative; margin: 8px 0px;"[39m
+2026-07-03T23:00:17.8883244Z             [36m>[39m
+2026-07-03T23:00:17.8883615Z               [36m<div[39m
+2026-07-03T23:00:17.8884565Z                 [33mstyle[39m=[32m"position: absolute; inset: 0px; display: flex; align-items: center;"[39m
+2026-07-03T23:00:17.8885633Z               [36m>[39m
+2026-07-03T23:00:17.8886069Z                 [36m<div[39m
+2026-07-03T23:00:17.8887021Z                   [33mstyle[39m=[32m"width: 100%; border-top: 1px solid var(--light-gray); opacity: 0.3;"[39m
+2026-07-03T23:00:17.8887834Z                 [36m/>[39m
+2026-07-03T23:00:17.8888302Z               [36m</div>[39m
+2026-07-03T23:00:17.8888737Z               [36m<div[39m
+2026-07-03T23:00:17.8889773Z                 [33mstyle[39m=[32m"position: relative; display: flex; justify-content: center; font-size: 14px;"[39m
+2026-07-03T23:00:17.8890636Z               [36m>[39m
+2026-07-03T23:00:17.8891087Z                 [36m<span[39m
+2026-07-03T23:00:17.8891931Z                   [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.8893087Z                   [33mstyle[39m=[32m"padding: 0px 8px; background-color: var(--dark-green); color: var(--light-gray);"[39m
+2026-07-03T23:00:17.8893997Z                 [36m>[39m
+2026-07-03T23:00:17.8894410Z                   [0mOR[0m
+2026-07-03T23:00:17.8894878Z                 [36m</span>[39m
+2026-07-03T23:00:17.8895448Z               [36m</div>[39m
+2026-07-03T23:00:17.8895876Z             [36m</div>[39m
+2026-07-03T23:00:17.8896305Z             [36m<button[39m
+2026-07-03T23:00:17.8897070Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity"[39m
+2026-07-03T23:00:17.8899600Z               [33mstyle[39m=[32m"background-color: white; border: 3px solid black; border-radius: 30px; font-size: 24px; color: black; height: 60px; padding: 0px 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; align-self: center;"[39m
+2026-07-03T23:00:17.8901406Z               [33mtype[39m=[32m"button"[39m
+2026-07-03T23:00:17.8902083Z             [36m>[39m
+2026-07-03T23:00:17.8902475Z               [36m<svg[39m
+2026-07-03T23:00:17.8903468Z                 [33mstyle[39m=[32m"width: 28px; height: 28px; flex-shrink: 0;"[39m
+2026-07-03T23:00:17.8904286Z                 [33mviewBox[39m=[32m"0 0 24 24"[39m
+2026-07-03T23:00:17.8904807Z               [36m>[39m
+2026-07-03T23:00:17.8905267Z                 [36m<path[39m
+2026-07-03T23:00:17.8906509Z                   [33md[39m=[32m"M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"[39m
+2026-07-03T23:00:17.8907570Z                   [33mfill[39m=[32m"#4285F4"[39m
+2026-07-03T23:00:17.8908088Z                 [36m/>[39m
+2026-07-03T23:00:17.8908548Z                 [36m<path[39m
+2026-07-03T23:00:17.8909792Z                   [33md[39m=[32m"M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"[39m
+2026-07-03T23:00:17.8910865Z                   [33mfill[39m=[32m"#34A853"[39m
+2026-07-03T23:00:17.8911372Z                 [36m/>[39m
+2026-07-03T23:00:17.8912074Z                 [36m<path[39m
+2026-07-03T23:00:17.8913404Z                   [33md[39m=[32m"M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"[39m
+2026-07-03T23:00:17.8914548Z                   [33mfill[39m=[32m"#FBBC05"[39m
+2026-07-03T23:00:17.8915142Z                 [36m/>[39m
+2026-07-03T23:00:17.8915620Z                 [36m<path[39m
+2026-07-03T23:00:17.8916862Z                   [33md[39m=[32m"M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"[39m
+2026-07-03T23:00:17.8917924Z                   [33mfill[39m=[32m"#EA4335"[39m
+2026-07-03T23:00:17.8918433Z                 [36m/>[39m
+2026-07-03T23:00:17.8918893Z               [36m</svg>[39m
+2026-07-03T23:00:17.8919416Z               [0mContinue with Google[0m
+2026-07-03T23:00:17.8919964Z             [36m</button>[39m
+2026-07-03T23:00:17.8920415Z             [36m<div[39m
+2026-07-03T23:00:17.8922003Z               [33mclass[39m=[32m"flex gap-[10px] items-start justify-center font-display text-[24px] px-[16px] py-[16px]"[39m
+2026-07-03T23:00:17.8922967Z             [36m>[39m
+2026-07-03T23:00:17.8923388Z               [36m<span[39m
+2026-07-03T23:00:17.8924040Z                 [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.8924632Z               [36m>[39m
+2026-07-03T23:00:17.8925121Z                 [0mGot an Account?[0m
+2026-07-03T23:00:17.8925636Z               [36m</span>[39m
+2026-07-03T23:00:17.8926071Z               [36m<a[39m
+2026-07-03T23:00:17.8926659Z                 [33mclass[39m=[32m"hover:opacity-80"[39m
+2026-07-03T23:00:17.8927307Z                 [33mhref[39m=[32m"/login"[39m
+2026-07-03T23:00:17.8928117Z                 [33mstyle[39m=[32m"color: var(--green-lowlight);"[39m
+2026-07-03T23:00:17.8928734Z               [36m>[39m
+2026-07-03T23:00:17.8929193Z                 [0mLog In[0m
+2026-07-03T23:00:17.8929628Z               [36m</a>[39m
+2026-07-03T23:00:17.8930063Z             [36m</div>[39m
+2026-07-03T23:00:17.8930486Z             [36m<div[39m
+2026-07-03T23:00:17.8931027Z               [33mid[39m=[32m"clerk-captcha"[39m
+2026-07-03T23:00:17.8931769Z             [36m/>[39m
+2026-07-03T23:00:17.8932193Z           [36m</form>[39m
+2026-07-03T23:00:17.8932603Z         [36m</div>[39m
+2026-07-03T23:00:17.8933005Z       [36m</div>[39m
+2026-07-03T23:00:17.8933381Z     [36m</div>[39m
+2026-07-03T23:00:17.8933752Z   [36m</div>[39m
+2026-07-03T23:00:17.8934127Z [36m</body>[39m
+2026-07-03T23:00:17.8935607Z [90m [2m❯[22m Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+2026-07-03T23:00:17.8937635Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+2026-07-03T23:00:17.8939758Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+2026-07-03T23:00:17.8941856Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+2026-07-03T23:00:17.8943175Z [36m [2m❯[22m __tests__/signup.test.tsx:[2m68:28[22m[39m
+2026-07-03T23:00:17.8944136Z     [90m 66|[39m     [34mrender[39m([33m<[39m[33mSignupPage[39m [33m/[39m[33m>[39m)
+2026-07-03T23:00:17.8944830Z     [90m 67|[39m
+2026-07-03T23:00:17.8945642Z     [90m 68|[39m     await user.type(screen.getByPlaceholderText('Username'), 'testuser…
+2026-07-03T23:00:17.8946613Z     [90m   |[39m                            [31m^[39m
+2026-07-03T23:00:17.8947575Z     [90m 69|[39m     await user.type(screen.getByPlaceholderText('Email'), 'user@exampl…
+2026-07-03T23:00:17.8948749Z     [90m 70|[39m     await user.type(screen.getByPlaceholderText('Password'), 'password…
+2026-07-03T23:00:17.8949322Z 
+2026-07-03T23:00:17.8949744Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯[22m[39m
+2026-07-03T23:00:17.8950084Z 
+2026-07-03T23:00:17.8951006Z [41m[1m FAIL [22m[49m __tests__/signup.test.tsx[2m > [22mSignupPage[2m > [22mshows error from Clerk on failed signup
+2026-07-03T23:00:17.8952940Z [31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the placeholder text of: Username
+2026-07-03T23:00:17.8953681Z 
+2026-07-03T23:00:17.8953933Z Ignored nodes: comments, script, style
+2026-07-03T23:00:17.8954413Z [36m<body>[39m
+2026-07-03T23:00:17.8954789Z   [36m<div>[39m
+2026-07-03T23:00:17.8955161Z     [36m<div[39m
+2026-07-03T23:00:17.8956144Z       [33mclass[39m=[32m"min-h-screen flex flex-col items-center justify-center relative overflow-hidden"[39m
+2026-07-03T23:00:17.8957009Z     [36m>[39m
+2026-07-03T23:00:17.8957379Z       [36m<div[39m
+2026-07-03T23:00:17.8958046Z         [33mclass[39m=[32m"fixed inset-0 pointer-events-none z-0"[39m
+2026-07-03T23:00:17.8958696Z       [36m>[39m
+2026-07-03T23:00:17.8959066Z         [36m<div[39m
+2026-07-03T23:00:17.8959834Z           [33mclass[39m=[32m"absolute inset-0"[39m
+2026-07-03T23:00:17.8960681Z           [33mstyle[39m=[32m"background-color: var(--dark-mint-green);"[39m
+2026-07-03T23:00:17.8961335Z         [36m/>[39m
+2026-07-03T23:00:17.8961931Z         [36m<img[39m
+2026-07-03T23:00:17.8962397Z           [33malt[39m=[32m""[39m
+2026-07-03T23:00:17.8963265Z           [33mclass[39m=[32m"absolute inset-0 w-full h-full object-cover opacity-40"[39m
+2026-07-03T23:00:17.8964159Z           [33msrc[39m=[32m"/images/forest_bg.jpg"[39m
+2026-07-03T23:00:17.8964696Z         [36m/>[39m
+2026-07-03T23:00:17.8965082Z       [36m</div>[39m
+2026-07-03T23:00:17.8965473Z       [36m<div[39m
+2026-07-03T23:00:17.8966600Z         [33mclass[39m=[32m"relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"[39m
+2026-07-03T23:00:17.8967588Z       [36m>[39m
+2026-07-03T23:00:17.8967961Z         [36m<div[39m
+2026-07-03T23:00:17.8968813Z           [33mclass[39m=[32m"fade-up flex gap-[10px] items-center justify-center px-[10px]"[39m
+2026-07-03T23:00:17.8969572Z         [36m>[39m
+2026-07-03T23:00:17.8969956Z           [36m<span[39m
+2026-07-03T23:00:17.8970670Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.8971673Z             [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.8972226Z           [36m>[39m
+2026-07-03T23:00:17.8972688Z             [0mHello, Author,[0m
+2026-07-03T23:00:17.8973147Z           [36m</span>[39m
+2026-07-03T23:00:17.8973573Z           [36m<span[39m
+2026-07-03T23:00:17.8974267Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.8975098Z             [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.8975652Z           [36m>[39m
+2026-07-03T23:00:17.8976085Z             [0mWelcome to[0m
+2026-07-03T23:00:17.8976708Z           [36m</span>[39m
+2026-07-03T23:00:17.8977125Z         [36m</div>[39m
+2026-07-03T23:00:17.8977516Z         [36m<div[39m
+2026-07-03T23:00:17.8978981Z           [33mclass[39m=[32m"fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"[39m
+2026-07-03T23:00:17.8980441Z           [33mstyle[39m=[32m"background-color: var(--dark-green);"[39m
+2026-07-03T23:00:17.8981063Z         [36m>[39m
+2026-07-03T23:00:17.8981612Z           [36m<a[39m
+2026-07-03T23:00:17.8982824Z             [33mclass[39m=[32m"no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"[39m
+2026-07-03T23:00:17.8983947Z             [33mhref[39m=[32m"/"[39m
+2026-07-03T23:00:17.8984424Z           [36m>[39m
+2026-07-03T23:00:17.8984807Z             [36m<span[39m
+2026-07-03T23:00:17.8985380Z               [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.8985920Z             [36m>[39m
+2026-07-03T23:00:17.8986315Z               [0mRe[0m
+2026-07-03T23:00:17.8986718Z             [36m</span>[39m
+2026-07-03T23:00:17.8987143Z             [36m<span[39m
+2026-07-03T23:00:17.8987731Z               [33mstyle[39m=[32m"color: black;"[39m
+2026-07-03T23:00:17.8988289Z             [36m>[39m
+2026-07-03T23:00:17.8988681Z               [0m:[0m
+2026-07-03T23:00:17.8989084Z             [36m</span>[39m
+2026-07-03T23:00:17.8989516Z             [36m<span[39m
+2026-07-03T23:00:17.8990139Z               [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.8990714Z             [36m>[39m
+2026-07-03T23:00:17.8991109Z               [0mWrite[0m
+2026-07-03T23:00:17.8991703Z             [36m</span>[39m
+2026-07-03T23:00:17.8992147Z           [36m</a>[39m
+2026-07-03T23:00:17.8992558Z           [36m<form[39m
+2026-07-03T23:00:17.8993276Z             [33mclass[39m=[32m"flex flex-col gap-[20px] w-full px-[5px]"[39m
+2026-07-03T23:00:17.8993931Z           [36m>[39m
+2026-07-03T23:00:17.8994520Z             [36m<input[39m
+2026-07-03T23:00:17.8995080Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.8995697Z               [33mid[39m=[32m"email"[39m
+2026-07-03T23:00:17.8996321Z               [33mplaceholder[39m=[32m"Email"[39m
+2026-07-03T23:00:17.8996922Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.8998901Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9000550Z               [33mtype[39m=[32m"email"[39m
+2026-07-03T23:00:17.9001140Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9001817Z             [36m/>[39m
+2026-07-03T23:00:17.9002241Z             [36m<input[39m
+2026-07-03T23:00:17.9002792Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9003422Z               [33mid[39m=[32m"password"[39m
+2026-07-03T23:00:17.9004034Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.9004681Z               [33mplaceholder[39m=[32m"Password"[39m
+2026-07-03T23:00:17.9005312Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9007304Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9008936Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.9009533Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9010016Z             [36m/>[39m
+2026-07-03T23:00:17.9010433Z             [36m<input[39m
+2026-07-03T23:00:17.9010998Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9011827Z               [33mid[39m=[32m"repeatPassword"[39m
+2026-07-03T23:00:17.9012619Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.9013316Z               [33mplaceholder[39m=[32m"Repeat Password"[39m
+2026-07-03T23:00:17.9013971Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9015926Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9017565Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.9018156Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9018630Z             [36m/>[39m
+2026-07-03T23:00:17.9019036Z             [36m<button[39m
+2026-07-03T23:00:17.9020005Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity disabled:opacity-50"[39m
+2026-07-03T23:00:17.9022406Z               [33mstyle[39m=[32m"background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"[39m
+2026-07-03T23:00:17.9023979Z               [33mtype[39m=[32m"submit"[39m
+2026-07-03T23:00:17.9024478Z             [36m>[39m
+2026-07-03T23:00:17.9024954Z               [0mCreate Account[0m
+2026-07-03T23:00:17.9025463Z             [36m</button>[39m
+2026-07-03T23:00:17.9025911Z             [36m<div[39m
+2026-07-03T23:00:17.9026608Z               [33mstyle[39m=[32m"position: relative; margin: 8px 0px;"[39m
+2026-07-03T23:00:17.9027278Z             [36m>[39m
+2026-07-03T23:00:17.9027691Z               [36m<div[39m
+2026-07-03T23:00:17.9028726Z                 [33mstyle[39m=[32m"position: absolute; inset: 0px; display: flex; align-items: center;"[39m
+2026-07-03T23:00:17.9029556Z               [36m>[39m
+2026-07-03T23:00:17.9030005Z                 [36m<div[39m
+2026-07-03T23:00:17.9030943Z                   [33mstyle[39m=[32m"width: 100%; border-top: 1px solid var(--light-gray); opacity: 0.3;"[39m
+2026-07-03T23:00:17.9032317Z                 [36m/>[39m
+2026-07-03T23:00:17.9032790Z               [36m</div>[39m
+2026-07-03T23:00:17.9033225Z               [36m<div[39m
+2026-07-03T23:00:17.9034212Z                 [33mstyle[39m=[32m"position: relative; display: flex; justify-content: center; font-size: 14px;"[39m
+2026-07-03T23:00:17.9035080Z               [36m>[39m
+2026-07-03T23:00:17.9035533Z                 [36m<span[39m
+2026-07-03T23:00:17.9036123Z                   [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9037294Z                   [33mstyle[39m=[32m"padding: 0px 8px; background-color: var(--dark-green); color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9038193Z                 [36m>[39m
+2026-07-03T23:00:17.9038615Z                   [0mOR[0m
+2026-07-03T23:00:17.9039076Z                 [36m</span>[39m
+2026-07-03T23:00:17.9039560Z               [36m</div>[39m
+2026-07-03T23:00:17.9040010Z             [36m</div>[39m
+2026-07-03T23:00:17.9040442Z             [36m<button[39m
+2026-07-03T23:00:17.9041247Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity"[39m
+2026-07-03T23:00:17.9043992Z               [33mstyle[39m=[32m"background-color: white; border: 3px solid black; border-radius: 30px; font-size: 24px; color: black; height: 60px; padding: 0px 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; align-self: center;"[39m
+2026-07-03T23:00:17.9045856Z               [33mtype[39m=[32m"button"[39m
+2026-07-03T23:00:17.9046365Z             [36m>[39m
+2026-07-03T23:00:17.9046775Z               [36m<svg[39m
+2026-07-03T23:00:17.9047527Z                 [33mstyle[39m=[32m"width: 28px; height: 28px; flex-shrink: 0;"[39m
+2026-07-03T23:00:17.9048323Z                 [33mviewBox[39m=[32m"0 0 24 24"[39m
+2026-07-03T23:00:17.9048841Z               [36m>[39m
+2026-07-03T23:00:17.9049299Z                 [36m<path[39m
+2026-07-03T23:00:17.9050673Z                   [33md[39m=[32m"M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"[39m
+2026-07-03T23:00:17.9051937Z                   [33mfill[39m=[32m"#4285F4"[39m
+2026-07-03T23:00:17.9052576Z                 [36m/>[39m
+2026-07-03T23:00:17.9053034Z                 [36m<path[39m
+2026-07-03T23:00:17.9054192Z                   [33md[39m=[32m"M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"[39m
+2026-07-03T23:00:17.9055241Z                   [33mfill[39m=[32m"#34A853"[39m
+2026-07-03T23:00:17.9055731Z                 [36m/>[39m
+2026-07-03T23:00:17.9056168Z                 [36m<path[39m
+2026-07-03T23:00:17.9057314Z                   [33md[39m=[32m"M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"[39m
+2026-07-03T23:00:17.9058418Z                   [33mfill[39m=[32m"#FBBC05"[39m
+2026-07-03T23:00:17.9058940Z                 [36m/>[39m
+2026-07-03T23:00:17.9059399Z                 [36m<path[39m
+2026-07-03T23:00:17.9060586Z                   [33md[39m=[32m"M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"[39m
+2026-07-03T23:00:17.9061970Z                   [33mfill[39m=[32m"#EA4335"[39m
+2026-07-03T23:00:17.9062325Z                 [36m/>[39m
+2026-07-03T23:00:17.9062608Z               [36m</svg>[39m
+2026-07-03T23:00:17.9062916Z               [0mContinue with Google[0m
+2026-07-03T23:00:17.9063232Z             [36m</button>[39m
+2026-07-03T23:00:17.9063494Z             [36m<div[39m
+2026-07-03T23:00:17.9064137Z               [33mclass[39m=[32m"flex gap-[10px] items-start justify-center font-display text-[24px] px-[16px] py-[16px]"[39m
+2026-07-03T23:00:17.9064676Z             [36m>[39m
+2026-07-03T23:00:17.9064924Z               [36m<span[39m
+2026-07-03T23:00:17.9065316Z                 [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9065917Z               [36m>[39m
+2026-07-03T23:00:17.9066200Z                 [0mGot an Account?[0m
+2026-07-03T23:00:17.9066505Z               [36m</span>[39m
+2026-07-03T23:00:17.9066762Z               [36m<a[39m
+2026-07-03T23:00:17.9067094Z                 [33mclass[39m=[32m"hover:opacity-80"[39m
+2026-07-03T23:00:17.9067479Z                 [33mhref[39m=[32m"/login"[39m
+2026-07-03T23:00:17.9067911Z                 [33mstyle[39m=[32m"color: var(--green-lowlight);"[39m
+2026-07-03T23:00:17.9068266Z               [36m>[39m
+2026-07-03T23:00:17.9068528Z                 [0mLog In[0m
+2026-07-03T23:00:17.9068794Z               [36m</a>[39m
+2026-07-03T23:00:17.9069048Z             [36m</div>[39m
+2026-07-03T23:00:17.9069296Z             [36m<div[39m
+2026-07-03T23:00:17.9069610Z               [33mid[39m=[32m"clerk-captcha"[39m
+2026-07-03T23:00:17.9069921Z             [36m/>[39m
+2026-07-03T23:00:17.9070171Z           [36m</form>[39m
+2026-07-03T23:00:17.9070420Z         [36m</div>[39m
+2026-07-03T23:00:17.9070659Z       [36m</div>[39m
+2026-07-03T23:00:17.9070888Z     [36m</div>[39m
+2026-07-03T23:00:17.9071106Z   [36m</div>[39m
+2026-07-03T23:00:17.9071340Z [36m</body>[39m
+2026-07-03T23:00:17.9072592Z [90m [2m❯[22m Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+2026-07-03T23:00:17.9073815Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+2026-07-03T23:00:17.9074933Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+2026-07-03T23:00:17.9077253Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+2026-07-03T23:00:17.9079155Z [36m [2m❯[22m __tests__/signup.test.tsx:[2m86:28[22m[39m
+2026-07-03T23:00:17.9080113Z     [90m 84|[39m     [34mrender[39m([33m<[39m[33mSignupPage[39m [33m/[39m[33m>[39m)
+2026-07-03T23:00:17.9080793Z     [90m 85|[39m
+2026-07-03T23:00:17.9081291Z     [90m 86|[39m     await user.type(screen.getByPlaceholderText('Username'), 'testuser…
+2026-07-03T23:00:17.9082270Z     [90m   |[39m                            [31m^[39m
+2026-07-03T23:00:17.9082847Z     [90m 87|[39m     await user.type(screen.getByPlaceholderText('Email'), 'existing@ex…
+2026-07-03T23:00:17.9083518Z     [90m 88|[39m     await user.type(screen.getByPlaceholderText('Password'), 'password…
+2026-07-03T23:00:17.9083869Z 
+2026-07-03T23:00:17.9084121Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯[22m[39m
+2026-07-03T23:00:17.9084349Z 
+2026-07-03T23:00:17.9084970Z [41m[1m FAIL [22m[49m __tests__/signup.test.tsx[2m > [22mSignupPage[2m > [22mshows generic error when Clerk error has no message
+2026-07-03T23:00:17.9085967Z [31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the placeholder text of: Username
+2026-07-03T23:00:17.9086441Z 
+2026-07-03T23:00:17.9086618Z Ignored nodes: comments, script, style
+2026-07-03T23:00:17.9086914Z [36m<body>[39m
+2026-07-03T23:00:17.9087136Z   [36m<div>[39m
+2026-07-03T23:00:17.9087352Z     [36m<div[39m
+2026-07-03T23:00:17.9087949Z       [33mclass[39m=[32m"min-h-screen flex flex-col items-center justify-center relative overflow-hidden"[39m
+2026-07-03T23:00:17.9088490Z     [36m>[39m
+2026-07-03T23:00:17.9088724Z       [36m<div[39m
+2026-07-03T23:00:17.9089170Z         [33mclass[39m=[32m"fixed inset-0 pointer-events-none z-0"[39m
+2026-07-03T23:00:17.9089595Z       [36m>[39m
+2026-07-03T23:00:17.9089824Z         [36m<div[39m
+2026-07-03T23:00:17.9090175Z           [33mclass[39m=[32m"absolute inset-0"[39m
+2026-07-03T23:00:17.9090694Z           [33mstyle[39m=[32m"background-color: var(--dark-mint-green);"[39m
+2026-07-03T23:00:17.9091110Z         [36m/>[39m
+2026-07-03T23:00:17.9091354Z         [36m<img[39m
+2026-07-03T23:00:17.9092368Z           [33malt[39m=[32m""[39m
+2026-07-03T23:00:17.9093294Z           [33mclass[39m=[32m"absolute inset-0 w-full h-full object-cover opacity-40"[39m
+2026-07-03T23:00:17.9094241Z           [33msrc[39m=[32m"/images/forest_bg.jpg"[39m
+2026-07-03T23:00:17.9094787Z         [36m/>[39m
+2026-07-03T23:00:17.9095213Z       [36m</div>[39m
+2026-07-03T23:00:17.9095647Z       [36m<div[39m
+2026-07-03T23:00:17.9096576Z         [33mclass[39m=[32m"relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"[39m
+2026-07-03T23:00:17.9097200Z       [36m>[39m
+2026-07-03T23:00:17.9097451Z         [36m<div[39m
+2026-07-03T23:00:17.9097957Z           [33mclass[39m=[32m"fade-up flex gap-[10px] items-center justify-center px-[10px]"[39m
+2026-07-03T23:00:17.9098443Z         [36m>[39m
+2026-07-03T23:00:17.9098693Z           [36m<span[39m
+2026-07-03T23:00:17.9099141Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.9099651Z             [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.9100002Z           [36m>[39m
+2026-07-03T23:00:17.9100296Z             [0mHello, Author,[0m
+2026-07-03T23:00:17.9100598Z           [36m</span>[39m
+2026-07-03T23:00:17.9100869Z           [36m<span[39m
+2026-07-03T23:00:17.9101316Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.9102193Z             [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9102563Z           [36m>[39m
+2026-07-03T23:00:17.9102847Z             [0mWelcome to[0m
+2026-07-03T23:00:17.9103162Z           [36m</span>[39m
+2026-07-03T23:00:17.9103438Z         [36m</div>[39m
+2026-07-03T23:00:17.9103686Z         [36m<div[39m
+2026-07-03T23:00:17.9104608Z           [33mclass[39m=[32m"fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"[39m
+2026-07-03T23:00:17.9105755Z           [33mstyle[39m=[32m"background-color: var(--dark-green);"[39m
+2026-07-03T23:00:17.9106156Z         [36m>[39m
+2026-07-03T23:00:17.9106407Z           [36m<a[39m
+2026-07-03T23:00:17.9107154Z             [33mclass[39m=[32m"no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"[39m
+2026-07-03T23:00:17.9107844Z             [33mhref[39m=[32m"/"[39m
+2026-07-03T23:00:17.9108158Z           [36m>[39m
+2026-07-03T23:00:17.9108418Z             [36m<span[39m
+2026-07-03T23:00:17.9108796Z               [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.9109153Z             [36m>[39m
+2026-07-03T23:00:17.9109415Z               [0mRe[0m
+2026-07-03T23:00:17.9109690Z             [36m</span>[39m
+2026-07-03T23:00:17.9109974Z             [36m<span[39m
+2026-07-03T23:00:17.9110317Z               [33mstyle[39m=[32m"color: black;"[39m
+2026-07-03T23:00:17.9110655Z             [36m>[39m
+2026-07-03T23:00:17.9110916Z               [0m:[0m
+2026-07-03T23:00:17.9111176Z             [36m</span>[39m
+2026-07-03T23:00:17.9111674Z             [36m<span[39m
+2026-07-03T23:00:17.9112103Z               [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9112465Z             [36m>[39m
+2026-07-03T23:00:17.9112725Z               [0mWrite[0m
+2026-07-03T23:00:17.9112997Z             [36m</span>[39m
+2026-07-03T23:00:17.9113269Z           [36m</a>[39m
+2026-07-03T23:00:17.9113530Z           [36m<form[39m
+2026-07-03T23:00:17.9113967Z             [33mclass[39m=[32m"flex flex-col gap-[20px] w-full px-[5px]"[39m
+2026-07-03T23:00:17.9114370Z           [36m>[39m
+2026-07-03T23:00:17.9114636Z             [36m<input[39m
+2026-07-03T23:00:17.9114960Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9115336Z               [33mid[39m=[32m"email"[39m
+2026-07-03T23:00:17.9115722Z               [33mplaceholder[39m=[32m"Email"[39m
+2026-07-03T23:00:17.9116117Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9117529Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9118565Z               [33mtype[39m=[32m"email"[39m
+2026-07-03T23:00:17.9118935Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9119251Z             [36m/>[39m
+2026-07-03T23:00:17.9119525Z             [36m<input[39m
+2026-07-03T23:00:17.9119897Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9120297Z               [33mid[39m=[32m"password"[39m
+2026-07-03T23:00:17.9120696Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.9121097Z               [33mplaceholder[39m=[32m"Password"[39m
+2026-07-03T23:00:17.9121784Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9123068Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9124111Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.9124512Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9124844Z             [36m/>[39m
+2026-07-03T23:00:17.9125111Z             [36m<input[39m
+2026-07-03T23:00:17.9125466Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9125884Z               [33mid[39m=[32m"repeatPassword"[39m
+2026-07-03T23:00:17.9126283Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.9126737Z               [33mplaceholder[39m=[32m"Repeat Password"[39m
+2026-07-03T23:00:17.9127161Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9128434Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9129691Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.9130071Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9130384Z             [36m/>[39m
+2026-07-03T23:00:17.9130657Z             [36m<button[39m
+2026-07-03T23:00:17.9131270Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity disabled:opacity-50"[39m
+2026-07-03T23:00:17.9132953Z               [33mstyle[39m=[32m"background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"[39m
+2026-07-03T23:00:17.9133912Z               [33mtype[39m=[32m"submit"[39m
+2026-07-03T23:00:17.9134207Z             [36m>[39m
+2026-07-03T23:00:17.9134488Z               [0mCreate Account[0m
+2026-07-03T23:00:17.9134825Z             [36m</button>[39m
+2026-07-03T23:00:17.9135084Z             [36m<div[39m
+2026-07-03T23:00:17.9135489Z               [33mstyle[39m=[32m"position: relative; margin: 8px 0px;"[39m
+2026-07-03T23:00:17.9135866Z             [36m>[39m
+2026-07-03T23:00:17.9136132Z               [36m<div[39m
+2026-07-03T23:00:17.9136737Z                 [33mstyle[39m=[32m"position: absolute; inset: 0px; display: flex; align-items: center;"[39m
+2026-07-03T23:00:17.9137260Z               [36m>[39m
+2026-07-03T23:00:17.9137554Z                 [36m<div[39m
+2026-07-03T23:00:17.9138140Z                   [33mstyle[39m=[32m"width: 100%; border-top: 1px solid var(--light-gray); opacity: 0.3;"[39m
+2026-07-03T23:00:17.9138656Z                 [36m/>[39m
+2026-07-03T23:00:17.9138958Z               [36m</div>[39m
+2026-07-03T23:00:17.9139239Z               [36m<div[39m
+2026-07-03T23:00:17.9139861Z                 [33mstyle[39m=[32m"position: relative; display: flex; justify-content: center; font-size: 14px;"[39m
+2026-07-03T23:00:17.9140614Z               [36m>[39m
+2026-07-03T23:00:17.9140910Z                 [36m<span[39m
+2026-07-03T23:00:17.9141314Z                   [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9142353Z                   [33mstyle[39m=[32m"padding: 0px 8px; background-color: var(--dark-green); color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9142936Z                 [36m>[39m
+2026-07-03T23:00:17.9143214Z                   [0mOR[0m
+2026-07-03T23:00:17.9143518Z                 [36m</span>[39m
+2026-07-03T23:00:17.9143831Z               [36m</div>[39m
+2026-07-03T23:00:17.9144115Z             [36m</div>[39m
+2026-07-03T23:00:17.9144402Z             [36m<button[39m
+2026-07-03T23:00:17.9144921Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity"[39m
+2026-07-03T23:00:17.9146511Z               [33mstyle[39m=[32m"background-color: white; border: 3px solid black; border-radius: 30px; font-size: 24px; color: black; height: 60px; padding: 0px 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; align-self: center;"[39m
+2026-07-03T23:00:17.9147697Z               [33mtype[39m=[32m"button"[39m
+2026-07-03T23:00:17.9148024Z             [36m>[39m
+2026-07-03T23:00:17.9148286Z               [36m<svg[39m
+2026-07-03T23:00:17.9148743Z                 [33mstyle[39m=[32m"width: 28px; height: 28px; flex-shrink: 0;"[39m
+2026-07-03T23:00:17.9149252Z                 [33mviewBox[39m=[32m"0 0 24 24"[39m
+2026-07-03T23:00:17.9149585Z               [36m>[39m
+2026-07-03T23:00:17.9149870Z                 [36m<path[39m
+2026-07-03T23:00:17.9150630Z                   [33md[39m=[32m"M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"[39m
+2026-07-03T23:00:17.9151309Z                   [33mfill[39m=[32m"#4285F4"[39m
+2026-07-03T23:00:17.9152136Z                 [36m/>[39m
+2026-07-03T23:00:17.9152454Z                 [36m<path[39m
+2026-07-03T23:00:17.9153289Z                   [33md[39m=[32m"M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"[39m
+2026-07-03T23:00:17.9154011Z                   [33mfill[39m=[32m"#34A853"[39m
+2026-07-03T23:00:17.9154346Z                 [36m/>[39m
+2026-07-03T23:00:17.9154644Z                 [36m<path[39m
+2026-07-03T23:00:17.9155405Z                   [33md[39m=[32m"M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"[39m
+2026-07-03T23:00:17.9156100Z                   [33mfill[39m=[32m"#FBBC05"[39m
+2026-07-03T23:00:17.9156422Z                 [36m/>[39m
+2026-07-03T23:00:17.9156716Z                 [36m<path[39m
+2026-07-03T23:00:17.9157474Z                   [33md[39m=[32m"M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"[39m
+2026-07-03T23:00:17.9158176Z                   [33mfill[39m=[32m"#EA4335"[39m
+2026-07-03T23:00:17.9158497Z                 [36m/>[39m
+2026-07-03T23:00:17.9158789Z               [36m</svg>[39m
+2026-07-03T23:00:17.9159119Z               [0mContinue with Google[0m
+2026-07-03T23:00:17.9159456Z             [36m</button>[39m
+2026-07-03T23:00:17.9159737Z             [36m<div[39m
+2026-07-03T23:00:17.9160419Z               [33mclass[39m=[32m"flex gap-[10px] items-start justify-center font-display text-[24px] px-[16px] py-[16px]"[39m
+2026-07-03T23:00:17.9161005Z             [36m>[39m
+2026-07-03T23:00:17.9161279Z               [36m<span[39m
+2026-07-03T23:00:17.9162042Z                 [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9162449Z               [36m>[39m
+2026-07-03T23:00:17.9162761Z                 [0mGot an Account?[0m
+2026-07-03T23:00:17.9163156Z               [36m</span>[39m
+2026-07-03T23:00:17.9163617Z               [36m<a[39m
+2026-07-03T23:00:17.9164094Z                 [33mclass[39m=[32m"hover:opacity-80"[39m
+2026-07-03T23:00:17.9164960Z                 [33mhref[39m=[32m"/login"[39m
+2026-07-03T23:00:17.9165553Z                 [33mstyle[39m=[32m"color: var(--green-lowlight);"[39m
+2026-07-03T23:00:17.9166050Z               [36m>[39m
+2026-07-03T23:00:17.9166530Z                 [0mLog In[0m
+2026-07-03T23:00:17.9167025Z               [36m</a>[39m
+2026-07-03T23:00:17.9167476Z             [36m</div>[39m
+2026-07-03T23:00:17.9167861Z             [36m<div[39m
+2026-07-03T23:00:17.9182620Z               [33mid[39m=[32m"clerk-captcha"[39m
+2026-07-03T23:00:17.9183123Z             [36m/>[39m
+2026-07-03T23:00:17.9183406Z           [36m</form>[39m
+2026-07-03T23:00:17.9183675Z         [36m</div>[39m
+2026-07-03T23:00:17.9183914Z       [36m</div>[39m
+2026-07-03T23:00:17.9184148Z     [36m</div>[39m
+2026-07-03T23:00:17.9184374Z   [36m</div>[39m
+2026-07-03T23:00:17.9184612Z [36m</body>[39m
+2026-07-03T23:00:17.9185511Z [90m [2m❯[22m Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+2026-07-03T23:00:17.9186717Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+2026-07-03T23:00:17.9187827Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+2026-07-03T23:00:17.9188920Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+2026-07-03T23:00:17.9189652Z [36m [2m❯[22m __tests__/signup.test.tsx:[2m102:28[22m[39m
+2026-07-03T23:00:17.9190216Z     [90m100|[39m     [34mrender[39m([33m<[39m[33mSignupPage[39m [33m/[39m[33m>[39m)
+2026-07-03T23:00:17.9190676Z     [90m101|[39m
+2026-07-03T23:00:17.9191155Z     [90m102|[39m     await user.type(screen.getByPlaceholderText('Username'), 'testuser…
+2026-07-03T23:00:17.9192341Z     [90m   |[39m                            [31m^[39m
+2026-07-03T23:00:17.9192899Z     [90m103|[39m     await user.type(screen.getByPlaceholderText('Email'), 'user@exampl…
+2026-07-03T23:00:17.9193559Z     [90m104|[39m     await user.type(screen.getByPlaceholderText('Password'), 'password…
+2026-07-03T23:00:17.9193894Z 
+2026-07-03T23:00:17.9194137Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯[22m[39m
+2026-07-03T23:00:17.9194342Z 
+2026-07-03T23:00:17.9194952Z [41m[1m FAIL [22m[49m __tests__/signup.test.tsx[2m > [22mSignupPage[2m > [22mcalls router.push with /dashboard on successful signup
+2026-07-03T23:00:17.9195930Z [31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the placeholder text of: Username
+2026-07-03T23:00:17.9196335Z 
+2026-07-03T23:00:17.9196492Z Ignored nodes: comments, script, style
+2026-07-03T23:00:17.9196784Z [36m<body>[39m
+2026-07-03T23:00:17.9197027Z   [36m<div>[39m
+2026-07-03T23:00:17.9197248Z     [36m<div[39m
+2026-07-03T23:00:17.9197825Z       [33mclass[39m=[32m"min-h-screen flex flex-col items-center justify-center relative overflow-hidden"[39m
+2026-07-03T23:00:17.9198736Z     [36m>[39m
+2026-07-03T23:00:17.9199200Z       [36m<div[39m
+2026-07-03T23:00:17.9199611Z         [33mclass[39m=[32m"fixed inset-0 pointer-events-none z-0"[39m
+2026-07-03T23:00:17.9200191Z       [36m>[39m
+2026-07-03T23:00:17.9200424Z         [36m<div[39m
+2026-07-03T23:00:17.9200747Z           [33mclass[39m=[32m"absolute inset-0"[39m
+2026-07-03T23:00:17.9201246Z           [33mstyle[39m=[32m"background-color: var(--dark-mint-green);"[39m
+2026-07-03T23:00:17.9201907Z         [36m/>[39m
+2026-07-03T23:00:17.9202145Z         [36m<img[39m
+2026-07-03T23:00:17.9202415Z           [33malt[39m=[32m""[39m
+2026-07-03T23:00:17.9202917Z           [33mclass[39m=[32m"absolute inset-0 w-full h-full object-cover opacity-40"[39m
+2026-07-03T23:00:17.9203450Z           [33msrc[39m=[32m"/images/forest_bg.jpg"[39m
+2026-07-03T23:00:17.9203961Z         [36m/>[39m
+2026-07-03T23:00:17.9204195Z       [36m</div>[39m
+2026-07-03T23:00:17.9204422Z       [36m<div[39m
+2026-07-03T23:00:17.9205066Z         [33mclass[39m=[32m"relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"[39m
+2026-07-03T23:00:17.9205629Z       [36m>[39m
+2026-07-03T23:00:17.9205856Z         [36m<div[39m
+2026-07-03T23:00:17.9206344Z           [33mclass[39m=[32m"fade-up flex gap-[10px] items-center justify-center px-[10px]"[39m
+2026-07-03T23:00:17.9206785Z         [36m>[39m
+2026-07-03T23:00:17.9207028Z           [36m<span[39m
+2026-07-03T23:00:17.9207441Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.9207909Z             [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.9208228Z           [36m>[39m
+2026-07-03T23:00:17.9208500Z             [0mHello, Author,[0m
+2026-07-03T23:00:17.9208788Z           [36m</span>[39m
+2026-07-03T23:00:17.9209047Z           [36m<span[39m
+2026-07-03T23:00:17.9209453Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.9209989Z             [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9210337Z           [36m>[39m
+2026-07-03T23:00:17.9210600Z             [0mWelcome to[0m
+2026-07-03T23:00:17.9210860Z           [36m</span>[39m
+2026-07-03T23:00:17.9211106Z         [36m</div>[39m
+2026-07-03T23:00:17.9211342Z         [36m<div[39m
+2026-07-03T23:00:17.9212451Z           [33mclass[39m=[32m"fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"[39m
+2026-07-03T23:00:17.9213351Z           [33mstyle[39m=[32m"background-color: var(--dark-green);"[39m
+2026-07-03T23:00:17.9213723Z         [36m>[39m
+2026-07-03T23:00:17.9213950Z           [36m<a[39m
+2026-07-03T23:00:17.9214804Z             [33mclass[39m=[32m"no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"[39m
+2026-07-03T23:00:17.9215466Z             [33mhref[39m=[32m"/"[39m
+2026-07-03T23:00:17.9215742Z           [36m>[39m
+2026-07-03T23:00:17.9215978Z             [36m<span[39m
+2026-07-03T23:00:17.9216320Z               [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.9216644Z             [36m>[39m
+2026-07-03T23:00:17.9216882Z               [0mRe[0m
+2026-07-03T23:00:17.9217133Z             [36m</span>[39m
+2026-07-03T23:00:17.9217391Z             [36m<span[39m
+2026-07-03T23:00:17.9217706Z               [33mstyle[39m=[32m"color: black;"[39m
+2026-07-03T23:00:17.9218018Z             [36m>[39m
+2026-07-03T23:00:17.9218244Z               [0m:[0m
+2026-07-03T23:00:17.9218478Z             [36m</span>[39m
+2026-07-03T23:00:17.9218734Z             [36m<span[39m
+2026-07-03T23:00:17.9219091Z               [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9219428Z             [36m>[39m
+2026-07-03T23:00:17.9219665Z               [0mWrite[0m
+2026-07-03T23:00:17.9219935Z             [36m</span>[39m
+2026-07-03T23:00:17.9220199Z           [36m</a>[39m
+2026-07-03T23:00:17.9220436Z           [36m<form[39m
+2026-07-03T23:00:17.9220847Z             [33mclass[39m=[32m"flex flex-col gap-[20px] w-full px-[5px]"[39m
+2026-07-03T23:00:17.9221228Z           [36m>[39m
+2026-07-03T23:00:17.9221692Z             [36m<input[39m
+2026-07-03T23:00:17.9222121Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9222498Z               [33mid[39m=[32m"email"[39m
+2026-07-03T23:00:17.9222858Z               [33mplaceholder[39m=[32m"Email"[39m
+2026-07-03T23:00:17.9223224Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9224366Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9225488Z               [33mtype[39m=[32m"email"[39m
+2026-07-03T23:00:17.9225836Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9226127Z             [36m/>[39m
+2026-07-03T23:00:17.9226380Z             [36m<input[39m
+2026-07-03T23:00:17.9226706Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9227078Z               [33mid[39m=[32m"password"[39m
+2026-07-03T23:00:17.9227429Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.9227804Z               [33mplaceholder[39m=[32m"Password"[39m
+2026-07-03T23:00:17.9228226Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9229388Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9230372Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.9230726Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9231012Z             [36m/>[39m
+2026-07-03T23:00:17.9231258Z             [36m<input[39m
+2026-07-03T23:00:17.9231933Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9232333Z               [33mid[39m=[32m"repeatPassword"[39m
+2026-07-03T23:00:17.9232737Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.9233134Z               [33mplaceholder[39m=[32m"Repeat Password"[39m
+2026-07-03T23:00:17.9233520Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9234647Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9235592Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.9236111Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9236403Z             [36m/>[39m
+2026-07-03T23:00:17.9236650Z             [36m<button[39m
+2026-07-03T23:00:17.9237214Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity disabled:opacity-50"[39m
+2026-07-03T23:00:17.9238534Z               [33mstyle[39m=[32m"background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"[39m
+2026-07-03T23:00:17.9239458Z               [33mtype[39m=[32m"submit"[39m
+2026-07-03T23:00:17.9239754Z             [36m>[39m
+2026-07-03T23:00:17.9240030Z               [0mCreate Account[0m
+2026-07-03T23:00:17.9240333Z             [36m</button>[39m
+2026-07-03T23:00:17.9240598Z             [36m<div[39m
+2026-07-03T23:00:17.9241001Z               [33mstyle[39m=[32m"position: relative; margin: 8px 0px;"[39m
+2026-07-03T23:00:17.9241381Z             [36m>[39m
+2026-07-03T23:00:17.9241974Z               [36m<div[39m
+2026-07-03T23:00:17.9242561Z                 [33mstyle[39m=[32m"position: absolute; inset: 0px; display: flex; align-items: center;"[39m
+2026-07-03T23:00:17.9243050Z               [36m>[39m
+2026-07-03T23:00:17.9243320Z                 [36m<div[39m
+2026-07-03T23:00:17.9243861Z                   [33mstyle[39m=[32m"width: 100%; border-top: 1px solid var(--light-gray); opacity: 0.3;"[39m
+2026-07-03T23:00:17.9244331Z                 [36m/>[39m
+2026-07-03T23:00:17.9244601Z               [36m</div>[39m
+2026-07-03T23:00:17.9244853Z               [36m<div[39m
+2026-07-03T23:00:17.9245601Z                 [33mstyle[39m=[32m"position: relative; display: flex; justify-content: center; font-size: 14px;"[39m
+2026-07-03T23:00:17.9246134Z               [36m>[39m
+2026-07-03T23:00:17.9246411Z                 [36m<span[39m
+2026-07-03T23:00:17.9246770Z                   [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9247444Z                   [33mstyle[39m=[32m"padding: 0px 8px; background-color: var(--dark-green); color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9248139Z                 [36m>[39m
+2026-07-03T23:00:17.9248388Z                   [0mOR[0m
+2026-07-03T23:00:17.9248668Z                 [36m</span>[39m
+2026-07-03T23:00:17.9248960Z               [36m</div>[39m
+2026-07-03T23:00:17.9249216Z             [36m</div>[39m
+2026-07-03T23:00:17.9249466Z             [36m<button[39m
+2026-07-03T23:00:17.9249929Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity"[39m
+2026-07-03T23:00:17.9251374Z               [33mstyle[39m=[32m"background-color: white; border: 3px solid black; border-radius: 30px; font-size: 24px; color: black; height: 60px; padding: 0px 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; align-self: center;"[39m
+2026-07-03T23:00:17.9252756Z               [33mtype[39m=[32m"button"[39m
+2026-07-03T23:00:17.9253068Z             [36m>[39m
+2026-07-03T23:00:17.9253310Z               [36m<svg[39m
+2026-07-03T23:00:17.9253748Z                 [33mstyle[39m=[32m"width: 28px; height: 28px; flex-shrink: 0;"[39m
+2026-07-03T23:00:17.9254212Z                 [33mviewBox[39m=[32m"0 0 24 24"[39m
+2026-07-03T23:00:17.9254518Z               [36m>[39m
+2026-07-03T23:00:17.9254783Z                 [36m<path[39m
+2026-07-03T23:00:17.9255488Z                   [33md[39m=[32m"M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"[39m
+2026-07-03T23:00:17.9256113Z                   [33mfill[39m=[32m"#4285F4"[39m
+2026-07-03T23:00:17.9256416Z                 [36m/>[39m
+2026-07-03T23:00:17.9256684Z                 [36m<path[39m
+2026-07-03T23:00:17.9257411Z                   [33md[39m=[32m"M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"[39m
+2026-07-03T23:00:17.9258211Z                   [33mfill[39m=[32m"#34A853"[39m
+2026-07-03T23:00:17.9258513Z                 [36m/>[39m
+2026-07-03T23:00:17.9258780Z                 [36m<path[39m
+2026-07-03T23:00:17.9259492Z                   [33md[39m=[32m"M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"[39m
+2026-07-03T23:00:17.9260113Z                   [33mfill[39m=[32m"#FBBC05"[39m
+2026-07-03T23:00:17.9260413Z                 [36m/>[39m
+2026-07-03T23:00:17.9260682Z                 [36m<path[39m
+2026-07-03T23:00:17.9261385Z                   [33md[39m=[32m"M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"[39m
+2026-07-03T23:00:17.9262344Z                   [33mfill[39m=[32m"#EA4335"[39m
+2026-07-03T23:00:17.9262648Z                 [36m/>[39m
+2026-07-03T23:00:17.9262915Z               [36m</svg>[39m
+2026-07-03T23:00:17.9263218Z               [0mContinue with Google[0m
+2026-07-03T23:00:17.9263537Z             [36m</button>[39m
+2026-07-03T23:00:17.9263800Z             [36m<div[39m
+2026-07-03T23:00:17.9264427Z               [33mclass[39m=[32m"flex gap-[10px] items-start justify-center font-display text-[24px] px-[16px] py-[16px]"[39m
+2026-07-03T23:00:17.9264968Z             [36m>[39m
+2026-07-03T23:00:17.9265213Z               [36m<span[39m
+2026-07-03T23:00:17.9265592Z                 [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9265937Z               [36m>[39m
+2026-07-03T23:00:17.9266225Z                 [0mGot an Account?[0m
+2026-07-03T23:00:17.9266538Z               [36m</span>[39m
+2026-07-03T23:00:17.9266800Z               [36m<a[39m
+2026-07-03T23:00:17.9267136Z                 [33mclass[39m=[32m"hover:opacity-80"[39m
+2026-07-03T23:00:17.9267518Z                 [33mhref[39m=[32m"/login"[39m
+2026-07-03T23:00:17.9267952Z                 [33mstyle[39m=[32m"color: var(--green-lowlight);"[39m
+2026-07-03T23:00:17.9268312Z               [36m>[39m
+2026-07-03T23:00:17.9268790Z                 [0mLog In[0m
+2026-07-03T23:00:17.9269047Z               [36m</a>[39m
+2026-07-03T23:00:17.9269292Z             [36m</div>[39m
+2026-07-03T23:00:17.9269539Z             [36m<div[39m
+2026-07-03T23:00:17.9269849Z               [33mid[39m=[32m"clerk-captcha"[39m
+2026-07-03T23:00:17.9270148Z             [36m/>[39m
+2026-07-03T23:00:17.9270395Z           [36m</form>[39m
+2026-07-03T23:00:17.9270639Z         [36m</div>[39m
+2026-07-03T23:00:17.9270876Z       [36m</div>[39m
+2026-07-03T23:00:17.9271110Z     [36m</div>[39m
+2026-07-03T23:00:17.9271338Z   [36m</div>[39m
+2026-07-03T23:00:17.9271937Z [36m</body>[39m
+2026-07-03T23:00:17.9272842Z [90m [2m❯[22m Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+2026-07-03T23:00:17.9274028Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+2026-07-03T23:00:17.9275139Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+2026-07-03T23:00:17.9276228Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+2026-07-03T23:00:17.9276969Z [36m [2m❯[22m __tests__/signup.test.tsx:[2m119:28[22m[39m
+2026-07-03T23:00:17.9277539Z     [90m117|[39m     [34mrender[39m([33m<[39m[33mSignupPage[39m [33m/[39m[33m>[39m)
+2026-07-03T23:00:17.9277961Z     [90m118|[39m
+2026-07-03T23:00:17.9278711Z     [90m119|[39m     [35mawait[39m user[33m.[39m[34mtype[39m(screen[33m.[39m[34mgetByPlaceholderText[39m([32m'Username'[39m)[33m,[39m [32m'newuser'[39m)
+2026-07-03T23:00:17.9279430Z     [90m   |[39m                            [31m^[39m
+2026-07-03T23:00:17.9279971Z     [90m120|[39m     await user.type(screen.getByPlaceholderText('Email'), 'newuser@exa…
+2026-07-03T23:00:17.9281087Z     [90m121|[39m     [35mawait[39m user[33m.[39m[34mtype[39m(screen[33m.[39m[34mgetByPlaceholderText[39m([32m'First Name'[39m)[33m,[39m [32m'New'[39m)
+2026-07-03T23:00:17.9281950Z 
+2026-07-03T23:00:17.9282263Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯[22m[39m
+2026-07-03T23:00:17.9282477Z 
+2026-07-03T23:00:17.9283079Z [41m[1m FAIL [22m[49m __tests__/signup.test.tsx[2m > [22mSignupPage[2m > [22mshows Signup failed error when status is not complete
+2026-07-03T23:00:17.9284038Z [31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the placeholder text of: Username
+2026-07-03T23:00:17.9284449Z 
+2026-07-03T23:00:17.9284601Z Ignored nodes: comments, script, style
+2026-07-03T23:00:17.9284887Z [36m<body>[39m
+2026-07-03T23:00:17.9285113Z   [36m<div>[39m
+2026-07-03T23:00:17.9285334Z     [36m<div[39m
+2026-07-03T23:00:17.9285901Z       [33mclass[39m=[32m"min-h-screen flex flex-col items-center justify-center relative overflow-hidden"[39m
+2026-07-03T23:00:17.9286419Z     [36m>[39m
+2026-07-03T23:00:17.9286641Z       [36m<div[39m
+2026-07-03T23:00:17.9287034Z         [33mclass[39m=[32m"fixed inset-0 pointer-events-none z-0"[39m
+2026-07-03T23:00:17.9287408Z       [36m>[39m
+2026-07-03T23:00:17.9287633Z         [36m<div[39m
+2026-07-03T23:00:17.9287951Z           [33mclass[39m=[32m"absolute inset-0"[39m
+2026-07-03T23:00:17.9288446Z           [33mstyle[39m=[32m"background-color: var(--dark-mint-green);"[39m
+2026-07-03T23:00:17.9288834Z         [36m/>[39m
+2026-07-03T23:00:17.9289068Z         [36m<img[39m
+2026-07-03T23:00:17.9289342Z           [33malt[39m=[32m""[39m
+2026-07-03T23:00:17.9289840Z           [33mclass[39m=[32m"absolute inset-0 w-full h-full object-cover opacity-40"[39m
+2026-07-03T23:00:17.9290354Z           [33msrc[39m=[32m"/images/forest_bg.jpg"[39m
+2026-07-03T23:00:17.9290666Z         [36m/>[39m
+2026-07-03T23:00:17.9290890Z       [36m</div>[39m
+2026-07-03T23:00:17.9291122Z       [36m<div[39m
+2026-07-03T23:00:17.9292276Z         [33mclass[39m=[32m"relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"[39m
+2026-07-03T23:00:17.9292847Z       [36m>[39m
+2026-07-03T23:00:17.9293074Z         [36m<div[39m
+2026-07-03T23:00:17.9293564Z           [33mclass[39m=[32m"fade-up flex gap-[10px] items-center justify-center px-[10px]"[39m
+2026-07-03T23:00:17.9294005Z         [36m>[39m
+2026-07-03T23:00:17.9294244Z           [36m<span[39m
+2026-07-03T23:00:17.9294654Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.9295130Z             [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.9295451Z           [36m>[39m
+2026-07-03T23:00:17.9295719Z             [0mHello, Author,[0m
+2026-07-03T23:00:17.9295995Z           [36m</span>[39m
+2026-07-03T23:00:17.9296241Z           [36m<span[39m
+2026-07-03T23:00:17.9296647Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.9297143Z             [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9297476Z           [36m>[39m
+2026-07-03T23:00:17.9297732Z             [0mWelcome to[0m
+2026-07-03T23:00:17.9297997Z           [36m</span>[39m
+2026-07-03T23:00:17.9298319Z         [36m</div>[39m
+2026-07-03T23:00:17.9298570Z         [36m<div[39m
+2026-07-03T23:00:17.9299430Z           [33mclass[39m=[32m"fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"[39m
+2026-07-03T23:00:17.9300288Z           [33mstyle[39m=[32m"background-color: var(--dark-green);"[39m
+2026-07-03T23:00:17.9300660Z         [36m>[39m
+2026-07-03T23:00:17.9300886Z           [36m<a[39m
+2026-07-03T23:00:17.9301952Z             [33mclass[39m=[32m"no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"[39m
+2026-07-03T23:00:17.9302838Z             [33mhref[39m=[32m"/"[39m
+2026-07-03T23:00:17.9303135Z           [36m>[39m
+2026-07-03T23:00:17.9303374Z             [36m<span[39m
+2026-07-03T23:00:17.9303719Z               [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.9304043Z             [36m>[39m
+2026-07-03T23:00:17.9304282Z               [0mRe[0m
+2026-07-03T23:00:17.9304534Z             [36m</span>[39m
+2026-07-03T23:00:17.9304790Z             [36m<span[39m
+2026-07-03T23:00:17.9305119Z               [33mstyle[39m=[32m"color: black;"[39m
+2026-07-03T23:00:17.9305427Z             [36m>[39m
+2026-07-03T23:00:17.9305656Z               [0m:[0m
+2026-07-03T23:00:17.9305892Z             [36m</span>[39m
+2026-07-03T23:00:17.9306144Z             [36m<span[39m
+2026-07-03T23:00:17.9306502Z               [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9306836Z             [36m>[39m
+2026-07-03T23:00:17.9307070Z               [0mWrite[0m
+2026-07-03T23:00:17.9307324Z             [36m</span>[39m
+2026-07-03T23:00:17.9307569Z           [36m</a>[39m
+2026-07-03T23:00:17.9307810Z           [36m<form[39m
+2026-07-03T23:00:17.9308220Z             [33mclass[39m=[32m"flex flex-col gap-[20px] w-full px-[5px]"[39m
+2026-07-03T23:00:17.9308595Z           [36m>[39m
+2026-07-03T23:00:17.9308831Z             [36m<input[39m
+2026-07-03T23:00:17.9309156Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9309509Z               [33mid[39m=[32m"email"[39m
+2026-07-03T23:00:17.9309870Z               [33mplaceholder[39m=[32m"Email"[39m
+2026-07-03T23:00:17.9310222Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9311357Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9312698Z               [33mtype[39m=[32m"email"[39m
+2026-07-03T23:00:17.9313053Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9313503Z             [36m/>[39m
+2026-07-03T23:00:17.9313750Z             [36m<input[39m
+2026-07-03T23:00:17.9314073Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9314437Z               [33mid[39m=[32m"password"[39m
+2026-07-03T23:00:17.9314790Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.9315159Z               [33mplaceholder[39m=[32m"Password"[39m
+2026-07-03T23:00:17.9315523Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9316643Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9317590Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.9317936Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9318227Z             [36m/>[39m
+2026-07-03T23:00:17.9318471Z             [36m<input[39m
+2026-07-03T23:00:17.9318797Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9319169Z               [33mid[39m=[32m"repeatPassword"[39m
+2026-07-03T23:00:17.9319525Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.9319918Z               [33mplaceholder[39m=[32m"Repeat Password"[39m
+2026-07-03T23:00:17.9320299Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9321696Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9322717Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.9323070Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9323358Z             [36m/>[39m
+2026-07-03T23:00:17.9323767Z             [36m<button[39m
+2026-07-03T23:00:17.9324334Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity disabled:opacity-50"[39m
+2026-07-03T23:00:17.9325643Z               [33mstyle[39m=[32m"background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"[39m
+2026-07-03T23:00:17.9326559Z               [33mtype[39m=[32m"submit"[39m
+2026-07-03T23:00:17.9326867Z             [36m>[39m
+2026-07-03T23:00:17.9327140Z               [0mCreate Account[0m
+2026-07-03T23:00:17.9327444Z             [36m</button>[39m
+2026-07-03T23:00:17.9327707Z             [36m<div[39m
+2026-07-03T23:00:17.9328117Z               [33mstyle[39m=[32m"position: relative; margin: 8px 0px;"[39m
+2026-07-03T23:00:17.9328556Z             [36m>[39m
+2026-07-03T23:00:17.9328808Z               [36m<div[39m
+2026-07-03T23:00:17.9329355Z                 [33mstyle[39m=[32m"position: absolute; inset: 0px; display: flex; align-items: center;"[39m
+2026-07-03T23:00:17.9329845Z               [36m>[39m
+2026-07-03T23:00:17.9330110Z                 [36m<div[39m
+2026-07-03T23:00:17.9330652Z                   [33mstyle[39m=[32m"width: 100%; border-top: 1px solid var(--light-gray); opacity: 0.3;"[39m
+2026-07-03T23:00:17.9331119Z                 [36m/>[39m
+2026-07-03T23:00:17.9331389Z               [36m</div>[39m
+2026-07-03T23:00:17.9331988Z               [36m<div[39m
+2026-07-03T23:00:17.9332631Z                 [33mstyle[39m=[32m"position: relative; display: flex; justify-content: center; font-size: 14px;"[39m
+2026-07-03T23:00:17.9333144Z               [36m>[39m
+2026-07-03T23:00:17.9333414Z                 [36m<span[39m
+2026-07-03T23:00:17.9333755Z                   [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9334430Z                   [33mstyle[39m=[32m"padding: 0px 8px; background-color: var(--dark-green); color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9334963Z                 [36m>[39m
+2026-07-03T23:00:17.9335376Z                   [0mOR[0m
+2026-07-03T23:00:17.9335654Z                 [36m</span>[39m
+2026-07-03T23:00:17.9335940Z               [36m</div>[39m
+2026-07-03T23:00:17.9336198Z             [36m</div>[39m
+2026-07-03T23:00:17.9336451Z             [36m<button[39m
+2026-07-03T23:00:17.9336916Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity"[39m
+2026-07-03T23:00:17.9338383Z               [33mstyle[39m=[32m"background-color: white; border: 3px solid black; border-radius: 30px; font-size: 24px; color: black; height: 60px; padding: 0px 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; align-self: center;"[39m
+2026-07-03T23:00:17.9339478Z               [33mtype[39m=[32m"button"[39m
+2026-07-03T23:00:17.9339780Z             [36m>[39m
+2026-07-03T23:00:17.9340024Z               [36m<svg[39m
+2026-07-03T23:00:17.9340455Z                 [33mstyle[39m=[32m"width: 28px; height: 28px; flex-shrink: 0;"[39m
+2026-07-03T23:00:17.9340962Z                 [33mviewBox[39m=[32m"0 0 24 24"[39m
+2026-07-03T23:00:17.9341268Z               [36m>[39m
+2026-07-03T23:00:17.9341841Z                 [36m<path[39m
+2026-07-03T23:00:17.9342575Z                   [33md[39m=[32m"M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"[39m
+2026-07-03T23:00:17.9343204Z                   [33mfill[39m=[32m"#4285F4"[39m
+2026-07-03T23:00:17.9343509Z                 [36m/>[39m
+2026-07-03T23:00:17.9343788Z                 [36m<path[39m
+2026-07-03T23:00:17.9344518Z                   [33md[39m=[32m"M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"[39m
+2026-07-03T23:00:17.9345159Z                   [33mfill[39m=[32m"#34A853"[39m
+2026-07-03T23:00:17.9345462Z                 [36m/>[39m
+2026-07-03T23:00:17.9345899Z                 [36m<path[39m
+2026-07-03T23:00:17.9346609Z                   [33md[39m=[32m"M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"[39m
+2026-07-03T23:00:17.9347242Z                   [33mfill[39m=[32m"#FBBC05"[39m
+2026-07-03T23:00:17.9347545Z                 [36m/>[39m
+2026-07-03T23:00:17.9347815Z                 [36m<path[39m
+2026-07-03T23:00:17.9348524Z                   [33md[39m=[32m"M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"[39m
+2026-07-03T23:00:17.9349151Z                   [33mfill[39m=[32m"#EA4335"[39m
+2026-07-03T23:00:17.9349451Z                 [36m/>[39m
+2026-07-03T23:00:17.9349723Z               [36m</svg>[39m
+2026-07-03T23:00:17.9350026Z               [0mContinue with Google[0m
+2026-07-03T23:00:17.9350336Z             [36m</button>[39m
+2026-07-03T23:00:17.9350590Z             [36m<div[39m
+2026-07-03T23:00:17.9351221Z               [33mclass[39m=[32m"flex gap-[10px] items-start justify-center font-display text-[24px] px-[16px] py-[16px]"[39m
+2026-07-03T23:00:17.9351928Z             [36m>[39m
+2026-07-03T23:00:17.9352180Z               [36m<span[39m
+2026-07-03T23:00:17.9352555Z                 [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9352896Z               [36m>[39m
+2026-07-03T23:00:17.9353178Z                 [0mGot an Account?[0m
+2026-07-03T23:00:17.9353480Z               [36m</span>[39m
+2026-07-03T23:00:17.9353734Z               [36m<a[39m
+2026-07-03T23:00:17.9354063Z                 [33mclass[39m=[32m"hover:opacity-80"[39m
+2026-07-03T23:00:17.9354448Z                 [33mhref[39m=[32m"/login"[39m
+2026-07-03T23:00:17.9354878Z                 [33mstyle[39m=[32m"color: var(--green-lowlight);"[39m
+2026-07-03T23:00:17.9355233Z               [36m>[39m
+2026-07-03T23:00:17.9355500Z                 [0mLog In[0m
+2026-07-03T23:00:17.9355762Z               [36m</a>[39m
+2026-07-03T23:00:17.9356013Z             [36m</div>[39m
+2026-07-03T23:00:17.9356404Z             [36m<div[39m
+2026-07-03T23:00:17.9356718Z               [33mid[39m=[32m"clerk-captcha"[39m
+2026-07-03T23:00:17.9357020Z             [36m/>[39m
+2026-07-03T23:00:17.9357269Z           [36m</form>[39m
+2026-07-03T23:00:17.9357516Z         [36m</div>[39m
+2026-07-03T23:00:17.9357752Z       [36m</div>[39m
+2026-07-03T23:00:17.9357982Z     [36m</div>[39m
+2026-07-03T23:00:17.9358205Z   [36m</div>[39m
+2026-07-03T23:00:17.9358437Z [36m</body>[39m
+2026-07-03T23:00:17.9359310Z [90m [2m❯[22m Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+2026-07-03T23:00:17.9360490Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+2026-07-03T23:00:17.9361739Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+2026-07-03T23:00:17.9362859Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+2026-07-03T23:00:17.9363600Z [36m [2m❯[22m __tests__/signup.test.tsx:[2m138:28[22m[39m
+2026-07-03T23:00:17.9364166Z     [90m136|[39m     [34mrender[39m([33m<[39m[33mSignupPage[39m [33m/[39m[33m>[39m)
+2026-07-03T23:00:17.9364586Z     [90m137|[39m
+2026-07-03T23:00:17.9365053Z     [90m138|[39m     await user.type(screen.getByPlaceholderText('Username'), 'testuser…
+2026-07-03T23:00:17.9365563Z     [90m   |[39m                            [31m^[39m
+2026-07-03T23:00:17.9366090Z     [90m139|[39m     await user.type(screen.getByPlaceholderText('Email'), 'user@exampl…
+2026-07-03T23:00:17.9366741Z     [90m140|[39m     await user.type(screen.getByPlaceholderText('Password'), 'password…
+2026-07-03T23:00:17.9367056Z 
+2026-07-03T23:00:17.9367433Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯[22m[39m
+2026-07-03T23:00:17.9367648Z 
+2026-07-03T23:00:17.9368272Z [41m[1m FAIL [22m[49m __tests__/signup.test.tsx[2m > [22mSignupPage[2m > [22mshows loading state while account creation is in progress
+2026-07-03T23:00:17.9369252Z [31m[1mTestingLibraryElementError[22m[39m: Unable to find an element with the placeholder text of: Username
+2026-07-03T23:00:17.9369667Z 
+2026-07-03T23:00:17.9369824Z Ignored nodes: comments, script, style
+2026-07-03T23:00:17.9370115Z [36m<body>[39m
+2026-07-03T23:00:17.9370336Z   [36m<div>[39m
+2026-07-03T23:00:17.9370555Z     [36m<div[39m
+2026-07-03T23:00:17.9371119Z       [33mclass[39m=[32m"min-h-screen flex flex-col items-center justify-center relative overflow-hidden"[39m
+2026-07-03T23:00:17.9371784Z     [36m>[39m
+2026-07-03T23:00:17.9372006Z       [36m<div[39m
+2026-07-03T23:00:17.9372407Z         [33mclass[39m=[32m"fixed inset-0 pointer-events-none z-0"[39m
+2026-07-03T23:00:17.9372776Z       [36m>[39m
+2026-07-03T23:00:17.9373008Z         [36m<div[39m
+2026-07-03T23:00:17.9373328Z           [33mclass[39m=[32m"absolute inset-0"[39m
+2026-07-03T23:00:17.9373914Z           [33mstyle[39m=[32m"background-color: var(--dark-mint-green);"[39m
+2026-07-03T23:00:17.9374576Z         [36m/>[39m
+2026-07-03T23:00:17.9374820Z         [36m<img[39m
+2026-07-03T23:00:17.9375091Z           [33malt[39m=[32m""[39m
+2026-07-03T23:00:17.9375595Z           [33mclass[39m=[32m"absolute inset-0 w-full h-full object-cover opacity-40"[39m
+2026-07-03T23:00:17.9376117Z           [33msrc[39m=[32m"/images/forest_bg.jpg"[39m
+2026-07-03T23:00:17.9376433Z         [36m/>[39m
+2026-07-03T23:00:17.9376665Z       [36m</div>[39m
+2026-07-03T23:00:17.9376896Z       [36m<div[39m
+2026-07-03T23:00:17.9377542Z         [33mclass[39m=[32m"relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"[39m
+2026-07-03T23:00:17.9378106Z       [36m>[39m
+2026-07-03T23:00:17.9378340Z         [36m<div[39m
+2026-07-03T23:00:17.9378822Z           [33mclass[39m=[32m"fade-up flex gap-[10px] items-center justify-center px-[10px]"[39m
+2026-07-03T23:00:17.9379434Z         [36m>[39m
+2026-07-03T23:00:17.9379667Z           [36m<span[39m
+2026-07-03T23:00:17.9380079Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.9380552Z             [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.9380873Z           [36m>[39m
+2026-07-03T23:00:17.9381144Z             [0mHello, Author,[0m
+2026-07-03T23:00:17.9381638Z           [36m</span>[39m
+2026-07-03T23:00:17.9382051Z           [36m<span[39m
+2026-07-03T23:00:17.9382483Z             [33mclass[39m=[32m"font-display text-[36px] leading-normal"[39m
+2026-07-03T23:00:17.9382974Z             [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9383311Z           [36m>[39m
+2026-07-03T23:00:17.9383580Z             [0mWelcome to[0m
+2026-07-03T23:00:17.9383854Z           [36m</span>[39m
+2026-07-03T23:00:17.9384105Z         [36m</div>[39m
+2026-07-03T23:00:17.9384354Z         [36m<div[39m
+2026-07-03T23:00:17.9385213Z           [33mclass[39m=[32m"fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"[39m
+2026-07-03T23:00:17.9386085Z           [33mstyle[39m=[32m"background-color: var(--dark-green);"[39m
+2026-07-03T23:00:17.9386466Z         [36m>[39m
+2026-07-03T23:00:17.9386687Z           [36m<a[39m
+2026-07-03T23:00:17.9387384Z             [33mclass[39m=[32m"no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"[39m
+2026-07-03T23:00:17.9388033Z             [33mhref[39m=[32m"/"[39m
+2026-07-03T23:00:17.9388312Z           [36m>[39m
+2026-07-03T23:00:17.9388546Z             [36m<span[39m
+2026-07-03T23:00:17.9388888Z               [33mstyle[39m=[32m"color: var(--aqua);"[39m
+2026-07-03T23:00:17.9389374Z             [36m>[39m
+2026-07-03T23:00:17.9389612Z               [0mRe[0m
+2026-07-03T23:00:17.9389869Z             [36m</span>[39m
+2026-07-03T23:00:17.9390121Z             [36m<span[39m
+2026-07-03T23:00:17.9390438Z               [33mstyle[39m=[32m"color: black;"[39m
+2026-07-03T23:00:17.9390749Z             [36m>[39m
+2026-07-03T23:00:17.9390978Z               [0m:[0m
+2026-07-03T23:00:17.9391210Z             [36m</span>[39m
+2026-07-03T23:00:17.9391631Z             [36m<span[39m
+2026-07-03T23:00:17.9392004Z               [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9392338Z             [36m>[39m
+2026-07-03T23:00:17.9392571Z               [0mWrite[0m
+2026-07-03T23:00:17.9392817Z             [36m</span>[39m
+2026-07-03T23:00:17.9393066Z           [36m</a>[39m
+2026-07-03T23:00:17.9393306Z           [36m<form[39m
+2026-07-03T23:00:17.9393718Z             [33mclass[39m=[32m"flex flex-col gap-[20px] w-full px-[5px]"[39m
+2026-07-03T23:00:17.9394104Z           [36m>[39m
+2026-07-03T23:00:17.9394346Z             [36m<input[39m
+2026-07-03T23:00:17.9394676Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9395032Z               [33mid[39m=[32m"email"[39m
+2026-07-03T23:00:17.9395393Z               [33mplaceholder[39m=[32m"Email"[39m
+2026-07-03T23:00:17.9395752Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9396890Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9397835Z               [33mtype[39m=[32m"email"[39m
+2026-07-03T23:00:17.9398177Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9398474Z             [36m/>[39m
+2026-07-03T23:00:17.9398727Z             [36m<input[39m
+2026-07-03T23:00:17.9399057Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9399435Z               [33mid[39m=[32m"password"[39m
+2026-07-03T23:00:17.9399925Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.9400302Z               [33mplaceholder[39m=[32m"Password"[39m
+2026-07-03T23:00:17.9400669Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9402102Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9403112Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.9403471Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9403758Z             [36m/>[39m
+2026-07-03T23:00:17.9404005Z             [36m<input[39m
+2026-07-03T23:00:17.9404328Z               [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9404703Z               [33mid[39m=[32m"repeatPassword"[39m
+2026-07-03T23:00:17.9405069Z               [33mminlength[39m=[32m"6"[39m
+2026-07-03T23:00:17.9405476Z               [33mplaceholder[39m=[32m"Repeat Password"[39m
+2026-07-03T23:00:17.9405866Z               [33mrequired[39m=[32m""[39m
+2026-07-03T23:00:17.9406992Z               [33mstyle[39m=[32m"background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"[39m
+2026-07-03T23:00:17.9407929Z               [33mtype[39m=[32m"password"[39m
+2026-07-03T23:00:17.9408277Z               [33mvalue[39m=[32m""[39m
+2026-07-03T23:00:17.9408565Z             [36m/>[39m
+2026-07-03T23:00:17.9408815Z             [36m<button[39m
+2026-07-03T23:00:17.9409377Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity disabled:opacity-50"[39m
+2026-07-03T23:00:17.9410670Z               [33mstyle[39m=[32m"background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"[39m
+2026-07-03T23:00:17.9411954Z               [33mtype[39m=[32m"submit"[39m
+2026-07-03T23:00:17.9412258Z             [36m>[39m
+2026-07-03T23:00:17.9412531Z               [0mCreate Account[0m
+2026-07-03T23:00:17.9412836Z             [36m</button>[39m
+2026-07-03T23:00:17.9413098Z             [36m<div[39m
+2026-07-03T23:00:17.9413509Z               [33mstyle[39m=[32m"position: relative; margin: 8px 0px;"[39m
+2026-07-03T23:00:17.9413884Z             [36m>[39m
+2026-07-03T23:00:17.9414125Z               [36m<div[39m
+2026-07-03T23:00:17.9414669Z                 [33mstyle[39m=[32m"position: absolute; inset: 0px; display: flex; align-items: center;"[39m
+2026-07-03T23:00:17.9415148Z               [36m>[39m
+2026-07-03T23:00:17.9415416Z                 [36m<div[39m
+2026-07-03T23:00:17.9415956Z                   [33mstyle[39m=[32m"width: 100%; border-top: 1px solid var(--light-gray); opacity: 0.3;"[39m
+2026-07-03T23:00:17.9416434Z                 [36m/>[39m
+2026-07-03T23:00:17.9416719Z               [36m</div>[39m
+2026-07-03T23:00:17.9416971Z               [36m<div[39m
+2026-07-03T23:00:17.9417549Z                 [33mstyle[39m=[32m"position: relative; display: flex; justify-content: center; font-size: 14px;"[39m
+2026-07-03T23:00:17.9418096Z               [36m>[39m
+2026-07-03T23:00:17.9418383Z                 [36m<span[39m
+2026-07-03T23:00:17.9418726Z                   [33mclass[39m=[32m"font-display"[39m
+2026-07-03T23:00:17.9419418Z                   [33mstyle[39m=[32m"padding: 0px 8px; background-color: var(--dark-green); color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9419963Z                 [36m>[39m
+2026-07-03T23:00:17.9420216Z                   [0mOR[0m
+2026-07-03T23:00:17.9420498Z                 [36m</span>[39m
+2026-07-03T23:00:17.9420788Z               [36m</div>[39m
+2026-07-03T23:00:17.9421044Z             [36m</div>[39m
+2026-07-03T23:00:17.9421310Z             [36m<button[39m
+2026-07-03T23:00:17.9421984Z               [33mclass[39m=[32m"font-display hover:opacity-90 transition-opacity"[39m
+2026-07-03T23:00:17.9423608Z               [33mstyle[39m=[32m"background-color: white; border: 3px solid black; border-radius: 30px; font-size: 24px; color: black; height: 60px; padding: 0px 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; align-self: center;"[39m
+2026-07-03T23:00:17.9424718Z               [33mtype[39m=[32m"button"[39m
+2026-07-03T23:00:17.9425066Z             [36m>[39m
+2026-07-03T23:00:17.9425480Z               [36m<svg[39m
+2026-07-03T23:00:17.9426057Z                 [33mstyle[39m=[32m"width: 28px; height: 28px; flex-shrink: 0;"[39m
+2026-07-03T23:00:17.9426549Z                 [33mviewBox[39m=[32m"0 0 24 24"[39m
+2026-07-03T23:00:17.9426852Z               [36m>[39m
+2026-07-03T23:00:17.9427117Z                 [36m<path[39m
+2026-07-03T23:00:17.9427824Z                   [33md[39m=[32m"M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"[39m
+2026-07-03T23:00:17.9428516Z                   [33mfill[39m=[32m"#4285F4"[39m
+2026-07-03T23:00:17.9428816Z                 [36m/>[39m
+2026-07-03T23:00:17.9429084Z                 [36m<path[39m
+2026-07-03T23:00:17.9429807Z                   [33md[39m=[32m"M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"[39m
+2026-07-03T23:00:17.9430445Z                   [33mfill[39m=[32m"#34A853"[39m
+2026-07-03T23:00:17.9430741Z                 [36m/>[39m
+2026-07-03T23:00:17.9431009Z                 [36m<path[39m
+2026-07-03T23:00:17.9431888Z                   [33md[39m=[32m"M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"[39m
+2026-07-03T23:00:17.9432531Z                   [33mfill[39m=[32m"#FBBC05"[39m
+2026-07-03T23:00:17.9433047Z                 [36m/>[39m
+2026-07-03T23:00:17.9433320Z                 [36m<path[39m
+2026-07-03T23:00:17.9434037Z                   [33md[39m=[32m"M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"[39m
+2026-07-03T23:00:17.9434654Z                   [33mfill[39m=[32m"#EA4335"[39m
+2026-07-03T23:00:17.9434951Z                 [36m/>[39m
+2026-07-03T23:00:17.9435245Z               [36m</svg>[39m
+2026-07-03T23:00:17.9435578Z               [0mContinue with Google[0m
+2026-07-03T23:00:17.9435894Z             [36m</button>[39m
+2026-07-03T23:00:17.9436170Z             [36m<div[39m
+2026-07-03T23:00:17.9436832Z               [33mclass[39m=[32m"flex gap-[10px] items-start justify-center font-display text-[24px] px-[16px] py-[16px]"[39m
+2026-07-03T23:00:17.9437402Z             [36m>[39m
+2026-07-03T23:00:17.9437664Z               [36m<span[39m
+2026-07-03T23:00:17.9438060Z                 [33mstyle[39m=[32m"color: var(--light-gray);"[39m
+2026-07-03T23:00:17.9438441Z               [36m>[39m
+2026-07-03T23:00:17.9438748Z                 [0mGot an Account?[0m
+2026-07-03T23:00:17.9439094Z               [36m</span>[39m
+2026-07-03T23:00:17.9439411Z               [36m<a[39m
+2026-07-03T23:00:17.9439778Z                 [33mclass[39m=[32m"hover:opacity-80"[39m
+2026-07-03T23:00:17.9440162Z                 [33mhref[39m=[32m"/login"[39m
+2026-07-03T23:00:17.9440634Z                 [33mstyle[39m=[32m"color: var(--green-lowlight);"[39m
+2026-07-03T23:00:17.9441001Z               [36m>[39m
+2026-07-03T23:00:17.9441273Z                 [0mLog In[0m
+2026-07-03T23:00:17.9441752Z               [36m</a>[39m
+2026-07-03T23:00:17.9442168Z             [36m</div>[39m
+2026-07-03T23:00:17.9442441Z             [36m<div[39m
+2026-07-03T23:00:17.9442766Z               [33mid[39m=[32m"clerk-captcha"[39m
+2026-07-03T23:00:17.9443072Z             [36m/>[39m
+2026-07-03T23:00:17.9443324Z           [36m</form>[39m
+2026-07-03T23:00:17.9443572Z         [36m</div>[39m
+2026-07-03T23:00:17.9443969Z       [36m</div>[39m
+2026-07-03T23:00:17.9444199Z     [36m</div>[39m
+2026-07-03T23:00:17.9444420Z   [36m</div>[39m
+2026-07-03T23:00:17.9444656Z [36m</body>[39m
+2026-07-03T23:00:17.9444794Z 
+2026-07-03T23:00:17.9445247Z [2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m3 passed[39m[22m[90m (4)[39m
+2026-07-03T23:00:17.9446125Z [2m      Tests [22m [1m[31m7 failed[39m[22m[2m | [22m[1m[32m33 passed[39m[22m[2m | [22m[90m4 todo[39m[90m (44)[39m
+2026-07-03T23:00:17.9446745Z [2m   Start at [22m 23:00:14
+2026-07-03T23:00:17.9447590Z [2m   Duration [22m 3.42s[2m (transform 272ms, setup 476ms, import 852ms, tests 2.34s, environment 4.62s)[22m
+2026-07-03T23:00:17.9448030Z 
+2026-07-03T23:00:17.9448037Z 
+2026-07-03T23:00:17.9499861Z ##[error]TestingLibraryElementError: Unable to find an element with the placeholder text of: First Name
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+    >
+      <div
+        class="fixed inset-0 pointer-events-none z-0"
+      >
+        <div
+          class="absolute inset-0"
+          style="background-color: var(--dark-mint-green);"
+        />
+        <img
+          alt=""
+          class="absolute inset-0 w-full h-full object-cover opacity-40"
+          src="/images/forest_bg.jpg"
+        />
+      </div>
+      <div
+        class="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"
+      >
+        <div
+          class="fade-up flex gap-[10px] items-center justify-center px-[10px]"
+        >
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--aqua);"
+          >
+            Hello, Author,
+          </span>
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--light-gray);"
+          >
+            Welcome to
+          </span>
+        </div>
+        <div
+          class="fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
+          style="background-color: var(--dark-green);"
+        >
+          <a
+            class="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"
+            href="/"
+          >
+            <span
+              style="color: var(--aqua);"
+            >
+              Re
+            </span>
+            <span
+              style="color: black;"
+            >
+              :
+            </span>
+            <span
+              style="color: var(--light-gray);"
+            >
+              Write
+            </span>
+          </a>
+          <form
+            class="flex flex-col gap-[20px] w-full px-[5px]"
+          >
+            <input
+              class="font-display"
+              id="email"
+              placeholder="Email"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="email"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="password"
+              minlength="6"
+              placeholder="Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="repeatPassword"
+              minlength="6"
+              placeholder="Repeat Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <button
+              class="font-display hover:opacity-90 transition-opacity disabled:opacity-50"
+              style="background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"
+              type="submit"
+            >
+              Create Account
+            </button>
+            <div
+              style="position: relative; margin: 8px 0px;"
+            >
+              <div
+                style="position: absolute; inset: 0px; display: flex; align-items: center;"
+              >
+                <div
+           
+2026-07-03T23:00:17.9519199Z 
+2026-07-03T23:00:17.9552800Z ##[error]TestingLibraryElementError: Unable to find an element with the placeholder text of: Username
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+    >
+      <div
+        class="fixed inset-0 pointer-events-none z-0"
+      >
+        <div
+          class="absolute inset-0"
+          style="background-color: var(--dark-mint-green);"
+        />
+        <img
+          alt=""
+          class="absolute inset-0 w-full h-full object-cover opacity-40"
+          src="/images/forest_bg.jpg"
+        />
+      </div>
+      <div
+        class="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"
+      >
+        <div
+          class="fade-up flex gap-[10px] items-center justify-center px-[10px]"
+        >
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--aqua);"
+          >
+            Hello, Author,
+          </span>
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--light-gray);"
+          >
+            Welcome to
+          </span>
+        </div>
+        <div
+          class="fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
+          style="background-color: var(--dark-green);"
+        >
+          <a
+            class="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"
+            href="/"
+          >
+            <span
+              style="color: var(--aqua);"
+            >
+              Re
+            </span>
+            <span
+              style="color: black;"
+            >
+              :
+            </span>
+            <span
+              style="color: var(--light-gray);"
+            >
+              Write
+            </span>
+          </a>
+          <form
+            class="flex flex-col gap-[20px] w-full px-[5px]"
+          >
+            <input
+              class="font-display"
+              id="email"
+              placeholder="Email"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="email"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="password"
+              minlength="6"
+              placeholder="Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="repeatPassword"
+              minlength="6"
+              placeholder="Repeat Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <button
+              class="font-display hover:opacity-90 transition-opacity disabled:opacity-50"
+              style="background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"
+              type="submit"
+            >
+              Create Account
+            </button>
+            <div
+              style="position: relative; margin: 8px 0px;"
+            >
+              <div
+                style="position: absolute; inset: 0px; display: flex; align-items: center;"
+              >
+                <div
+             
+2026-07-03T23:00:17.9567379Z 
+2026-07-03T23:00:17.9613899Z ##[error]TestingLibraryElementError: Unable to find an element with the placeholder text of: Username
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+    >
+      <div
+        class="fixed inset-0 pointer-events-none z-0"
+      >
+        <div
+          class="absolute inset-0"
+          style="background-color: var(--dark-mint-green);"
+        />
+        <img
+          alt=""
+          class="absolute inset-0 w-full h-full object-cover opacity-40"
+          src="/images/forest_bg.jpg"
+        />
+      </div>
+      <div
+        class="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"
+      >
+        <div
+          class="fade-up flex gap-[10px] items-center justify-center px-[10px]"
+        >
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--aqua);"
+          >
+            Hello, Author,
+          </span>
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--light-gray);"
+          >
+            Welcome to
+          </span>
+        </div>
+        <div
+          class="fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
+          style="background-color: var(--dark-green);"
+        >
+          <a
+            class="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"
+            href="/"
+          >
+            <span
+              style="color: var(--aqua);"
+            >
+              Re
+            </span>
+            <span
+              style="color: black;"
+            >
+              :
+            </span>
+            <span
+              style="color: var(--light-gray);"
+            >
+              Write
+            </span>
+          </a>
+          <form
+            class="flex flex-col gap-[20px] w-full px-[5px]"
+          >
+            <input
+              class="font-display"
+              id="email"
+              placeholder="Email"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="email"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="password"
+              minlength="6"
+              placeholder="Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="repeatPassword"
+              minlength="6"
+              placeholder="Repeat Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <button
+              class="font-display hover:opacity-90 transition-opacity disabled:opacity-50"
+              style="background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"
+              type="submit"
+            >
+              Create Account
+            </button>
+            <div
+              style="position: relative; margin: 8px 0px;"
+            >
+              <div
+                style="position: absolute; inset: 0px; display: flex; align-items: center;"
+              >
+                <div
+             
+2026-07-03T23:00:17.9636173Z [90m [2m❯[22m Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:[2m37:19[22m[39m
+2026-07-03T23:00:17.9638356Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m76:38[22m[39m
+2026-07-03T23:00:17.9640298Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m52:17[22m[39m
+2026-07-03T23:00:17.9642459Z [90m [2m❯[22m node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:[2m95:19[22m[39m
+2026-07-03T23:00:17.9643783Z [36m [2m❯[22m __tests__/signup.test.tsx:[2m171:28[22m[39m
+2026-07-03T23:00:17.9644777Z     [90m169|[39m     [34mrender[39m([33m<[39m[33mSignupPage[39m [33m/[39m[33m>[39m)
+2026-07-03T23:00:17.9645507Z     [90m170|[39m
+2026-07-03T23:00:17.9646567Z     [90m171|[39m     await user.type(screen.getByPlaceholderText('Username'), 'testuser…
+2026-07-03T23:00:17.9647493Z     [90m   |[39m                            [31m^[39m
+2026-07-03T23:00:17.9648431Z     [90m172|[39m     await user.type(screen.getByPlaceholderText('Email'), 'user@exampl…
+2026-07-03T23:00:17.9649585Z     [90m173|[39m     await user.type(screen.getByPlaceholderText('Password'), 'password…
+2026-07-03T23:00:17.9650153Z 
+2026-07-03T23:00:17.9650562Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯[22m[39m
+2026-07-03T23:00:17.9650920Z 
+2026-07-03T23:00:17.9650972Z 
+2026-07-03T23:00:17.9696397Z ##[error]TestingLibraryElementError: Unable to find an element with the placeholder text of: Username
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+    >
+      <div
+        class="fixed inset-0 pointer-events-none z-0"
+      >
+        <div
+          class="absolute inset-0"
+          style="background-color: var(--dark-mint-green);"
+        />
+        <img
+          alt=""
+          class="absolute inset-0 w-full h-full object-cover opacity-40"
+          src="/images/forest_bg.jpg"
+        />
+      </div>
+      <div
+        class="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"
+      >
+        <div
+          class="fade-up flex gap-[10px] items-center justify-center px-[10px]"
+        >
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--aqua);"
+          >
+            Hello, Author,
+          </span>
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--light-gray);"
+          >
+            Welcome to
+          </span>
+        </div>
+        <div
+          class="fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
+          style="background-color: var(--dark-green);"
+        >
+          <a
+            class="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"
+            href="/"
+          >
+            <span
+              style="color: var(--aqua);"
+            >
+              Re
+            </span>
+            <span
+              style="color: black;"
+            >
+              :
+            </span>
+            <span
+              style="color: var(--light-gray);"
+            >
+              Write
+            </span>
+          </a>
+          <form
+            class="flex flex-col gap-[20px] w-full px-[5px]"
+          >
+            <input
+              class="font-display"
+              id="email"
+              placeholder="Email"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="email"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="password"
+              minlength="6"
+              placeholder="Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="repeatPassword"
+              minlength="6"
+              placeholder="Repeat Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <button
+              class="font-display hover:opacity-90 transition-opacity disabled:opacity-50"
+              style="background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"
+              type="submit"
+            >
+              Create Account
+            </button>
+            <div
+              style="position: relative; margin: 8px 0px;"
+            >
+              <div
+                style="position: absolute; inset: 0px; display: flex; align-items: center;"
+              >
+                <div
+             
+2026-07-03T23:00:17.9708684Z 
+2026-07-03T23:00:17.9744032Z ##[error]TestingLibraryElementError: Unable to find an element with the placeholder text of: Username
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+    >
+      <div
+        class="fixed inset-0 pointer-events-none z-0"
+      >
+        <div
+          class="absolute inset-0"
+          style="background-color: var(--dark-mint-green);"
+        />
+        <img
+          alt=""
+          class="absolute inset-0 w-full h-full object-cover opacity-40"
+          src="/images/forest_bg.jpg"
+        />
+      </div>
+      <div
+        class="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"
+      >
+        <div
+          class="fade-up flex gap-[10px] items-center justify-center px-[10px]"
+        >
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--aqua);"
+          >
+            Hello, Author,
+          </span>
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--light-gray);"
+          >
+            Welcome to
+          </span>
+        </div>
+        <div
+          class="fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
+          style="background-color: var(--dark-green);"
+        >
+          <a
+            class="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"
+            href="/"
+          >
+            <span
+              style="color: var(--aqua);"
+            >
+              Re
+            </span>
+            <span
+              style="color: black;"
+            >
+              :
+            </span>
+            <span
+              style="color: var(--light-gray);"
+            >
+              Write
+            </span>
+          </a>
+          <form
+            class="flex flex-col gap-[20px] w-full px-[5px]"
+          >
+            <input
+              class="font-display"
+              id="email"
+              placeholder="Email"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="email"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="password"
+              minlength="6"
+              placeholder="Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="repeatPassword"
+              minlength="6"
+              placeholder="Repeat Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <button
+              class="font-display hover:opacity-90 transition-opacity disabled:opacity-50"
+              style="background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"
+              type="submit"
+            >
+              Create Account
+            </button>
+            <div
+              style="position: relative; margin: 8px 0px;"
+            >
+              <div
+                style="position: absolute; inset: 0px; display: flex; align-items: center;"
+              >
+                <div
+             
+2026-07-03T23:00:17.9755957Z 
+2026-07-03T23:00:17.9788629Z ##[error]TestingLibraryElementError: Unable to find an element with the placeholder text of: Username
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+    >
+      <div
+        class="fixed inset-0 pointer-events-none z-0"
+      >
+        <div
+          class="absolute inset-0"
+          style="background-color: var(--dark-mint-green);"
+        />
+        <img
+          alt=""
+          class="absolute inset-0 w-full h-full object-cover opacity-40"
+          src="/images/forest_bg.jpg"
+        />
+      </div>
+      <div
+        class="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"
+      >
+        <div
+          class="fade-up flex gap-[10px] items-center justify-center px-[10px]"
+        >
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--aqua);"
+          >
+            Hello, Author,
+          </span>
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--light-gray);"
+          >
+            Welcome to
+          </span>
+        </div>
+        <div
+          class="fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
+          style="background-color: var(--dark-green);"
+        >
+          <a
+            class="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"
+            href="/"
+          >
+            <span
+              style="color: var(--aqua);"
+            >
+              Re
+            </span>
+            <span
+              style="color: black;"
+            >
+              :
+            </span>
+            <span
+              style="color: var(--light-gray);"
+            >
+              Write
+            </span>
+          </a>
+          <form
+            class="flex flex-col gap-[20px] w-full px-[5px]"
+          >
+            <input
+              class="font-display"
+              id="email"
+              placeholder="Email"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="email"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="password"
+              minlength="6"
+              placeholder="Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="repeatPassword"
+              minlength="6"
+              placeholder="Repeat Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <button
+              class="font-display hover:opacity-90 transition-opacity disabled:opacity-50"
+              style="background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"
+              type="submit"
+            >
+              Create Account
+            </button>
+            <div
+              style="position: relative; margin: 8px 0px;"
+            >
+              <div
+                style="position: absolute; inset: 0px; display: flex; align-items: center;"
+              >
+                <div
+             
+2026-07-03T23:00:17.9800661Z 
+2026-07-03T23:00:17.9833078Z ##[error]TestingLibraryElementError: Unable to find an element with the placeholder text of: Username
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden"
+    >
+      <div
+        class="fixed inset-0 pointer-events-none z-0"
+      >
+        <div
+          class="absolute inset-0"
+          style="background-color: var(--dark-mint-green);"
+        />
+        <img
+          alt=""
+          class="absolute inset-0 w-full h-full object-cover opacity-40"
+          src="/images/forest_bg.jpg"
+        />
+      </div>
+      <div
+        class="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]"
+      >
+        <div
+          class="fade-up flex gap-[10px] items-center justify-center px-[10px]"
+        >
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--aqua);"
+          >
+            Hello, Author,
+          </span>
+          <span
+            class="font-display text-[36px] leading-normal"
+            style="color: var(--light-gray);"
+          >
+            Welcome to
+          </span>
+        </div>
+        <div
+          class="fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
+          style="background-color: var(--dark-green);"
+        >
+          <a
+            class="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]"
+            href="/"
+          >
+            <span
+              style="color: var(--aqua);"
+            >
+              Re
+            </span>
+            <span
+              style="color: black;"
+            >
+              :
+            </span>
+            <span
+              style="color: var(--light-gray);"
+            >
+              Write
+            </span>
+          </a>
+          <form
+            class="flex flex-col gap-[20px] w-full px-[5px]"
+          >
+            <input
+              class="font-display"
+              id="email"
+              placeholder="Email"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="email"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="password"
+              minlength="6"
+              placeholder="Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <input
+              class="font-display"
+              id="repeatPassword"
+              minlength="6"
+              placeholder="Repeat Password"
+              required=""
+              style="background-color: var(--mint-green); border: 3px solid black; border-radius: 20px; font-size: 20px; color: black; padding: 8px 16px; outline: none; width: 100%; height: 44px; box-sizing: border-box;"
+              type="password"
+              value=""
+            />
+            <button
+              class="font-display hover:opacity-90 transition-opacity disabled:opacity-50"
+              style="background-color: var(--green-highlight); border: 3px solid black; border-radius: 30px; font-size: 36px; color: black; height: 60px; padding: 0px 32px; cursor: pointer; align-self: center;"
+              type="submit"
+            >
+              Create Account
+            </button>
+            <div
+              style="position: relative; margin: 8px 0px;"
+            >
+              <div
+                style="position: absolute; inset: 0px; display: flex; align-items: center;"
+              >
+                <div
+             
+2026-07-03T23:00:17.9845074Z [ELIFECYCLE] Command failed with exit code 1.
+2026-07-03T23:00:17.9848431Z ##[error]Process completed with exit code 1.
