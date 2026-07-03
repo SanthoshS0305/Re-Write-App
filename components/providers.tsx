@@ -2,7 +2,6 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@/components/theme-provider";
-import { MotionConfig } from "framer-motion";
 import { useState } from "react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -18,18 +17,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <MotionConfig transition={{ layout: { type: "spring", stiffness: 220, damping: 28 } }}>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </QueryClientProvider>
-    </MotionConfig>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        {children}
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
-

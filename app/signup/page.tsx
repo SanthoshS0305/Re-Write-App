@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSignUp } from "@clerk/nextjs";
+import { useSignUp } from "@clerk/nextjs/legacy";
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -15,32 +14,57 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Email verification step
+  const [verifying, setVerifying] = useState(false);
+  const [code, setCode] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isLoaded) return;
     setError("");
-    setLoading(true);
 
     if (password !== repeatPassword) {
       setError("Passwords do not match");
-      setLoading(false);
       return;
     }
 
+    setLoading(true);
     try {
-      const result = await signUp.create({
-        emailAddress: email,
-        password,
-      });
+      const result = await signUp.create({ emailAddress: email, password });
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
         router.push("/dashboard");
+      } else if (result.unverifiedFields.includes("email_address")) {
+        await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+        setVerifying(true);
       } else {
         setError("Signup failed. Please try again.");
       }
-    } catch (err: any) {
-      setError(err?.errors?.[0]?.message ?? "An error occurred. Please try again.");
+    } catch (err: unknown) {
+      const e = err as { errors?: { message: string }[] };
+      setError(e?.errors?.[0]?.message ?? "An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerification = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLoaded) return;
+    setError("");
+    setLoading(true);
+    try {
+      const result = await signUp.attemptEmailAddressVerification({ code });
+      if (result.status === "complete") {
+        await setActive({ session: result.createdSessionId });
+        router.push("/dashboard");
+      } else {
+        setError("Verification failed. Please try again.");
+      }
+    } catch (err: unknown) {
+      const e = err as { errors?: { message: string }[] };
+      setError(e?.errors?.[0]?.message ?? "Invalid code. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -59,6 +83,8 @@ export default function SignupPage() {
     }
   };
 
+  const inputStyle = { backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" as const };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
       {/* Background */}
@@ -71,64 +97,71 @@ export default function SignupPage() {
         />
       </div>
 
-<<<<<<< HEAD
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]">
         {/* Welcome Text */}
         <div className="fade-up flex gap-[10px] items-center justify-center px-[10px]">
-=======
-      {/* Content column */}
-      <div className="relative z-10 flex flex-col items-center gap-[10px] py-[10px] w-[33vw] [container-type:inline-size]">
-
-        {/* Intro */}
-        <motion.div
-          layout
-          layoutId="auth-intro"
-          className="flex gap-[10px] items-center justify-center px-[10px]"
-        >
->>>>>>> feat/page-transitions
           <span className="font-display text-[36px] leading-normal" style={{ color: "var(--aqua)" }}>
             Hello, Author,
           </span>
           <span className="font-display text-[36px] leading-normal" style={{ color: "var(--light-gray)" }}>
-            Welcome to
+            {verifying ? "Check your email." : "Welcome to"}
           </span>
-        </motion.div>
+        </div>
 
-<<<<<<< HEAD
-        {/* Signup Card */}
+        {/* Card */}
         <div
-          className="fade-up fade-up-delay-1 flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
+          className="fade-up fade-up-delay-1 w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
           style={{ backgroundColor: "var(--dark-green)" }}
         >
           {/* Logo */}
-          <Link href='/' className="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]">
+          <Link href="/" className="no-underline flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]">
             <span style={{ color: "var(--aqua)" }}>Re</span>
             <span style={{ color: "black" }}>:</span>
             <span style={{ color: "var(--light-gray)" }}>Write</span>
           </Link>
-=======
-        {/* Card */}
-        <motion.div
-          layoutId="auth-card"
-          className="w-full flex flex-col items-center gap-[10px] rounded-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] px-[30px] py-[40px]"
-          style={{ backgroundColor: "var(--dark-green)" }}
-        >
-          {/* Logo */}
-          <motion.div layoutId="auth-logo" className="flex items-center justify-center font-display text-[96px] leading-normal px-[10px] py-[10px]">
-            <span style={{ color: "var(--aqua)" }}>Re</span>
-            <span style={{ color: "black" }}>:</span>
-            <span style={{ color: "var(--light-gray)" }}>Write</span>
-          </motion.div>
->>>>>>> feat/page-transitions
 
-          {/* Form */}
-          <motion.div
-            className="w-full"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.35, duration: 0.3 }}
-          >
+          {verifying ? (
+            /* Verification step */
+            <form onSubmit={handleVerification} className="flex flex-col gap-[20px] w-full px-[5px]">
+              <p className="font-display text-center m-0" style={{ color: "var(--light-gray)", fontSize: 18 }}>
+                We sent a code to <strong>{email}</strong>. Enter it below.
+              </p>
+              <input
+                type="text"
+                placeholder="Verification code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                required
+                autoFocus
+                className="font-display text-center"
+                style={{ ...inputStyle, letterSpacing: "0.2em" }}
+              />
+              {error && (
+                <div className="font-display" style={{ color: "#f87171", fontSize: 14, backgroundColor: "rgba(127,29,29,0.2)", border: "1px solid rgba(239,68,68,0.3)", borderRadius: 6, padding: "8px 12px" }}>
+                  {error}
+                </div>
+              )}
+              <button
+                type="submit"
+                disabled={loading}
+                className="font-display hover:opacity-90 transition-opacity disabled:opacity-50"
+                style={{ backgroundColor: "var(--green-highlight)", border: "3px solid black", borderRadius: 30, fontSize: 36, color: "black", height: 60, padding: "0 32px", cursor: loading ? "not-allowed" : "pointer", alignSelf: "center" }}
+              >
+                {loading ? "Verifying..." : "Verify"}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setVerifying(false); setError(""); setCode(""); }}
+                className="font-display hover:opacity-80 transition-opacity"
+                style={{ background: "none", border: "none", color: "var(--green-lowlight)", fontSize: 18, cursor: "pointer", alignSelf: "center" }}
+              >
+                ← Back
+              </button>
+              <div id="clerk-captcha" />
+            </form>
+          ) : (
+            /* Sign-up step */
             <form onSubmit={handleSubmit} className="flex flex-col gap-[20px] w-full px-[5px]">
               <input
                 id="email"
@@ -138,7 +171,7 @@ export default function SignupPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 className="font-display"
-                style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" }}
+                style={inputStyle}
               />
               <input
                 id="password"
@@ -149,7 +182,7 @@ export default function SignupPage() {
                 required
                 minLength={6}
                 className="font-display"
-                style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" }}
+                style={inputStyle}
               />
               <input
                 id="repeatPassword"
@@ -160,7 +193,7 @@ export default function SignupPage() {
                 required
                 minLength={6}
                 className="font-display"
-                style={{ backgroundColor: "var(--mint-green)", border: "3px solid black", borderRadius: 20, fontSize: 20, color: "black", padding: "8px 16px", outline: "none", width: "100%", height: 44, boxSizing: "border-box" }}
+                style={inputStyle}
               />
 
               {error && (
@@ -210,8 +243,8 @@ export default function SignupPage() {
               </div>
               <div id="clerk-captcha" />
             </form>
-          </motion.div>
-        </motion.div>
+          )}
+        </div>
       </div>
     </div>
   );
