@@ -1,0 +1,25 @@
+﻿2026-07-03T22:59:58.8538252Z Node 20 is being deprecated. This workflow is running with Node 24 by default. If you need to temporarily use Node 20, you can set the ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true environment variable. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+2026-07-03T22:59:58.8544362Z ##[group]Run pnpm/action-setup@v4
+2026-07-03T22:59:58.8545374Z with:
+2026-07-03T22:59:58.8546122Z   version: 11
+2026-07-03T22:59:58.8546915Z   dest: ~/setup-pnpm
+2026-07-03T22:59:58.8547757Z   run_install: null
+2026-07-03T22:59:58.8548567Z   cache: false
+2026-07-03T22:59:58.8549416Z   cache_dependency_path: pnpm-lock.yaml
+2026-07-03T22:59:58.8550511Z   package_json_file: package.json
+2026-07-03T22:59:58.8551919Z   standalone: false
+2026-07-03T22:59:58.8552776Z ##[endgroup]
+2026-07-03T22:59:59.0085992Z ##[group]Running self-installer...
+2026-07-03T22:59:59.4446343Z (node:2210) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-07-03T22:59:59.4447787Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-07-03T22:59:59.6048327Z Progress: resolved 1, reused 0, downloaded 0, added 0
+2026-07-03T22:59:59.6173147Z Packages: +1
+2026-07-03T22:59:59.6173706Z +
+2026-07-03T22:59:59.9317070Z Progress: resolved 1, reused 0, downloaded 1, added 1, done
+2026-07-03T22:59:59.9665789Z 
+2026-07-03T22:59:59.9666377Z dependencies:
+2026-07-03T22:59:59.9666754Z + pnpm 11.9.0
+2026-07-03T22:59:59.9666935Z 
+2026-07-03T22:59:59.9700364Z Done in 761ms
+2026-07-03T22:59:59.9989687Z ##[endgroup]
+2026-07-03T22:59:59.9990886Z Installation Completed!

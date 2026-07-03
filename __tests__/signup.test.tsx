@@ -35,13 +35,11 @@ describe('SignupPage', () => {
     vi.clearAllMocks()
   })
 
-  it('renders email, password, repeat password, first name, and last name inputs', () => {
+  it('renders email, password, and repeat password inputs', () => {
     render(<SignupPage />)
     expect(screen.getByPlaceholderText('Email')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Password')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Repeat Password')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('First Name')).toBeInTheDocument()
-    expect(screen.getByPlaceholderText('Last Name')).toBeInTheDocument()
   })
 
   it('renders Create Account submit button', () => {
@@ -65,7 +63,6 @@ describe('SignupPage', () => {
     const user = userEvent.setup()
     render(<SignupPage />)
 
-    await user.type(screen.getByPlaceholderText('Username'), 'testuser')
     await user.type(screen.getByPlaceholderText('Email'), 'user@example.com')
     await user.type(screen.getByPlaceholderText('Password'), 'password123')
     await user.type(screen.getByPlaceholderText('Repeat Password'), 'differentpassword')
@@ -83,7 +80,6 @@ describe('SignupPage', () => {
     const user = userEvent.setup()
     render(<SignupPage />)
 
-    await user.type(screen.getByPlaceholderText('Username'), 'testuser')
     await user.type(screen.getByPlaceholderText('Email'), 'existing@example.com')
     await user.type(screen.getByPlaceholderText('Password'), 'password123')
     await user.type(screen.getByPlaceholderText('Repeat Password'), 'password123')
@@ -99,7 +95,6 @@ describe('SignupPage', () => {
     const user = userEvent.setup()
     render(<SignupPage />)
 
-    await user.type(screen.getByPlaceholderText('Username'), 'testuser')
     await user.type(screen.getByPlaceholderText('Email'), 'user@example.com')
     await user.type(screen.getByPlaceholderText('Password'), 'password123')
     await user.type(screen.getByPlaceholderText('Repeat Password'), 'password123')
@@ -116,10 +111,7 @@ describe('SignupPage', () => {
     const user = userEvent.setup()
     render(<SignupPage />)
 
-    await user.type(screen.getByPlaceholderText('Username'), 'newuser')
     await user.type(screen.getByPlaceholderText('Email'), 'newuser@example.com')
-    await user.type(screen.getByPlaceholderText('First Name'), 'New')
-    await user.type(screen.getByPlaceholderText('Last Name'), 'User')
     await user.type(screen.getByPlaceholderText('Password'), 'securepass123')
     await user.type(screen.getByPlaceholderText('Repeat Password'), 'securepass123')
     await user.click(screen.getByRole('button', { name: 'Create Account' }))
@@ -131,11 +123,10 @@ describe('SignupPage', () => {
   })
 
   it('shows Signup failed error when status is not complete', async () => {
-    mockSignUpCreate.mockResolvedValueOnce({ status: 'missing_requirements', createdSessionId: null })
+    mockSignUpCreate.mockResolvedValueOnce({ status: 'missing_requirements', createdSessionId: null, unverifiedFields: [] })
     const user = userEvent.setup()
     render(<SignupPage />)
 
-    await user.type(screen.getByPlaceholderText('Username'), 'testuser')
     await user.type(screen.getByPlaceholderText('Email'), 'user@example.com')
     await user.type(screen.getByPlaceholderText('Password'), 'password123')
     await user.type(screen.getByPlaceholderText('Repeat Password'), 'password123')
@@ -168,7 +159,6 @@ describe('SignupPage', () => {
     const user = userEvent.setup()
     render(<SignupPage />)
 
-    await user.type(screen.getByPlaceholderText('Username'), 'testuser')
     await user.type(screen.getByPlaceholderText('Email'), 'user@example.com')
     await user.type(screen.getByPlaceholderText('Password'), 'password123')
     await user.type(screen.getByPlaceholderText('Repeat Password'), 'password123')
