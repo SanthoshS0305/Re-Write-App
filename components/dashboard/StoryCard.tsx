@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Trash2 } from "lucide-react";
+import { Pin, Trash2 } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   AlertDialog,
@@ -33,6 +33,20 @@ export function StoryCard({ story }: StoryCardProps) {
     },
   });
 
+  const pinMutation = useMutation({
+    mutationFn: async () => {
+      const response = await fetch(`/api/stories/${story.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pinned: !story.pinned }),
+      });
+      if (!response.ok) throw new Error("Failed to update pin state");
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["stories"] });
+    },
+  });
+
   const chapterCount = story.chapters.length;
   const lastUpdated = new Date(story.updatedAt).toLocaleDateString("en-US", {
     month: "short",
@@ -58,6 +72,17 @@ export function StoryCard({ story }: StoryCardProps) {
             >
               {story.title}
             </h3>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                pinMutation.mutate();
+              }}
+              className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-70 mt-1"
+              style={{ color: story.pinned ? "var(--aqua)" : "var(--light-gray)", opacity: story.pinned ? 1 : 0.5 }}
+              aria-label={story.pinned ? "Unpin story" : "Pin story"}
+            >
+              <Pin className="h-4 w-4" fill={story.pinned ? "currentColor" : "none"} />
+            </button>
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <button
