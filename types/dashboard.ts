@@ -12,6 +12,8 @@ export type Story = {
   id: string;
   title: string;
   userId: string;
+  pinned: boolean;
+  lastAccessedAt: string;
   createdAt: string;
   updatedAt: string;
   chapters: Chapter[];
