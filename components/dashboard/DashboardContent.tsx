@@ -1,12 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useClerk } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { StoryCard } from "@/components/dashboard/StoryCard";
+import { ChapterResultTile } from "@/components/dashboard/ChapterResultTile";
 import { CreateStoryDialog } from "@/components/dashboard/CreateStoryDialog";
 import { ImportDialog } from "@/components/dashboard/ImportDialog";
-import { Upload, LogOut, Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  sortStories,
+  searchStories,
+  type SortCriterion,
+  type SearchFilterMode,
+} from "@/lib/dashboard/sort-search";
+import { Upload, LogOut, Plus, Search } from "lucide-react";
 import type { Story } from "@/types/dashboard";
 
 async function fetchStories(): Promise<Story[]> {
@@ -20,11 +35,26 @@ export function DashboardContent() {
   const { signOut } = useClerk();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
+  const [sortCriterion, setSortCriterion] = useState<SortCriterion>("recent");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterMode, setFilterMode] = useState<SearchFilterMode>("best");
 
   const { data: stories = [], isLoading } = useQuery({
     queryKey: ["stories"],
     queryFn: fetchStories,
   });
+
+  const isSearching = searchQuery.trim().length > 0;
+
+  const displayedStories = useMemo(
+    () => sortStories(stories, sortCriterion),
+    [stories, sortCriterion]
+  );
+
+  const searchResults = useMemo(
+    () => searchStories(stories, searchQuery, filterMode),
+    [stories, searchQuery, filterMode]
+  );
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -44,7 +74,6 @@ export function DashboardContent() {
           className="flex items-center gap-[10px] px-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] shrink-0"
           style={{ backgroundColor: "var(--dark-green)", minHeight: "80px" }}
         >
-          {/* Logo */}
           <div className="flex items-center justify-center h-full px-[10px] shrink-0">
             <span className="font-display leading-none" style={{ fontSize: "48px" }}>
               <span style={{ color: "var(--aqua)" }}>Re</span>
@@ -55,7 +84,6 @@ export function DashboardContent() {
 
           <div className="flex-1" />
 
-          {/* Actions */}
           <button
             onClick={() => setIsImportDialogOpen(true)}
             className="flex items-center gap-2 px-4 py-2 rounded-[20px] font-display text-[18px] text-white transition-opacity hover:opacity-80"
@@ -96,13 +124,70 @@ export function DashboardContent() {
             </button>
           </div>
 
+          {/* Controls: search + filter + sort */}
+          <div className="fade-up mb-8 flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2 flex-1 min-w-[240px]">
+              <Search className="h-4 w-4 shrink-0" style={{ color: "var(--light-gray)" }} />
+              <Input
+                placeholder="Search stories and chapters..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Search stories and chapters"
+              />
+            </div>
+
+            <Select value={filterMode} onValueChange={(v) => setFilterMode(v as SearchFilterMode)}>
+              <SelectTrigger className="w-[160px]" aria-label="Search filter">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="best">Best match</SelectItem>
+                <SelectItem value="story">Story title</SelectItem>
+                <SelectItem value="chapter">Chapter title</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={sortCriterion} onValueChange={(v) => setSortCriterion(v as SortCriterion)}>
+              <SelectTrigger className="w-[160px]" aria-label="Sort stories">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recent">Recent</SelectItem>
+                <SelectItem value="alphabetical">Alphabetical</SelectItem>
+                <SelectItem value="length">Length</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-24">
               <p className="font-display text-[20px]" style={{ color: "var(--light-gray)", opacity: 0.5 }}>
                 Loading...
               </p>
             </div>
-          ) : stories.length === 0 ? (
+          ) : isSearching ? (
+            searchResults.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-24">
+                <p className="font-display text-[24px]" style={{ color: "var(--light-gray)", opacity: 0.6 }}>
+                  No matches for &ldquo;{searchQuery}&rdquo;.
+                </p>
+              </div>
+            ) : (
+              <div className="fade-up fade-up-delay-1 grid grid-cols-1 md:grid-cols-2 gap-6">
+                {searchResults.map((result) =>
+                  result.type === "story" ? (
+                    <StoryCard key={`story-${result.story.id}`} story={result.story} />
+                  ) : (
+                    <ChapterResultTile
+                      key={`chapter-${result.chapter.id}`}
+                      chapter={result.chapter}
+                      story={result.story}
+                    />
+                  )
+                )}
+              </div>
+            )
+          ) : displayedStories.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 gap-6">
               <p className="font-display text-[24px]" style={{ color: "var(--light-gray)", opacity: 0.6 }}>
                 You don&apos;t have any stories yet.
@@ -117,7 +202,7 @@ export function DashboardContent() {
             </div>
           ) : (
             <div className="fade-up fade-up-delay-1 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {stories.map((story) => (
+              {displayedStories.map((story) => (
                 <StoryCard key={story.id} story={story} />
               ))}
             </div>
@@ -125,14 +210,8 @@ export function DashboardContent() {
         </main>
       </div>
 
-      <CreateStoryDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-      />
-      <ImportDialog
-        open={isImportDialogOpen}
-        onOpenChange={setIsImportDialogOpen}
-      />
+      <CreateStoryDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
+      <ImportDialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen} />
     </div>
   );
 }
