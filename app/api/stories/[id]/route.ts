@@ -41,6 +41,15 @@ export async function GET(
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
+    try {
+      await prisma.story.update({
+        where: { id },
+        data: { lastAccessedAt: new Date() },
+      });
+    } catch (accessError) {
+      console.error("Error bumping lastAccessedAt:", accessError);
+    }
+
     return NextResponse.json({ data: story });
   } catch (error) {
     console.error("Error fetching story:", error);
@@ -63,13 +72,36 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title } = await request.json();
+    const body = await request.json();
+    const { title, pinned } = body as { title?: unknown; pinned?: unknown };
 
-    if (!title || typeof title !== "string" || title.trim().length === 0) {
+    if (title === undefined && pinned === undefined) {
       return NextResponse.json(
-        { error: "Title is required" },
+        { error: "At least one of title or pinned is required" },
         { status: 400 }
       );
+    }
+
+    const data: { title?: string; pinned?: boolean } = {};
+
+    if (title !== undefined) {
+      if (typeof title !== "string" || title.trim().length === 0) {
+        return NextResponse.json(
+          { error: "Title is required" },
+          { status: 400 }
+        );
+      }
+      data.title = title.trim();
+    }
+
+    if (pinned !== undefined) {
+      if (typeof pinned !== "boolean") {
+        return NextResponse.json(
+          { error: "Pinned must be a boolean" },
+          { status: 400 }
+        );
+      }
+      data.pinned = pinned;
     }
 
     const story = await prisma.$transaction(async (tx) => {
@@ -81,7 +113,7 @@ export async function PATCH(
 
       return tx.story.update({
         where: { id },
-        data: { title: title.trim() },
+        data,
       });
     });
 
