@@ -97,6 +97,36 @@ describe('GET /api/stories/[id]', () => {
     expect(res.status).toBe(404)
     expect(body.error).toBe('Story not found')
   })
+
+  it('bumps lastAccessedAt after a successful fetch without blocking the response', async () => {
+    const story = makeStory()
+    mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
+    mockStoryFindFirst.mockResolvedValueOnce(story)
+    mockStoryUpdate.mockResolvedValueOnce({ ...story, lastAccessedAt: new Date().toISOString() })
+
+    const req = new Request('http://localhost/api/stories/story-1')
+    const res = await GET(req, { params: makeParams('story-1') })
+
+    expect(res.status).toBe(200)
+    expect(mockStoryUpdate).toHaveBeenCalledWith({
+      where: { id: 'story-1' },
+      data: { lastAccessedAt: expect.any(Date) },
+    })
+  })
+
+  it('still returns the story when the lastAccessedAt bump fails', async () => {
+    const story = makeStory()
+    mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
+    mockStoryFindFirst.mockResolvedValueOnce(story)
+    mockStoryUpdate.mockRejectedValueOnce(new Error('db unavailable'))
+
+    const req = new Request('http://localhost/api/stories/story-1')
+    const res = await GET(req, { params: makeParams('story-1') })
+    const body = await res.json()
+
+    expect(res.status).toBe(200)
+    expect(body.data).toMatchObject({ id: 'story-1' })
+  })
 })
 
 describe('PATCH /api/stories/[id]', () => {
@@ -184,6 +214,62 @@ describe('PATCH /api/stories/[id]', () => {
 
     expect(res.status).toBe(400)
     expect(body.error).toBe('Title is required')
+  })
+
+  it('updates pinned via transaction and returns updated story wrapped in { data }', async () => {
+    const updated = makeStory({ pinned: true })
+    mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
+    mockTransaction.mockImplementationOnce(async (fn: (tx: {
+      story: { findFirst: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn> }
+    }) => Promise<unknown>) =>
+      fn({
+        story: {
+          findFirst: vi.fn().mockResolvedValueOnce(makeStory()),
+          update: vi.fn().mockResolvedValueOnce(updated),
+        },
+      })
+    )
+
+    const req = new Request('http://localhost/api/stories/story-1', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pinned: true }),
+    })
+    const res = await PATCH(req, { params: makeParams('story-1') })
+    const body = await res.json()
+
+    expect(res.status).toBe(200)
+    expect(body.data).toMatchObject({ pinned: true })
+  })
+
+  it('returns 400 when neither title nor pinned is provided', async () => {
+    mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
+
+    const req = new Request('http://localhost/api/stories/story-1', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+    })
+    const res = await PATCH(req, { params: makeParams('story-1') })
+    const body = await res.json()
+
+    expect(res.status).toBe(400)
+    expect(body.error).toBe('At least one of title or pinned is required')
+  })
+
+  it('returns 400 when pinned is not a boolean', async () => {
+    mockGetServerSession.mockResolvedValueOnce(AUTH_SESSION)
+
+    const req = new Request('http://localhost/api/stories/story-1', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pinned: 'yes' }),
+    })
+    const res = await PATCH(req, { params: makeParams('story-1') })
+    const body = await res.json()
+
+    expect(res.status).toBe(400)
+    expect(body.error).toBe('Pinned must be a boolean')
   })
 })
 
