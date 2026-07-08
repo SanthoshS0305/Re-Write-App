@@ -44,7 +44,7 @@ export async function GET(
     try {
       await prisma.story.update({
         where: { id },
-        data: { lastAccessedAt: new Date() },
+        data: { lastAccessedAt: new Date(), updatedAt: story.updatedAt },
       });
     } catch (accessError) {
       console.error("Error bumping lastAccessedAt:", accessError);
@@ -113,7 +113,7 @@ export async function PATCH(
 
       return tx.story.update({
         where: { id },
-        data,
+        data: title === undefined ? { ...data, updatedAt: existing.updatedAt } : data,
       });
     });
 
