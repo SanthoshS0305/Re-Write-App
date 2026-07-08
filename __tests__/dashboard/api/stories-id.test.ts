@@ -110,7 +110,7 @@ describe('GET /api/stories/[id]', () => {
     expect(res.status).toBe(200)
     expect(mockStoryUpdate).toHaveBeenCalledWith({
       where: { id: 'story-1' },
-      data: { lastAccessedAt: expect.any(Date) },
+      data: { lastAccessedAt: expect.any(Date), updatedAt: story.updatedAt },
     })
   })
 
