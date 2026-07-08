@@ -56,6 +56,8 @@ const makeStory = (overrides: Record<string, unknown> = {}) => ({
   id: 'story-1',
   title: 'My Great Story',
   userId: 'test-user-id',
+  pinned: false,
+  lastAccessedAt: new Date('2024-01-15').toISOString(),
   chapters: [],
   createdAt: new Date('2024-01-15').toISOString(),
   updatedAt: new Date('2024-01-15').toISOString(),
@@ -159,6 +161,52 @@ describe('StoryCard', () => {
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled()
+    })
+  })
+})
+
+describe('StoryCard pin toggle', () => {
+  it('renders a pin toggle button', () => {
+    render(<StoryCard story={makeStory()} />, { wrapper: createWrapper() })
+    expect(screen.getByRole('button', { name: /pin story/i })).toBeInTheDocument()
+  })
+
+  it('shows "Unpin story" label when the story is pinned', () => {
+    render(<StoryCard story={makeStory({ pinned: true })} />, { wrapper: createWrapper() })
+    expect(screen.getByRole('button', { name: /unpin story/i })).toBeInTheDocument()
+  })
+
+  it('calls PATCH /api/stories/[id] with pinned: true when pinning an unpinned story', async () => {
+    const user = userEvent.setup()
+    render(<StoryCard story={makeStory({ id: 'story-abc', pinned: false })} />, { wrapper: createWrapper() })
+
+    await user.click(screen.getByRole('button', { name: /pin story/i }))
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/stories/story-abc',
+        expect.objectContaining({
+          method: 'PATCH',
+          body: JSON.stringify({ pinned: true }),
+        })
+      )
+    })
+  })
+
+  it('calls PATCH /api/stories/[id] with pinned: false when unpinning a pinned story', async () => {
+    const user = userEvent.setup()
+    render(<StoryCard story={makeStory({ id: 'story-abc', pinned: true })} />, { wrapper: createWrapper() })
+
+    await user.click(screen.getByRole('button', { name: /unpin story/i }))
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        '/api/stories/story-abc',
+        expect.objectContaining({
+          method: 'PATCH',
+          body: JSON.stringify({ pinned: false }),
+        })
+      )
     })
   })
 })
