@@ -34,7 +34,7 @@ export default async function EditorPage({
   try {
     await prisma.story.update({
       where: { id: chapter.storyId },
-      data: { lastAccessedAt: new Date() },
+      data: { lastAccessedAt: new Date(), updatedAt: chapter.story.updatedAt },
     });
   } catch (accessError) {
     console.error("Error bumping lastAccessedAt:", accessError);
