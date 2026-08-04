@@ -4,11 +4,12 @@ import {
   removeFromSyncQueue,
   saveToIndexedDB,
   getFromIndexedDB,
+  type SyncEntity,
 } from "./idb";
 
 export interface SyncConflict {
   id: string;
-  type: string;
+  type: SyncEntity;
   localData: any;
   serverData: any;
   localTimestamp: number;
