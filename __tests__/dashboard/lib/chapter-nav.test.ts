@@ -7,6 +7,7 @@ const makeChapter = (overrides: Partial<Story['chapters'][number]> = {}): Story[
   title: 'Chapter One',
   order: 1,
   wordCount: 100,
+  previewText: '',
   storyId: 'story-1',
   createdAt: new Date('2024-01-01').toISOString(),
   updatedAt: new Date('2024-01-01').toISOString(),
