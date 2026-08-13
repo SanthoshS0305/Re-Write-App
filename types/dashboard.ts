@@ -3,6 +3,7 @@ export type Chapter = {
   title: string;
   order: number;
   wordCount: number | null;
+  previewText: string;
   storyId: string;
   createdAt: string;
   updatedAt: string;

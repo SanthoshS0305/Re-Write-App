@@ -38,6 +38,7 @@ model Chapter {
   order         Int
   content       Json             // ProseMirror JSON document
   wordCount     Int              @default(0)
+  previewText   String           @default("")
   storyId       String
   story         Story            @relation(fields: [storyId], references: [id], onDelete: Cascade)
   scenes        Scene[]
