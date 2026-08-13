@@ -1,5 +1,6 @@
 import type { Story, Chapter } from "@/types/dashboard";
 
+// Latest updatedAt wins; ties break toward the lowest order.
 export function getLastModifiedChapter(story: Story): Chapter | null {
   if (story.chapters.length === 0) return null;
 
