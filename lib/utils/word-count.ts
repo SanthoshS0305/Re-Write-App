@@ -39,3 +39,25 @@ export function countCharacters(content: JSONContent | null | undefined): number
   return charCount;
 }
 
+export function extractPreviewText(
+  content: JSONContent | null | undefined,
+  maxLength: number
+): string {
+  if (!content) return "";
+
+  const parts: string[] = [];
+
+  function traverse(node: JSONContent) {
+    if (node.type === "text" && node.text) {
+      parts.push(node.text);
+    }
+
+    if (node.content && Array.isArray(node.content)) {
+      node.content.forEach(traverse);
+    }
+  }
+
+  traverse(content);
+  return parts.join(" ").slice(0, maxLength);
+}
+
