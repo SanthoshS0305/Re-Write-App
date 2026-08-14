@@ -137,23 +137,27 @@ export function StoryCard({ story }: StoryCardProps) {
                     style={{ backgroundColor: "var(--dark-green)", border: "1px solid var(--dark-green-highlight)" }}
                   >
                     <AlertDialogHeader>
-                      <AlertDialogTitle className="font-display" style={{ color: "var(--light-gray)" }}>
+                      <AlertDialogTitle
+                        className="font-display text-[24px]"
+                        style={{ color: "var(--light-gray)" }}
+                      >
                         Delete Story
                       </AlertDialogTitle>
                       <AlertDialogDescription style={{ color: "var(--light-gray)", opacity: 0.7 }}>
-                        Are you sure you want to delete &ldquo;{story.title}&rdquo;? This action cannot be undone.
+                        Are you sure you want to delete &ldquo;{story.title}&rdquo;? This will also delete all
+                        chapters. This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel
-                        className="font-display"
+                        className="font-display rounded-[20px]"
                         style={{ backgroundColor: "var(--dark-green-highlight)", color: "var(--light-gray)", border: "none" }}
                       >
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction
                         onClick={() => deleteMutation.mutate()}
-                        className="font-display"
+                        className="font-display rounded-[20px] border-[2px] border-black"
                         style={{ backgroundColor: "#c0392b", color: "white" }}
                       >
                         Delete
