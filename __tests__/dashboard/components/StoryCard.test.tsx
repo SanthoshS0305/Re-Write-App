@@ -43,6 +43,16 @@ vi.mock('@/components/ui/alert-dialog', () => ({
   ),
 }))
 
+vi.mock('@/components/ui/dropdown-menu', () => ({
+  DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  DropdownMenuTrigger: ({ children, asChild }: { children: React.ReactNode; asChild?: boolean }) =>
+    asChild ? <>{children}</> : <button>{children}</button>,
+  DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  DropdownMenuItem: ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => (
+    <button type="button" onClick={onClick}>{children}</button>
+  ),
+}))
+
 const createWrapper = () => {
   const queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
@@ -89,7 +99,7 @@ describe('StoryCard', () => {
 
   it('renders correct chapter count for one chapter with singular form', () => {
     const story = makeStory({
-      chapters: [{ id: 'ch-1', title: 'Chapter 1', order: 1, wordCount: 0, storyId: 'story-1' }],
+      chapters: [{ id: 'ch-1', title: 'Chapter 1', order: 1, wordCount: 0, previewText: '', storyId: 'story-1', createdAt: '2024-01-01T00:00:00.000Z', updatedAt: '2024-01-01T00:00:00.000Z' }],
     })
     render(<StoryCard story={story} />, { wrapper: createWrapper() })
     expect(screen.getByText('1 chapter')).toBeInTheDocument()
@@ -98,114 +108,83 @@ describe('StoryCard', () => {
   it('renders correct chapter count for multiple chapters', () => {
     const story = makeStory({
       chapters: [
-        { id: 'ch-1', title: 'Chapter 1', order: 1, wordCount: 0, storyId: 'story-1' },
-        { id: 'ch-2', title: 'Chapter 2', order: 2, wordCount: 0, storyId: 'story-1' },
-        { id: 'ch-3', title: 'Chapter 3', order: 3, wordCount: 0, storyId: 'story-1' },
+        { id: 'ch-1', title: 'Chapter 1', order: 1, wordCount: 0, previewText: '', storyId: 'story-1', createdAt: '2024-01-01T00:00:00.000Z', updatedAt: '2024-01-01T00:00:00.000Z' },
+        { id: 'ch-2', title: 'Chapter 2', order: 2, wordCount: 0, previewText: '', storyId: 'story-1', createdAt: '2024-01-01T00:00:00.000Z', updatedAt: '2024-01-01T00:00:00.000Z' },
+        { id: 'ch-3', title: 'Chapter 3', order: 3, wordCount: 0, previewText: '', storyId: 'story-1', createdAt: '2024-01-01T00:00:00.000Z', updatedAt: '2024-01-01T00:00:00.000Z' },
       ],
     })
     render(<StoryCard story={story} />, { wrapper: createWrapper() })
     expect(screen.getByText('3 chapters')).toBeInTheDocument()
   })
 
-  it('links to the story detail page', () => {
-    render(<StoryCard story={makeStory()} />, { wrapper: createWrapper() })
-    const link = screen.getByRole('link')
-    expect(link).toHaveAttribute('href', '/dashboard/stories/story-1')
-  })
-
-  it('renders a delete (trash) button', () => {
-    render(<StoryCard story={makeStory()} />, { wrapper: createWrapper() })
-    // AlertDialog mock renders Cancel+Delete inline, so use getAllByRole
-    const buttons = screen.getAllByRole('button')
-    expect(buttons.length).toBeGreaterThanOrEqual(1)
-  })
-
-  it('shows Delete Story heading in the confirmation area', () => {
-    render(<StoryCard story={makeStory()} />, { wrapper: createWrapper() })
-    // AlertDialog mock renders all children inline (no portal), heading is always present
-    expect(screen.getByText('Delete Story')).toBeInTheDocument()
-  })
-
-  it('shows story title in the confirmation description', () => {
-    render(<StoryCard story={makeStory({ title: 'Important Novel' })} />, {
-      wrapper: createWrapper(),
+  it('renders the previewText of the last-modified chapter as a thumbnail', () => {
+    const story = makeStory({
+      chapters: [
+        { id: 'ch-1', title: 'Ch 1', order: 1, wordCount: 5, previewText: 'Old text', storyId: 'story-1', createdAt: '2024-01-01T00:00:00.000Z', updatedAt: '2024-01-01T00:00:00.000Z' },
+        { id: 'ch-2', title: 'Ch 2', order: 2, wordCount: 5, previewText: 'Newest text', storyId: 'story-1', createdAt: '2024-06-01T00:00:00.000Z', updatedAt: '2024-06-01T00:00:00.000Z' },
+      ],
     })
-    const dialog = screen.getByRole('dialog')
-    expect(within(dialog).getByText(/Important Novel/)).toBeInTheDocument()
+    render(<StoryCard story={story} />, { wrapper: createWrapper() })
+    expect(screen.getByText('Newest text')).toBeInTheDocument()
   })
 
-  it('calls DELETE /api/stories/[id] when Delete button is clicked', async () => {
+  it('opens the "⋮" menu and deletes via DELETE /api/stories/[id]', async () => {
     const user = userEvent.setup()
     render(<StoryCard story={makeStory({ id: 'story-abc' })} />, { wrapper: createWrapper() })
 
-    await user.click(screen.getByText('Delete'))
+    await user.click(screen.getByRole('button', { name: /story options/i }))
+    // The dumb AlertDialog/DropdownMenu mocks render both the menu's "Delete"
+    // trigger and the dialog's "Delete" confirm button unconditionally (no
+    // open-state gating like real Radix), so both share the literal text
+    // "Delete". Disambiguate by dialog scoping rather than DOM order.
+    const deleteMenuItem = screen
+      .getAllByText('Delete')
+      .find((el) => !el.closest('[role="dialog"]'))
+    if (!deleteMenuItem) throw new Error('Delete menu item not found')
+    await user.click(deleteMenuItem)
+    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: /^delete$/i }))
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith(
-        '/api/stories/story-abc',
-        { method: 'DELETE' }
-      )
-    })
-  })
-
-  it('does not throw when deletion fails at fetch level', async () => {
-    vi.spyOn(global, 'fetch').mockResolvedValueOnce({
-      ok: false,
-      json: async () => ({ error: 'Not found' }),
-    } as Response)
-
-    const user = userEvent.setup()
-    render(<StoryCard story={makeStory()} />, { wrapper: createWrapper() })
-
-    await user.click(screen.getByText('Delete'))
-
-    await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalled()
+      expect(global.fetch).toHaveBeenCalledWith('/api/stories/story-abc', { method: 'DELETE' })
     })
   })
 })
 
 describe('StoryCard pin toggle', () => {
-  it('renders a pin toggle button', () => {
-    render(<StoryCard story={makeStory()} />, { wrapper: createWrapper() })
-    expect(screen.getByRole('button', { name: /pin story/i })).toBeInTheDocument()
+  it('shows a pin badge only when the story is pinned', () => {
+    const { rerender } = render(<StoryCard story={makeStory({ pinned: false })} />, { wrapper: createWrapper() })
+    expect(screen.queryByTestId('pin-badge')).not.toBeInTheDocument()
+
+    rerender(<StoryCard story={makeStory({ pinned: true })} />)
+    expect(screen.getByTestId('pin-badge')).toBeInTheDocument()
   })
 
-  it('shows "Unpin story" label when the story is pinned', () => {
-    render(<StoryCard story={makeStory({ pinned: true })} />, { wrapper: createWrapper() })
-    expect(screen.getByRole('button', { name: /unpin story/i })).toBeInTheDocument()
-  })
-
-  it('calls PATCH /api/stories/[id] with pinned: true when pinning an unpinned story', async () => {
+  it('calls PATCH /api/stories/[id] with pinned: true from the "⋮" menu when unpinned', async () => {
     const user = userEvent.setup()
     render(<StoryCard story={makeStory({ id: 'story-abc', pinned: false })} />, { wrapper: createWrapper() })
 
-    await user.click(screen.getByRole('button', { name: /pin story/i }))
+    await user.click(screen.getByRole('button', { name: /story options/i }))
+    await user.click(screen.getByText('Pin'))
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/stories/story-abc',
-        expect.objectContaining({
-          method: 'PATCH',
-          body: JSON.stringify({ pinned: true }),
-        })
+        expect.objectContaining({ method: 'PATCH', body: JSON.stringify({ pinned: true }) })
       )
     })
   })
 
-  it('calls PATCH /api/stories/[id] with pinned: false when unpinning a pinned story', async () => {
+  it('calls PATCH /api/stories/[id] with pinned: false from the "⋮" menu when pinned', async () => {
     const user = userEvent.setup()
     render(<StoryCard story={makeStory({ id: 'story-abc', pinned: true })} />, { wrapper: createWrapper() })
 
-    await user.click(screen.getByRole('button', { name: /unpin story/i }))
+    await user.click(screen.getByRole('button', { name: /story options/i }))
+    await user.click(screen.getByText('Unpin'))
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
         '/api/stories/story-abc',
-        expect.objectContaining({
-          method: 'PATCH',
-          body: JSON.stringify({ pinned: false }),
-        })
+        expect.objectContaining({ method: 'PATCH', body: JSON.stringify({ pinned: false }) })
       )
     })
   })

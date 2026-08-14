@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Pin, Trash2 } from "lucide-react";
+import { Pin, MoreVertical } from "lucide-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   AlertDialog,
@@ -14,6 +14,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { getLastModifiedChapter } from "@/lib/dashboard/chapter-nav";
 import type { Story } from "@/types/dashboard";
 
 interface StoryCardProps {
@@ -48,6 +55,7 @@ export function StoryCard({ story }: StoryCardProps) {
   });
 
   const chapterCount = story.chapters.length;
+  const thumbnailChapter = getLastModifiedChapter(story);
   const lastUpdated = new Date(story.updatedAt).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -63,68 +71,98 @@ export function StoryCard({ story }: StoryCardProps) {
         {/* Card header accent */}
         <div className="h-1 w-full" style={{ backgroundColor: "var(--aqua)" }} />
 
+        {thumbnailChapter?.previewText && (
+          <div
+            className="mx-3 mt-3 rounded p-2 overflow-hidden"
+            style={{ backgroundColor: "var(--light-gray)", height: 56 }}
+          >
+            <p className="font-display text-[9px] leading-snug" style={{ color: "#333" }}>
+              {thumbnailChapter.previewText}
+            </p>
+          </div>
+        )}
+
         <div className="flex flex-col flex-1 p-6 gap-4">
           {/* Title row */}
           <div className="flex items-start justify-between gap-2">
+            {story.pinned && (
+              <span
+                data-testid="pin-badge"
+                className="shrink-0"
+                style={{ color: "var(--aqua)" }}
+                aria-hidden="true"
+              >
+                <Pin className="h-3 w-3" fill="currentColor" />
+              </span>
+            )}
             <h3
               className="font-display text-[28px] leading-tight"
               style={{ color: "var(--light-gray)" }}
             >
               {story.title}
             </h3>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                pinMutation.mutate();
-              }}
-              className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-70 mt-1"
-              style={{ color: story.pinned ? "var(--aqua)" : "var(--light-gray)", opacity: story.pinned ? 1 : 0.5 }}
-              aria-label={story.pinned ? "Unpin story" : "Pin story"}
-            >
-              <Pin className="h-4 w-4" fill={story.pinned ? "currentColor" : "none"} />
-            </button>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <button
-                  className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-70 mt-1"
-                  style={{ color: "var(--light-gray)", opacity: 0.5 }}
                   onClick={(e) => e.preventDefault()}
+                  aria-label="Story options"
+                  className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-70"
+                  style={{ color: "var(--light-gray)" }}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <MoreVertical className="h-4 w-4" />
                 </button>
-              </AlertDialogTrigger>
-              <AlertDialogContent
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
                 style={{ backgroundColor: "var(--dark-green)", border: "1px solid var(--dark-green-highlight)" }}
               >
-                <AlertDialogHeader>
-                  <AlertDialogTitle
-                    className="font-display text-[24px]"
-                    style={{ color: "var(--light-gray)" }}
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.preventDefault();
+                    pinMutation.mutate();
+                  }}
+                  style={{ color: "var(--light-gray)", fontFamily: "Joan, serif", cursor: "pointer" }}
+                >
+                  {story.pinned ? "Unpin" : "Pin"}
+                </DropdownMenuItem>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <DropdownMenuItem
+                      onSelect={(e) => e.preventDefault()}
+                      style={{ color: "#f87171", fontFamily: "Joan, serif", cursor: "pointer" }}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent
+                    style={{ backgroundColor: "var(--dark-green)", border: "1px solid var(--dark-green-highlight)" }}
                   >
-                    Delete Story
-                  </AlertDialogTitle>
-                  <AlertDialogDescription style={{ color: "var(--light-gray)", opacity: 0.7 }}>
-                    Are you sure you want to delete &ldquo;{story.title}&rdquo;? This will also delete all
-                    chapters. This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel
-                    className="font-display rounded-[20px]"
-                    style={{ backgroundColor: "var(--dark-green-highlight)", color: "var(--light-gray)", border: "none" }}
-                  >
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={() => deleteMutation.mutate()}
-                    className="font-display rounded-[20px] border-[2px] border-black"
-                    style={{ backgroundColor: "#c0392b", color: "white" }}
-                  >
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="font-display" style={{ color: "var(--light-gray)" }}>
+                        Delete Story
+                      </AlertDialogTitle>
+                      <AlertDialogDescription style={{ color: "var(--light-gray)", opacity: 0.7 }}>
+                        Are you sure you want to delete &ldquo;{story.title}&rdquo;? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel
+                        className="font-display"
+                        style={{ backgroundColor: "var(--dark-green-highlight)", color: "var(--light-gray)", border: "none" }}
+                      >
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => deleteMutation.mutate()}
+                        className="font-display"
+                        style={{ backgroundColor: "#c0392b", color: "white" }}
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
           {/* Meta */}
