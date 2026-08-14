@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useClerk } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { StoryCard } from "@/components/dashboard/StoryCard";
+import { StoryListRow } from "@/components/dashboard/StoryListRow";
 import { ChapterResultTile } from "@/components/dashboard/ChapterResultTile";
 import { CreateStoryDialog } from "@/components/dashboard/CreateStoryDialog";
 import { ImportDialog } from "@/components/dashboard/ImportDialog";
@@ -21,7 +22,8 @@ import {
   type SortCriterion,
   type SearchFilterMode,
 } from "@/lib/dashboard/sort-search";
-import { Upload, LogOut, Plus, Search } from "lucide-react";
+import { useViewPreference } from "@/hooks/useViewPreference";
+import { Upload, LogOut, Plus, Search, LayoutGrid, List as ListIcon } from "lucide-react";
 import type { Story } from "@/types/dashboard";
 
 async function fetchStories(): Promise<Story[]> {
@@ -38,6 +40,7 @@ export function DashboardContent() {
   const [sortCriterion, setSortCriterion] = useState<SortCriterion>("recent");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMode, setFilterMode] = useState<SearchFilterMode>("best");
+  const { view, setView } = useViewPreference();
 
   const { data: stories = [], isLoading } = useQuery({
     queryKey: ["stories"],
@@ -126,7 +129,7 @@ export function DashboardContent() {
 
           {/* Controls: search + filter + sort */}
           <div className="fade-up mb-8 flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2 flex-1 min-w-[240px]">
+            <div className="flex items-center gap-2" style={{ flex: "1 1 480px", maxWidth: 480 }}>
               <Search className="h-4 w-4 shrink-0" style={{ color: "var(--light-gray)" }} />
               <Input
                 placeholder="Search stories and chapters..."
@@ -157,6 +160,25 @@ export function DashboardContent() {
                 <SelectItem value="length">Length</SelectItem>
               </SelectContent>
             </Select>
+
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                onClick={() => setView("grid")}
+                aria-label="Grid view"
+                className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-80"
+                style={{ color: "var(--light-gray)", opacity: view === "grid" ? 1 : 0.5 }}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setView("list")}
+                aria-label="List view"
+                className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-80"
+                style={{ color: "var(--light-gray)", opacity: view === "list" ? 1 : 0.5 }}
+              >
+                <ListIcon className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {isLoading ? (
@@ -201,10 +223,20 @@ export function DashboardContent() {
               </button>
             </div>
           ) : (
-            <div className="fade-up fade-up-delay-1 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {displayedStories.map((story) => (
-                <StoryCard key={story.id} story={story} />
-              ))}
+            <div
+              className={
+                view === "grid"
+                  ? "fade-up fade-up-delay-1 grid grid-cols-1 md:grid-cols-2 gap-6"
+                  : "fade-up fade-up-delay-1 flex flex-col gap-2"
+              }
+            >
+              {displayedStories.map((story) =>
+                view === "grid" ? (
+                  <StoryCard key={story.id} story={story} />
+                ) : (
+                  <StoryListRow key={story.id} story={story} />
+                )
+              )}
             </div>
           )}
         </main>

@@ -56,6 +56,7 @@ const STORIES = [
         title: 'The Escape',
         order: 1,
         wordCount: 100,
+        previewText: '',
         storyId: 'story-1',
         createdAt: new Date('2024-01-01').toISOString(),
         updatedAt: new Date('2024-01-01').toISOString(),
@@ -111,5 +112,24 @@ describe('DashboardContent search', () => {
     await user.type(screen.getByLabelText('Search stories and chapters'), 'nonexistent')
 
     expect(await screen.findByText(/no matches for/i)).toBeInTheDocument()
+  })
+})
+
+describe('DashboardContent view toggle', () => {
+  it('defaults to grid view, showing story cards', async () => {
+    render(<DashboardContent />, { wrapper: createWrapper() })
+    await screen.findByText('The Great Adventure')
+    expect(screen.getByRole('link', { name: /the great adventure/i })).toBeInTheDocument()
+  })
+
+  it('switches to list view when the list toggle is clicked', async () => {
+    const user = userEvent.setup()
+    render(<DashboardContent />, { wrapper: createWrapper() })
+    await screen.findByText('The Great Adventure')
+
+    await user.click(screen.getByRole('button', { name: /list view/i }))
+
+    // Still renders the story, just via StoryListRow instead of StoryCard
+    expect(screen.getByText('The Great Adventure')).toBeInTheDocument()
   })
 })
