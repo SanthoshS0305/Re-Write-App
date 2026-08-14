@@ -7,6 +7,7 @@ const CHAPTER_DASHBOARD_SELECT = {
   title: true,
   order: true,
   wordCount: true,
+  previewText: true,
   storyId: true,
   createdAt: true,
   updatedAt: true,
