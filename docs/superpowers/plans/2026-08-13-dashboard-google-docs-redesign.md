@@ -709,23 +709,24 @@ const thumbnailChapter = getLastModifiedChapter(story);
         style={{ backgroundColor: "var(--dark-green)", border: "1px solid var(--dark-green-highlight)" }}
       >
         <AlertDialogHeader>
-          <AlertDialogTitle className="font-display" style={{ color: "var(--light-gray)" }}>
+          <AlertDialogTitle className="font-display text-[24px]" style={{ color: "var(--light-gray)" }}>
             Delete Story
           </AlertDialogTitle>
           <AlertDialogDescription style={{ color: "var(--light-gray)", opacity: 0.7 }}>
-            Are you sure you want to delete &ldquo;{story.title}&rdquo;? This action cannot be undone.
+            Are you sure you want to delete &ldquo;{story.title}&rdquo;? This will also delete all
+            chapters. This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel
-            className="font-display"
+            className="font-display rounded-[20px]"
             style={{ backgroundColor: "var(--dark-green-highlight)", color: "var(--light-gray)", border: "none" }}
           >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={() => deleteMutation.mutate()}
-            className="font-display"
+            className="font-display rounded-[20px] border-[2px] border-black"
             style={{ backgroundColor: "#c0392b", color: "white" }}
           >
             Delete
@@ -737,7 +738,7 @@ const thumbnailChapter = getLastModifiedChapter(story);
 </DropdownMenu>
 ```
 
-This reuses the exact `AlertDialogHeader`/`AlertDialogTitle`/etc. markup and `deleteMutation` already present in the file — only the trigger moved from a standalone icon button into a `DropdownMenuItem`. Remove the old standalone pin `<button>` and the old standalone `AlertDialog`/`AlertDialogTrigger` delete icon block that this replaces.
+This reuses the exact `AlertDialogHeader`/`AlertDialogTitle`/etc. markup (classNames and copy preserved verbatim from the existing component — do not simplify them) and `deleteMutation` already present in the file — only the trigger moved from a standalone icon button into a `DropdownMenuItem`. Remove the old standalone pin `<button>` and the old standalone `AlertDialog`/`AlertDialogTrigger` delete icon block that this replaces.
 
 - [ ] **Step 4: Run the tests to verify they pass**
 
@@ -1005,23 +1006,24 @@ export function StoryListRow({ story }: StoryListRowProps) {
                 style={{ backgroundColor: "var(--dark-green)", border: "1px solid var(--dark-green-highlight)" }}
               >
                 <AlertDialogHeader>
-                  <AlertDialogTitle className="font-display" style={{ color: "var(--light-gray)" }}>
+                  <AlertDialogTitle className="font-display text-[24px]" style={{ color: "var(--light-gray)" }}>
                     Delete Story
                   </AlertDialogTitle>
                   <AlertDialogDescription style={{ color: "var(--light-gray)", opacity: 0.7 }}>
-                    Are you sure you want to delete &ldquo;{story.title}&rdquo;? This action cannot be undone.
+                    Are you sure you want to delete &ldquo;{story.title}&rdquo;? This will also delete all
+                    chapters. This action cannot be undone.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel
-                    className="font-display"
+                    className="font-display rounded-[20px]"
                     style={{ backgroundColor: "var(--dark-green-highlight)", color: "var(--light-gray)", border: "none" }}
                   >
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() => deleteMutation.mutate()}
-                    className="font-display"
+                    className="font-display rounded-[20px] border-[2px] border-black"
                     style={{ backgroundColor: "#c0392b", color: "white" }}
                   >
                     Delete
@@ -1213,3 +1215,4 @@ git commit -m "feat(dashboard): promote search bar, add grid/list view toggle to
 - **Spec coverage:** prominent search row + view toggle (Task 7) ✓; thumbnail previews via precomputed `previewText` (Tasks 1–3) ✓; grid/list toggle persisted (Task 4) ✓; "⋮" menu replacing icons, pin badge (Tasks 5–6) ✓; pinned-first ordering unchanged (no task touches `sortStories`) ✓.
 - **Type consistency verified:** `Chapter.previewText: string` (Task 1) matches every fixture/mock built across Tasks 3, 5, 6, 7 — all include the field as a required property, none use `previewText?:`.
 - **Ambiguity resolved:** `StoryListRow`'s square thumbnail intentionally does not render `previewText` (too small to be legible per the spec) — flagged explicitly in Task 6, Step 3, so a future reader doesn't "fix" it as a bug.
+- **Post-execution correction (found during Task 5's review):** the original Task 5 and Task 6 code blocks had accidentally simplified the delete-confirmation `AlertDialog` — dropped `AlertDialogTitle`'s `text-[24px]`, the "This will also delete all chapters." warning sentence, and `rounded-[20px]`/`border-[2px] border-black` on the Cancel/Delete buttons — contradicting this plan's own instruction that the markup stay unchanged. Corrected in both task blocks after the user confirmed the original markup/copy should be restored, not the simplified version kept.
