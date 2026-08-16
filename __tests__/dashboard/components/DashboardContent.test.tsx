@@ -127,9 +127,16 @@ describe('DashboardContent view toggle', () => {
     render(<DashboardContent />, { wrapper: createWrapper() })
     await screen.findByText('The Great Adventure')
 
+    // Grid view renders the story title as a heading (StoryCard's <h3>) — a
+    // no-op setView would leave this heading in place, so asserting it goes
+    // away is what actually proves the view switched to StoryListRow.
+    expect(screen.getByRole('heading', { name: /the great adventure/i })).toBeInTheDocument()
+
     await user.click(screen.getByRole('button', { name: /list view/i }))
 
-    // Still renders the story, just via StoryListRow instead of StoryCard
+    // Still renders the story, just via StoryListRow (a plain <span> title,
+    // not a heading) instead of StoryCard.
     expect(screen.getByText('The Great Adventure')).toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: /the great adventure/i })).not.toBeInTheDocument()
   })
 })

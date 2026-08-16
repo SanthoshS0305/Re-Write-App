@@ -5,7 +5,7 @@ import { useClerk } from "@clerk/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { StoryCard } from "@/components/dashboard/StoryCard";
 import { StoryListRow } from "@/components/dashboard/StoryListRow";
-import { ChapterResultTile } from "@/components/dashboard/ChapterResultTile";
+import { ChapterResultRow } from "@/components/dashboard/ChapterResultRow";
 import { CreateStoryDialog } from "@/components/dashboard/CreateStoryDialog";
 import { ImportDialog } from "@/components/dashboard/ImportDialog";
 import { Input } from "@/components/ui/input";
@@ -165,6 +165,7 @@ export function DashboardContent() {
               <button
                 onClick={() => setView("grid")}
                 aria-label="Grid view"
+                aria-pressed={view === "grid"}
                 className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-80"
                 style={{ color: "var(--light-gray)", opacity: view === "grid" ? 1 : 0.5 }}
               >
@@ -173,6 +174,7 @@ export function DashboardContent() {
               <button
                 onClick={() => setView("list")}
                 aria-label="List view"
+                aria-pressed={view === "list"}
                 className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-80"
                 style={{ color: "var(--light-gray)", opacity: view === "list" ? 1 : 0.5 }}
               >
@@ -195,12 +197,12 @@ export function DashboardContent() {
                 </p>
               </div>
             ) : (
-              <div className="fade-up fade-up-delay-1 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="fade-up fade-up-delay-1 flex flex-col gap-2">
                 {searchResults.map((result) =>
                   result.type === "story" ? (
-                    <StoryCard key={`story-${result.story.id}`} story={result.story} />
+                    <StoryListRow key={`story-${result.story.id}`} story={result.story} />
                   ) : (
-                    <ChapterResultTile
+                    <ChapterResultRow
                       key={`chapter-${result.chapter.id}`}
                       chapter={result.chapter}
                       story={result.story}
