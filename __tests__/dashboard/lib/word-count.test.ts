@@ -39,4 +39,21 @@ describe('extractPreviewText', () => {
     }
     expect(extractPreviewText(content, 200)).toBe('short')
   })
+
+  it('does not insert spurious spaces between text nodes split by an inline mark', () => {
+    const content = {
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            { type: 'text', text: 'Hello ' },
+            { type: 'text', text: 'world', marks: [{ type: 'bold' }] },
+            { type: 'text', text: '!' },
+          ],
+        },
+      ],
+    }
+    expect(extractPreviewText(content, 200)).toBe('Hello world!')
+  })
 })

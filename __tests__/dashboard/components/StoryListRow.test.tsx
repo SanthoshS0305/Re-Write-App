@@ -31,8 +31,29 @@ vi.mock('@/components/ui/dropdown-menu', () => ({
   DropdownMenuTrigger: ({ children, asChild }: { children: React.ReactNode; asChild?: boolean }) =>
     asChild ? <>{children}</> : <button>{children}</button>,
   DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DropdownMenuItem: ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => (
-    <button type="button" onClick={onClick}>{children}</button>
+  // Real Radix DropdownMenuItem composes both an onClick handler and its own
+  // onSelect-driven selection handling from a single user click. This mock
+  // fires both props on click (onClick first, then onSelect) to mirror that,
+  // since StoryActionsMenu relies on stopPropagation happening in onClick
+  // and the actual mutation firing from onSelect.
+  DropdownMenuItem: ({
+    children,
+    onClick,
+    onSelect,
+  }: {
+    children: React.ReactNode
+    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+    onSelect?: (e: Event) => void
+  }) => (
+    <button
+      type="button"
+      onClick={(e) => {
+        onClick?.(e)
+        onSelect?.(e as unknown as Event)
+      }}
+    >
+      {children}
+    </button>
   ),
 }))
 
@@ -90,6 +111,28 @@ describe('StoryListRow', () => {
     // trigger and the dialog's "Delete" confirm button unconditionally (no
     // open-state gating like real Radix), so both share the literal text
     // "Delete". Disambiguate by dialog scoping rather than DOM order.
+    const deleteMenuItem = screen
+      .getAllByText('Delete')
+      .find((el) => !el.closest('[role="dialog"]'))
+    if (!deleteMenuItem) throw new Error('Delete menu item not found')
+    await user.click(deleteMenuItem)
+    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: /^delete$/i }))
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/stories/story-abc', { method: 'DELETE' })
+    })
+  })
+
+  it('does not throw when deletion fails at fetch level', async () => {
+    vi.spyOn(global, 'fetch').mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ error: 'Not found' }),
+    } as Response)
+
+    const user = userEvent.setup()
+    render(<StoryListRow story={makeStory({ id: 'story-abc' })} />, { wrapper: createWrapper() })
+
+    await user.click(screen.getByRole('button', { name: /story options/i }))
     const deleteMenuItem = screen
       .getAllByText('Delete')
       .find((el) => !el.closest('[role="dialog"]'))

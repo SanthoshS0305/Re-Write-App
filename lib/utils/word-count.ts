@@ -45,19 +45,25 @@ export function extractPreviewText(
 ): string {
   if (!content) return "";
 
-  const parts: string[] = [];
+  const blocks: string[] = [];
+  let current = "";
 
-  function traverse(node: JSONContent) {
-    if (node.type === "text" && node.text) {
-      parts.push(node.text);
+  function traverse(node: JSONContent, isBlockStart: boolean) {
+    if (isBlockStart && current) {
+      blocks.push(current);
+      current = "";
     }
-
+    if (node.type === "text" && node.text) {
+      current += node.text;
+    }
     if (node.content && Array.isArray(node.content)) {
-      node.content.forEach(traverse);
+      node.content.forEach((child, i) => traverse(child, i === 0 && node.type !== "text"));
     }
   }
 
-  traverse(content);
-  return parts.join(" ").slice(0, maxLength);
+  traverse(content, false);
+  if (current) blocks.push(current);
+
+  return blocks.join(" ").replace(/\s+/g, " ").trim().slice(0, maxLength);
 }
 
