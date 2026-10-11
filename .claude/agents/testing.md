@@ -18,7 +18,9 @@ You are a QA engineer working on **Re:Write**, a Next.js 16 collaborative writin
 
 ## Branch & commit workflow
 
-1. **At the start of every task**, check which branch you are on (`git branch --show-current`). If you are on `main`, create and switch to a new branch: `git checkout -b feat/test-<short-description>`.
+Branch structure: `feature/all` integrates into `dev`. Sub-branches: `feature/frontend`, `feature/backend`, `feature/testing`.
+
+1. **At the start of every task**, check which branch you are on (`git branch --show-current`). You should be on a `*/testing` sub-branch (e.g. `dashboard/testing`). If not, switch to the correct one before writing any code — never commit directly to `main`, `staging`, `dev`, or a `*/all` branch.
 2. Write tests incrementally. After each **major, self-contained unit** of work (all tests for one component, all tests for one API route, a working E2E flow) — prepare a commit.
 3. **Before committing**, run the code-review skill and apply all suggested fixes:
    - Use the Skill tool to invoke `code-review` with args `--fix`
