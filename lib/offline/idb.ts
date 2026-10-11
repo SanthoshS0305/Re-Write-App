@@ -1,5 +1,25 @@
 import { openDB, DBSchema, IDBPDatabase } from "idb";
 
+export type StoreName =
+  | "chapters"
+  | "stories"
+  | "scenes"
+  | "sceneVersions"
+  | "chapterVersions"
+  | "syncQueue";
+
+// Entities that can be queued for offline sync (excludes the queue store itself)
+export type SyncEntity = Exclude<StoreName, "syncQueue">;
+
+export interface SyncQueueItem {
+  id: number;
+  type: SyncEntity;
+  entity: SyncEntity;
+  action: string;
+  data: any;
+  timestamp: number;
+}
+
 interface RewriteDB extends DBSchema {
   stories: {
     key: string;
@@ -23,14 +43,7 @@ interface RewriteDB extends DBSchema {
   };
   syncQueue: {
     key: number;
-    value: {
-      id: number;
-      type: string;
-      entity: string;
-      action: string;
-      data: any;
-      timestamp: number;
-    };
+    value: SyncQueueItem;
     indexes: { "by-timestamp": number };
   };
 }
@@ -80,41 +93,44 @@ export function getDB() {
   return dbPromise;
 }
 
-export async function saveToIndexedDB(store: "chapters" | "stories" | "scenes" | "sceneVersions" | "chapterVersions" | "syncQueue", key: string, value: any) {
+export async function saveToIndexedDB(store: StoreName, key: string, value: any) {
   const db = await getDB();
   await db.put(store, value, key);
 }
 
-export async function getFromIndexedDB(store: "chapters" | "stories" | "scenes" | "sceneVersions" | "chapterVersions" | "syncQueue", key: string) {
+export async function getFromIndexedDB(store: StoreName, key: string) {
   const db = await getDB();
   return db.get(store, key);
 }
 
-export async function getAllFromIndexedDB(store: "chapters" | "stories" | "scenes" | "sceneVersions" | "chapterVersions" | "syncQueue") {
+export async function getAllFromIndexedDB(store: StoreName) {
   const db = await getDB();
   return db.getAll(store);
 }
 
-export async function deleteFromIndexedDB(store: "chapters" | "stories" | "scenes" | "sceneVersions" | "chapterVersions" | "syncQueue", key: string) {
+export async function deleteFromIndexedDB(store: StoreName, key: string) {
   const db = await getDB();
   await db.delete(store, key);
 }
 
 export async function addToSyncQueue(
-  type: string,
-  entity: string,
+  type: SyncEntity,
+  entity: SyncEntity,
   action: string,
   data: any
 ) {
   const db = await getDB();
   const syncStore = db.transaction("syncQueue", "readwrite").objectStore("syncQueue");
+  // `id` is intentionally omitted — the store's keyPath is autoIncrement, so
+  // IndexedDB assigns it on insert. Cast is required because idb's add()
+  // types don't account for autoIncrement making the keyPath field optional.
   await syncStore.add({
     type,
     entity,
     action,
     data,
     timestamp: Date.now(),
-  });
+  } as SyncQueueItem);
 }
 
 export async function getSyncQueue() {

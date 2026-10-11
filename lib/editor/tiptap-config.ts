@@ -1,7 +1,5 @@
 import StarterKit from "@tiptap/starter-kit";
-import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
-import Underline from "@tiptap/extension-underline";
 import { SceneExtension } from "./scene-plugin";
 
 export const editorExtensions = [
@@ -9,12 +7,11 @@ export const editorExtensions = [
     heading: {
       levels: [1, 2, 3],
     },
-  }),
-  Underline,
-  Link.configure({
-    openOnClick: false,
-    HTMLAttributes: {
-      class: "text-primary underline",
+    link: {
+      openOnClick: false,
+      HTMLAttributes: {
+        class: "text-primary underline",
+      },
     },
   }),
   Placeholder.configure({
@@ -22,4 +19,3 @@ export const editorExtensions = [
   }),
   SceneExtension,
 ];
-

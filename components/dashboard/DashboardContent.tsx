@@ -1,33 +1,63 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useClerk } from "@clerk/nextjs";
+import { useQuery } from "@tanstack/react-query";
 import { StoryCard } from "@/components/dashboard/StoryCard";
+import { StoryListRow } from "@/components/dashboard/StoryListRow";
+import { ChapterResultRow } from "@/components/dashboard/ChapterResultRow";
 import { CreateStoryDialog } from "@/components/dashboard/CreateStoryDialog";
 import { ImportDialog } from "@/components/dashboard/ImportDialog";
-import { Upload, LogOut, Plus } from "lucide-react";
-import type { Story, Chapter } from "@prisma/client";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  sortStories,
+  searchStories,
+  type SortCriterion,
+  type SearchFilterMode,
+} from "@/lib/dashboard/sort-search";
+import { useViewPreference } from "@/hooks/useViewPreference";
+import { Upload, LogOut, Plus, Search, LayoutGrid, List as ListIcon } from "lucide-react";
+import type { Story } from "@/types/dashboard";
 
-type StoryWithChapters = Story & { chapters: Chapter[] };
-
-interface DashboardContentProps {
-  stories: StoryWithChapters[];
+async function fetchStories(): Promise<Story[]> {
+  const res = await fetch("/api/stories");
+  if (!res.ok) throw new Error("Failed to fetch stories");
+  const json = await res.json();
+  return json.data;
 }
 
-export function DashboardContent({ stories: initialStories }: DashboardContentProps) {
+export function DashboardContent() {
   const { signOut } = useClerk();
-  const [stories, setStories] = useState(initialStories);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
+  const [sortCriterion, setSortCriterion] = useState<SortCriterion>("recent");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterMode, setFilterMode] = useState<SearchFilterMode>("best");
+  const { view, setView } = useViewPreference();
 
-  const handleStoryCreated = (newStory: StoryWithChapters) => {
-    setStories([newStory, ...stories]);
-    setIsCreateDialogOpen(false);
-  };
+  const { data: stories = [], isLoading } = useQuery({
+    queryKey: ["stories"],
+    queryFn: fetchStories,
+  });
 
-  const handleStoryDeleted = (storyId: string) => {
-    setStories(stories.filter((s) => s.id !== storyId));
-  };
+  const isSearching = searchQuery.trim().length > 0;
+
+  const displayedStories = useMemo(
+    () => sortStories(stories, sortCriterion),
+    [stories, sortCriterion]
+  );
+
+  const searchResults = useMemo(
+    () => searchStories(stories, searchQuery, filterMode),
+    [stories, searchQuery, filterMode]
+  );
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -47,16 +77,16 @@ export function DashboardContent({ stories: initialStories }: DashboardContentPr
           className="flex items-center gap-[10px] px-[10px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] shrink-0"
           style={{ backgroundColor: "var(--dark-green)", minHeight: "80px" }}
         >
-          {/* Logo */}
           <div className="flex items-center justify-center h-full px-[10px] shrink-0">
-            <span className="font-display leading-none" style={{ fontSize: "48px", color: "var(--aqua)" }}>
-              Re:
+            <span className="font-display leading-none" style={{ fontSize: "48px" }}>
+              <span style={{ color: "var(--aqua)" }}>Re</span>
+              <span style={{ color: "black" }}>:</span>
+              <span style={{ color: "var(--light-gray)" }}>Write</span>
             </span>
           </div>
 
           <div className="flex-1" />
 
-          {/* Actions */}
           <button
             onClick={() => setIsImportDialogOpen(true)}
             className="flex items-center gap-2 px-4 py-2 rounded-[20px] font-display text-[18px] text-white transition-opacity hover:opacity-80"
@@ -97,10 +127,94 @@ export function DashboardContent({ stories: initialStories }: DashboardContentPr
             </button>
           </div>
 
-          {stories.length === 0 ? (
+          {/* Controls: search + filter + sort */}
+          <div className="fade-up mb-8 flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2" style={{ flex: "1 1 480px", maxWidth: 480 }}>
+              <Search className="h-4 w-4 shrink-0" style={{ color: "var(--light-gray)" }} />
+              <Input
+                placeholder="Search stories and chapters..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Search stories and chapters"
+              />
+            </div>
+
+            <Select value={filterMode} onValueChange={(v) => setFilterMode(v as SearchFilterMode)}>
+              <SelectTrigger className="w-[160px]" aria-label="Search filter">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="best">Best match</SelectItem>
+                <SelectItem value="story">Story title</SelectItem>
+                <SelectItem value="chapter">Chapter title</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={sortCriterion} onValueChange={(v) => setSortCriterion(v as SortCriterion)}>
+              <SelectTrigger className="w-[160px]" aria-label="Sort stories">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="recent">Recent</SelectItem>
+                <SelectItem value="alphabetical">Alphabetical</SelectItem>
+                <SelectItem value="length">Length</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                onClick={() => setView("grid")}
+                aria-label="Grid view"
+                aria-pressed={view === "grid"}
+                className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-80"
+                style={{ color: "var(--light-gray)", opacity: view === "grid" ? 1 : 0.5 }}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setView("list")}
+                aria-label="List view"
+                aria-pressed={view === "list"}
+                className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity hover:opacity-80"
+                style={{ color: "var(--light-gray)", opacity: view === "list" ? 1 : 0.5 }}
+              >
+                <ListIcon className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center py-24">
+              <p className="font-display text-[20px]" style={{ color: "var(--light-gray)", opacity: 0.5 }}>
+                Loading...
+              </p>
+            </div>
+          ) : isSearching ? (
+            searchResults.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-24">
+                <p className="font-display text-[24px]" style={{ color: "var(--light-gray)", opacity: 0.6 }}>
+                  No matches for &ldquo;{searchQuery}&rdquo;.
+                </p>
+              </div>
+            ) : (
+              <div className="fade-up fade-up-delay-1 flex flex-col gap-2">
+                {searchResults.map((result) =>
+                  result.type === "story" ? (
+                    <StoryListRow key={`story-${result.story.id}`} story={result.story} />
+                  ) : (
+                    <ChapterResultRow
+                      key={`chapter-${result.chapter.id}`}
+                      chapter={result.chapter}
+                      story={result.story}
+                    />
+                  )
+                )}
+              </div>
+            )
+          ) : displayedStories.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 gap-6">
               <p className="font-display text-[24px]" style={{ color: "var(--light-gray)", opacity: 0.6 }}>
-                You don't have any stories yet.
+                You don&apos;t have any stories yet.
               </p>
               <button
                 onClick={() => setIsCreateDialogOpen(true)}
@@ -111,24 +225,27 @@ export function DashboardContent({ stories: initialStories }: DashboardContentPr
               </button>
             </div>
           ) : (
-            <div className="fade-up fade-up-delay-1 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {stories.map((story) => (
-                <StoryCard key={story.id} story={story} onDelete={handleStoryDeleted} />
-              ))}
+            <div
+              className={
+                view === "grid"
+                  ? "fade-up fade-up-delay-1 grid grid-cols-1 md:grid-cols-2 gap-6"
+                  : "fade-up fade-up-delay-1 flex flex-col gap-2"
+              }
+            >
+              {displayedStories.map((story) =>
+                view === "grid" ? (
+                  <StoryCard key={story.id} story={story} />
+                ) : (
+                  <StoryListRow key={story.id} story={story} />
+                )
+              )}
             </div>
           )}
         </main>
       </div>
 
-      <CreateStoryDialog
-        open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-        onStoryCreated={handleStoryCreated}
-      />
-      <ImportDialog
-        open={isImportDialogOpen}
-        onOpenChange={setIsImportDialogOpen}
-      />
+      <CreateStoryDialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen} />
+      <ImportDialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen} />
     </div>
   );
 }
