@@ -2,6 +2,17 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-server";
 import { prisma } from "@/lib/db/prisma";
 
+const CHAPTER_DASHBOARD_SELECT = {
+  id: true,
+  title: true,
+  order: true,
+  wordCount: true,
+  previewText: true,
+  storyId: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
 export async function GET(request: Request) {
   try {
     const session = await getServerSession();
@@ -20,7 +31,6 @@ export async function GET(request: Request) {
       );
     }
 
-    // Verify user owns the story
     const story = await prisma.story.findFirst({
       where: {
         id: storyId,
@@ -35,9 +45,10 @@ export async function GET(request: Request) {
     const chapters = await prisma.chapter.findMany({
       where: { storyId },
       orderBy: { order: "asc" },
+      select: CHAPTER_DASHBOARD_SELECT,
     });
 
-    return NextResponse.json(chapters);
+    return NextResponse.json({ data: chapters });
   } catch (error) {
     console.error("Error fetching chapters:", error);
     return NextResponse.json(
@@ -71,7 +82,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Verify user owns the story
     const story = await prisma.story.findFirst({
       where: {
         id: storyId,
@@ -83,7 +93,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
-    // Get the highest order number
     const lastChapter = await prisma.chapter.findFirst({
       where: { storyId },
       orderBy: { order: "desc" },
@@ -91,7 +100,6 @@ export async function POST(request: Request) {
 
     const newOrder = lastChapter ? lastChapter.order + 1 : 1;
 
-    // Create empty ProseMirror document
     const emptyContent = {
       type: "doc",
       content: [
@@ -109,9 +117,10 @@ export async function POST(request: Request) {
         content: emptyContent,
         wordCount: 0,
       },
+      select: CHAPTER_DASHBOARD_SELECT,
     });
 
-    return NextResponse.json(chapter);
+    return NextResponse.json({ data: chapter }, { status: 201 });
   } catch (error) {
     console.error("Error creating chapter:", error);
     return NextResponse.json(
@@ -120,4 +129,3 @@ export async function POST(request: Request) {
     );
   }
 }
-

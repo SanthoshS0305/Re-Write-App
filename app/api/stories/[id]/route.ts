@@ -2,6 +2,17 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-server";
 import { prisma } from "@/lib/db/prisma";
 
+const CHAPTER_DASHBOARD_SELECT = {
+  id: true,
+  title: true,
+  order: true,
+  wordCount: true,
+  previewText: true,
+  storyId: true,
+  createdAt: true,
+  updatedAt: true,
+} as const;
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -22,6 +33,7 @@ export async function GET(
       include: {
         chapters: {
           orderBy: { order: "asc" },
+          select: CHAPTER_DASHBOARD_SELECT,
         },
       },
     });
@@ -30,7 +42,16 @@ export async function GET(
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
-    return NextResponse.json(story);
+    try {
+      await prisma.story.update({
+        where: { id },
+        data: { lastAccessedAt: new Date(), updatedAt: story.updatedAt },
+      });
+    } catch (accessError) {
+      console.error("Error bumping lastAccessedAt:", accessError);
+    }
+
+    return NextResponse.json({ data: story });
   } catch (error) {
     console.error("Error fetching story:", error);
     return NextResponse.json(
@@ -52,34 +73,56 @@ export async function PATCH(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { title } = await request.json();
+    const body = await request.json();
+    const { title, pinned } = body as { title?: unknown; pinned?: unknown };
 
-    if (!title || typeof title !== "string" || title.trim().length === 0) {
+    if (title === undefined && pinned === undefined) {
       return NextResponse.json(
-        { error: "Title is required" },
+        { error: "At least one of title or pinned is required" },
         { status: 400 }
       );
     }
 
-    const story = await prisma.story.updateMany({
-      where: {
-        id,
-        userId: session.user.id,
-      },
-      data: {
-        title: title.trim(),
-      },
+    const data: { title?: string; pinned?: boolean } = {};
+
+    if (title !== undefined) {
+      if (typeof title !== "string" || title.trim().length === 0) {
+        return NextResponse.json(
+          { error: "Title is required" },
+          { status: 400 }
+        );
+      }
+      data.title = title.trim();
+    }
+
+    if (pinned !== undefined) {
+      if (typeof pinned !== "boolean") {
+        return NextResponse.json(
+          { error: "Pinned must be a boolean" },
+          { status: 400 }
+        );
+      }
+      data.pinned = pinned;
+    }
+
+    const story = await prisma.$transaction(async (tx) => {
+      const existing = await tx.story.findFirst({
+        where: { id, userId: session.user.id },
+      });
+
+      if (!existing) return null;
+
+      return tx.story.update({
+        where: { id },
+        data: title === undefined ? { ...data, updatedAt: existing.updatedAt } : data,
+      });
     });
 
-    if (story.count === 0) {
+    if (!story) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
-    const updatedStory = await prisma.story.findUnique({
-      where: { id },
-    });
-
-    return NextResponse.json(updatedStory);
+    return NextResponse.json({ data: story });
   } catch (error) {
     console.error("Error updating story:", error);
     return NextResponse.json(
@@ -101,18 +144,17 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const story = await prisma.story.deleteMany({
-      where: {
-        id,
-        userId: session.user.id,
-      },
+    const existing = await prisma.story.findFirst({
+      where: { id, userId: session.user.id },
     });
 
-    if (story.count === 0) {
+    if (!existing) {
       return NextResponse.json({ error: "Story not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Story deleted successfully" });
+    await prisma.story.delete({ where: { id } });
+
+    return NextResponse.json({ data: { id } });
   } catch (error) {
     console.error("Error deleting story:", error);
     return NextResponse.json(

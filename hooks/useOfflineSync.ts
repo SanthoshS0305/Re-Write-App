@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { syncOfflineChanges, resolveConflict, type SyncConflict } from "@/lib/offline/sync";
-import { addToSyncQueue } from "@/lib/offline/idb";
+import { addToSyncQueue, type SyncEntity } from "@/lib/offline/idb";
 
 export function useOfflineSync() {
   const [isOnline, setIsOnline] = useState(true);
@@ -61,8 +61,8 @@ export function useOfflineSync() {
 
   const queueChange = useCallback(
     async (
-      type: string,
-      entity: string,
+      type: SyncEntity,
+      entity: SyncEntity,
       action: string,
       data: any
     ) => {

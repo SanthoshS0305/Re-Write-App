@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-server";
 import { prisma } from "@/lib/db/prisma";
-import { countWords } from "@/lib/utils/word-count";
+import { countWords, extractPreviewText } from "@/lib/utils/word-count";
 
 export async function PATCH(
   request: Request,
@@ -32,12 +32,14 @@ export async function PATCH(
     }
 
     const wordCount = countWords(content);
+    const previewText = extractPreviewText(content, 200);
 
     const chapter = await prisma.chapter.update({
       where: { id },
       data: {
         content,
         wordCount,
+        previewText,
       },
     });
 

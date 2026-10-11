@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-server";
 import { prisma } from "@/lib/db/prisma";
+import { Prisma } from "@prisma/client";
+import { extractPreviewText } from "@/lib/utils/word-count";
 
 export async function GET(
   request: Request,
@@ -30,7 +32,7 @@ export async function GET(
       return NextResponse.json({ error: "Chapter not found" }, { status: 404 });
     }
 
-    return NextResponse.json(chapter);
+    return NextResponse.json({ data: chapter });
   } catch (error) {
     console.error("Error fetching chapter:", error);
     return NextResponse.json(
@@ -54,7 +56,6 @@ export async function PATCH(
 
     const body = await request.json();
 
-    // Verify user owns the chapter
     const existingChapter = await prisma.chapter.findFirst({
       where: {
         id,
@@ -68,15 +69,23 @@ export async function PATCH(
       return NextResponse.json({ error: "Chapter not found" }, { status: 404 });
     }
 
-    const updateData: any = {};
+    const updateData: Prisma.ChapterUpdateInput = {};
+
     if (body.title !== undefined) {
+      if (typeof body.title !== "string" || body.title.trim().length === 0) {
+        return NextResponse.json(
+          { error: "Title must be a non-empty string" },
+          { status: 400 }
+        );
+      }
       updateData.title = body.title.trim();
     }
     if (body.content !== undefined) {
-      updateData.content = body.content;
+      updateData.content = body.content as Prisma.InputJsonValue;
+      updateData.previewText = extractPreviewText(body.content, 200);
     }
     if (body.wordCount !== undefined) {
-      updateData.wordCount = body.wordCount;
+      updateData.wordCount = Number(body.wordCount);
     }
 
     const chapter = await prisma.chapter.update({
@@ -84,7 +93,7 @@ export async function PATCH(
       data: updateData,
     });
 
-    return NextResponse.json(chapter);
+    return NextResponse.json({ data: chapter });
   } catch (error) {
     console.error("Error updating chapter:", error);
     return NextResponse.json(
@@ -106,7 +115,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const chapter = await prisma.chapter.deleteMany({
+    const existing = await prisma.chapter.findFirst({
       where: {
         id,
         story: {
@@ -115,11 +124,13 @@ export async function DELETE(
       },
     });
 
-    if (chapter.count === 0) {
+    if (!existing) {
       return NextResponse.json({ error: "Chapter not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Chapter deleted successfully" });
+    await prisma.chapter.delete({ where: { id } });
+
+    return NextResponse.json({ data: { id } });
   } catch (error) {
     console.error("Error deleting chapter:", error);
     return NextResponse.json(
