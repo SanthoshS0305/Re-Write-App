@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "@/lib/auth-server";
 import { prisma } from "@/lib/db/prisma";
 import { Prisma } from "@prisma/client";
+import { extractPreviewText } from "@/lib/utils/word-count";
 
 export async function GET(
   request: Request,
@@ -81,6 +82,7 @@ export async function PATCH(
     }
     if (body.content !== undefined) {
       updateData.content = body.content as Prisma.InputJsonValue;
+      updateData.previewText = extractPreviewText(body.content, 200);
     }
     if (body.wordCount !== undefined) {
       updateData.wordCount = Number(body.wordCount);
