@@ -1,0 +1,100 @@
+<h2>Where should the narrow chapter list sit?</h2>
+<p class="subtitle">Story hub page: description + outline notes + the chapter list. Reachable only from the editor's story-title button.</p>
+
+<div class="cards">
+  <div class="card" data-choice="left-rail" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex; gap:8px; height:220px;">
+        <div style="width:32%; background:var(--dark-green, #02353c); border-radius:6px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+          <div style="color:#3fd0c9; font-size:11px; opacity:.8;">CHAPTERS</div>
+          <div style="background:rgba(255,255,255,.08); border-radius:4px; padding:6px; font-size:11px; color:#eee;">01 · The Escape</div>
+          <div style="background:rgba(255,255,255,.15); border-radius:4px; padding:6px; font-size:11px; color:#eee;">02 · Quiet Mountains</div>
+          <div style="background:rgba(255,255,255,.08); border-radius:4px; padding:6px; font-size:11px; color:#eee;">03 · The Return</div>
+        </div>
+        <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+          <div style="background:rgba(255,255,255,.06); border-radius:6px; padding:10px; flex:1;">
+            <div class="label">Description</div>
+            <div style="height:8px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; margin-bottom:6px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; width:70%;"></div>
+          </div>
+          <div style="background:rgba(255,255,255,.06); border-radius:6px; padding:10px; flex:2;">
+            <div class="label">Outline</div>
+            <div style="height:8px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; margin-bottom:6px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; margin-bottom:6px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; width:60%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Left rail</h3>
+      <p>Narrow chapter list docked left, like a file browser. Description + outline fill the rest.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="right-rail" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex; gap:8px; height:220px;">
+        <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+          <div style="background:rgba(255,255,255,.06); border-radius:6px; padding:10px; flex:1;">
+            <div class="label">Description</div>
+            <div style="height:8px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; margin-bottom:6px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; width:70%;"></div>
+          </div>
+          <div style="background:rgba(255,255,255,.06); border-radius:6px; padding:10px; flex:2;">
+            <div class="label">Outline</div>
+            <div style="height:8px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; margin-bottom:6px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; margin-bottom:6px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; width:60%;"></div>
+          </div>
+        </div>
+        <div style="width:32%; background:var(--dark-green, #02353c); border-radius:6px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+          <div style="color:#3fd0c9; font-size:11px; opacity:.8;">CHAPTERS</div>
+          <div style="background:rgba(255,255,255,.08); border-radius:4px; padding:6px; font-size:11px; color:#eee;">01 · The Escape</div>
+          <div style="background:rgba(255,255,255,.15); border-radius:4px; padding:6px; font-size:11px; color:#eee;">02 · Quiet Mountains</div>
+          <div style="background:rgba(255,255,255,.08); border-radius:4px; padding:6px; font-size:11px; color:#eee;">03 · The Return</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Right rail (recommended)</h3>
+      <p>Same idea, mirrored. Matches the editor's existing Scene Manager / Version History panels, which already slide in from the right — keeps the app's spatial language consistent.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="stacked" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex; flex-direction:column; gap:8px; height:220px;">
+        <div style="display:flex; gap:8px; flex:2;">
+          <div style="flex:1; background:rgba(255,255,255,.06); border-radius:6px; padding:10px;">
+            <div class="label">Description</div>
+            <div style="height:8px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; margin-bottom:6px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; width:70%;"></div>
+          </div>
+          <div style="flex:1; background:rgba(255,255,255,.06); border-radius:6px; padding:10px;">
+            <div class="label">Outline</div>
+            <div style="height:8px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; margin-bottom:6px;"></div>
+            <div style="background:rgba(255,255,255,.1); height:8px; border-radius:3px; width:60%;"></div>
+          </div>
+        </div>
+        <div style="background:var(--dark-green, #02353c); border-radius:6px; padding:8px; flex:1; display:flex; gap:6px; overflow:hidden;">
+          <div style="background:rgba(255,255,255,.08); border-radius:4px; padding:6px 10px; font-size:11px; color:#eee; white-space:nowrap;">01 · The Escape</div>
+          <div style="background:rgba(255,255,255,.15); border-radius:4px; padding:6px 10px; font-size:11px; color:#eee; white-space:nowrap;">02 · Quiet Mountains</div>
+          <div style="background:rgba(255,255,255,.08); border-radius:4px; padding:6px 10px; font-size:11px; color:#eee; white-space:nowrap;">03 · The Return</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Notes on top, chapters below</h3>
+      <p>Description + outline side-by-side up top get the most visual weight. Chapter list is a compact strip underneath, not a tall rail.</p>
+    </div>
+  </div>
+</div>
+
+<p class="subtitle">Click the option that feels right, or describe a different arrangement in the terminal.</p>

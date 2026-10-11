@@ -1,0 +1,133 @@
+<h2>Dashboard redesign — header layout</h2>
+<p class="subtitle">Same card grid and list view underneath both options — this is about where the search bar and view controls live.</p>
+
+<div class="split">
+  <div class="mockup">
+    <div class="mockup-header">A — Google-style: search bar IS the header</div>
+    <div class="mockup-body" style="padding:0; background:#3b4c49;">
+      <div style="background:#02353c; padding:10px 20px; display:flex; align-items:center; gap:16px; box-shadow:0 4px 4px rgba(0,0,0,.25);">
+        <span style="font-family: Georgia, serif; font-size:28px; line-height:1;"><span style="color:#3fd0c9;">Re</span><span style="color:#000;">:</span><span style="color:#f3f3f3;">Write</span></span>
+        <div style="flex:1; max-width:480px; margin:0 auto; display:flex; align-items:center; gap:8px; background:#c1f6ed; border-radius:20px; padding:8px 16px;">
+          <span style="opacity:.6;">&#128269;</span>
+          <span style="font-family: Georgia, serif; opacity:.5; color:#02353c;">Search stories and chapters...</span>
+        </div>
+        <span style="font-family: Georgia, serif; font-size:14px; color:#f3f3f3; opacity:.8;">Sign Out</span>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 24px 0;">
+        <span style="font-family: Georgia, serif; color:#3fd0c9; font-size:14px;">Best match &nbsp;&middot;&nbsp; Recent</span>
+        <span style="font-family: Georgia, serif; color:#f3f3f3; font-size:14px; opacity:.8;">&#9638; Grid &nbsp; &#9776; List</span>
+      </div>
+      <div style="padding:16px 24px 24px; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div style="background:#02353c; border-radius:10px; overflow:hidden; box-shadow:0 4px 4px rgba(0,0,0,.25);">
+          <div style="height:3px; background:#3fd0c9;"></div>
+          <div style="background:#f3f3f3; margin:12px; border-radius:4px; padding:10px; height:56px; overflow:hidden;">
+            <p style="font-family: Georgia, serif; font-size:9px; color:#333; line-height:1.4; margin:0;">The lighthouse stood at the edge of the world, its beam cutting through fog that never quite lifted...</p>
+          </div>
+          <div style="display:flex; align-items:center; padding:0 12px 12px; gap:8px;">
+            <div style="flex:1;">
+              <p style="font-family: Georgia, serif; color:#f3f3f3; font-size:15px; margin:0;">The Lighthouse</p>
+              <p style="font-family: Georgia, serif; color:#3fd0c9; font-size:11px; opacity:.7; margin:2px 0 0;">4 chapters &middot; Jun 12</p>
+            </div>
+            <span style="color:#f3f3f3; opacity:.6;">&#8942;</span>
+          </div>
+        </div>
+        <div style="background:#02353c; border-radius:10px; overflow:hidden; box-shadow:0 4px 4px rgba(0,0,0,.25); opacity:.85;">
+          <div style="height:3px; background:#3fd0c9;"></div>
+          <div style="background:#f3f3f3; margin:12px; border-radius:4px; padding:10px; height:56px; overflow:hidden;">
+            <p style="font-family: Georgia, serif; font-size:9px; color:#333; line-height:1.4; margin:0;">Salt clung to everything in the cedar house by the bay...</p>
+          </div>
+          <div style="display:flex; align-items:center; padding:0 12px 12px; gap:8px;">
+            <div style="flex:1;">
+              <p style="font-family: Georgia, serif; color:#f3f3f3; font-size:15px; margin:0;">Salt &amp; Cedar</p>
+              <p style="font-family: Georgia, serif; color:#3fd0c9; font-size:11px; opacity:.7; margin:2px 0 0;">2 chapters &middot; May 30</p>
+            </div>
+            <span style="color:#f3f3f3; opacity:.6;">&#8942;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup">
+    <div class="mockup-header">B — Header stays, search row added below</div>
+    <div class="mockup-body" style="padding:0; background:#3b4c49;">
+      <div style="background:#02353c; padding:10px 20px; display:flex; align-items:center; gap:12px; box-shadow:0 4px 4px rgba(0,0,0,.25);">
+        <span style="font-family: Georgia, serif; font-size:28px; line-height:1;"><span style="color:#3fd0c9;">Re</span><span style="color:#000;">:</span><span style="color:#f3f3f3;">Write</span></span>
+        <div style="flex:1;"></div>
+        <span style="font-family: Georgia, serif; font-size:13px; color:#f3f3f3; opacity:.8;">&#8593; Import</span>
+        <span style="font-family: Georgia, serif; font-size:13px; color:#f3f3f3; opacity:.8;">Sign Out</span>
+      </div>
+      <div style="padding:16px 24px 0; display:flex; align-items:center; gap:12px;">
+        <div style="flex:1; display:flex; align-items:center; gap:8px; background:#c1f6ed; border-radius:20px; padding:8px 16px;">
+          <span style="opacity:.6;">&#128269;</span>
+          <span style="font-family: Georgia, serif; opacity:.5; color:#02353c; font-size:13px;">Search stories and chapters...</span>
+        </div>
+        <span style="font-family: Georgia, serif; color:#f3f3f3; font-size:13px; opacity:.8; white-space:nowrap;">Recent &#9662;</span>
+        <span style="font-family: Georgia, serif; color:#f3f3f3; font-size:13px; opacity:.8; white-space:nowrap;">&#9638; &#9776;</span>
+      </div>
+      <div style="padding:16px 24px 24px; display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+        <div style="background:#02353c; border-radius:10px; overflow:hidden; box-shadow:0 4px 4px rgba(0,0,0,.25);">
+          <div style="height:3px; background:#3fd0c9;"></div>
+          <div style="background:#f3f3f3; margin:12px; border-radius:4px; padding:10px; height:56px; overflow:hidden;">
+            <p style="font-family: Georgia, serif; font-size:9px; color:#333; line-height:1.4; margin:0;">The lighthouse stood at the edge of the world, its beam cutting through fog that never quite lifted...</p>
+          </div>
+          <div style="display:flex; align-items:center; padding:0 12px 12px; gap:8px;">
+            <div style="flex:1;">
+              <p style="font-family: Georgia, serif; color:#f3f3f3; font-size:15px; margin:0;">The Lighthouse</p>
+              <p style="font-family: Georgia, serif; color:#3fd0c9; font-size:11px; opacity:.7; margin:2px 0 0;">4 chapters &middot; Jun 12</p>
+            </div>
+            <span style="color:#f3f3f3; opacity:.6;">&#8942;</span>
+          </div>
+        </div>
+        <div style="background:#02353c; border-radius:10px; overflow:hidden; box-shadow:0 4px 4px rgba(0,0,0,.25); opacity:.85;">
+          <div style="height:3px; background:#3fd0c9;"></div>
+          <div style="background:#f3f3f3; margin:12px; border-radius:4px; padding:10px; height:56px; overflow:hidden;">
+            <p style="font-family: Georgia, serif; font-size:9px; color:#333; line-height:1.4; margin:0;">Salt clung to everything in the cedar house by the bay...</p>
+          </div>
+          <div style="display:flex; align-items:center; padding:0 12px 12px; gap:8px;">
+            <div style="flex:1;">
+              <p style="font-family: Georgia, serif; color:#f3f3f3; font-size:15px; margin:0;">Salt &amp; Cedar</p>
+              <p style="font-family: Georgia, serif; color:#3fd0c9; font-size:11px; opacity:.7; margin:2px 0 0;">2 chapters &middot; May 30</p>
+            </div>
+            <span style="color:#f3f3f3; opacity:.6;">&#8942;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:24px;">
+  <h3>List view (same data, either header option)</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="background:#3b4c49; padding:16px;">
+      <div style="display:flex; flex-direction:column; gap:2px;">
+        <div style="display:flex; align-items:center; gap:12px; background:#02353c; padding:10px 16px; border-radius:8px;">
+          <div style="width:28px; height:36px; background:#f3f3f3; border-radius:2px; flex-shrink:0;"></div>
+          <span style="font-family: Georgia, serif; color:#f3f3f3; flex:1; font-size:14px;">The Lighthouse</span>
+          <span style="font-family: Georgia, serif; color:#3fd0c9; font-size:12px; opacity:.7;">4 chapters</span>
+          <span style="font-family: Georgia, serif; color:#f3f3f3; font-size:12px; opacity:.6; width:70px;">Jun 12</span>
+          <span style="color:#f3f3f3; opacity:.6;">&#8942;</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; background:#02353c; padding:10px 16px; border-radius:8px; opacity:.85;">
+          <div style="width:28px; height:36px; background:#f3f3f3; border-radius:2px; flex-shrink:0;"></div>
+          <span style="font-family: Georgia, serif; color:#f3f3f3; flex:1; font-size:14px;">Salt &amp; Cedar</span>
+          <span style="font-family: Georgia, serif; color:#3fd0c9; font-size:12px; opacity:.7;">2 chapters</span>
+          <span style="font-family: Georgia, serif; color:#f3f3f3; font-size:12px; opacity:.6; width:70px;">May 30</span>
+          <span style="color:#f3f3f3; opacity:.6;">&#8942;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="options" style="margin-top:24px;">
+  <div class="option" data-choice="header-a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content"><h3>Option A</h3><p>Search bar dominates the header itself</p></div>
+  </div>
+  <div class="option" data-choice="header-b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content"><h3>Option B</h3><p>Header unchanged, search row added below</p></div>
+  </div>
+</div>

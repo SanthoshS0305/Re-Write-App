@@ -130,7 +130,7 @@ export async function addToSyncQueue(
     action,
     data,
     timestamp: Date.now(),
-  } as SyncQueueItem);
+  } as RewriteDB["syncQueue"]["value"]);
 }
 
 export async function getSyncQueue() {
