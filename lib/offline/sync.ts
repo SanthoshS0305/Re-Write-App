@@ -4,6 +4,7 @@ import {
   removeFromSyncQueue,
   saveToIndexedDB,
   getFromIndexedDB,
+  type StoreName,
 } from "./idb";
 
 export interface SyncConflict {
@@ -121,7 +122,7 @@ export async function resolveConflict(
 
   if (response.ok) {
     const updated = await response.json();
-    await saveToIndexedDB(conflict.type, conflict.id, updated);
+    await saveToIndexedDB(conflict.type as StoreName, conflict.id, updated);
     
     // Remove from sync queue
     const queue = await getSyncQueue();

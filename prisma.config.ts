@@ -1,6 +1,4 @@
 import { defineConfig } from "prisma/config";
-import { PrismaPg } from "@prisma/adapter-pg";
-import { Pool } from "pg";
 import { config } from "dotenv";
 
 // Prisma CLI doesn't load .env.local automatically — do it here
@@ -14,6 +12,5 @@ const connectionString =
 export default defineConfig({
   datasource: {
     url: connectionString,
-    adapter: new PrismaPg(new Pool({ connectionString })),
   },
 });

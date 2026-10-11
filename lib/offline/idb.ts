@@ -1,4 +1,4 @@
-import { openDB, DBSchema, IDBPDatabase } from "idb";
+import { openDB, DBSchema, IDBPDatabase, StoreNames } from "idb";
 
 interface RewriteDB extends DBSchema {
   stories: {
@@ -34,6 +34,8 @@ interface RewriteDB extends DBSchema {
     indexes: { "by-timestamp": number };
   };
 }
+
+export type StoreName = StoreNames<RewriteDB>;
 
 let dbPromise: Promise<IDBPDatabase<RewriteDB>> | null = null;
 
@@ -114,7 +116,8 @@ export async function addToSyncQueue(
     action,
     data,
     timestamp: Date.now(),
-  });
+    // id is assigned by the store's autoIncrement keyPath
+  } as RewriteDB["syncQueue"]["value"]);
 }
 
 export async function getSyncQueue() {
